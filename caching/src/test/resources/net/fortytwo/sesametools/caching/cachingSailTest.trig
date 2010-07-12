@@ -1,0 +1,19 @@
+@prefix : <http://example.org/ns/>.
+
+:ctxA
+{
+	:one
+		:two :three;
+		:four :five;
+		.
+		
+	:six
+		:seven :three;
+		:eight :nine;
+		.
+}
+
+:ctxB
+{
+
+}
