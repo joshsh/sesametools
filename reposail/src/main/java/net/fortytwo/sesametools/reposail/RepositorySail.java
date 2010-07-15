@@ -1,4 +1,3 @@
-
 package net.fortytwo.sesametools.reposail;
 
 import org.openrdf.model.ValueFactory;
@@ -19,9 +18,16 @@ import java.io.File;
  */
 public class RepositorySail implements Sail {
     private Repository repository;
+    private final boolean autoCommit;
 
     public RepositorySail(final Repository repo) {
+        this(repo, false);
+    }
+
+    public RepositorySail(final Repository repo,
+                          final boolean autoCommit) {
         this.repository = repo;
+        this.autoCommit = autoCommit;
     }
 
     public void addSailChangedListener(SailChangedListener listener) {
@@ -33,6 +39,7 @@ public class RepositorySail implements Sail {
 
         try {
             rc = repository.getConnection();
+            rc.setAutoCommit(autoCommit);
         } catch (RepositoryException e) {
             throw new SailException(e);
         }

@@ -54,10 +54,10 @@ public class PlaybackSail implements StackableSail {
     public void initialize() throws SailException {
 //        baseSail.initialize();
 
-        Sink<SailConnectionCall, SailException> sink = new Sink<SailConnectionCall, SailException>() {
+        Handler<SailConnectionCall, SailException> handler = new Handler<SailConnectionCall, SailException>() {
             private long line = 0;
 
-            public void put(final SailConnectionCall call) throws SailException {
+            public void handle(final SailConnectionCall call) throws SailException {
                 line++;
 
                 try {
@@ -86,7 +86,7 @@ public class PlaybackSail implements StackableSail {
             }
         };
 
-        querySource.writeTo(sink);
+        querySource.writeTo(handler);
     }
 
     private SailConnection getConnection(final String id) throws SailException {
@@ -164,7 +164,7 @@ public class PlaybackSail implements StackableSail {
             reader = new BufferedReader(new InputStreamReader(is));
         }
 
-        public void writeTo(final Sink<SailConnectionCall, SailException> sink) throws SailException {
+        public void writeTo(final Handler<SailConnectionCall, SailException> handler) throws SailException {
             try {
                 try {
                     String line;
@@ -172,7 +172,7 @@ public class PlaybackSail implements StackableSail {
                     while (null != (line = reader.readLine())) {
                         line = line.trim();
                         if (0 != line.length()) {
-                            sink.put(SailConnectionCall.construct(line));
+                            handler.handle(SailConnectionCall.construct(line));
                         }
                     }
                 } finally {

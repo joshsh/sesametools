@@ -6,5 +6,5 @@ package net.fortytwo.sesametools.replay;
  * Time: 10:32:06 AM
  */
 public interface Source<T, E extends Exception> {
-    void writeTo(Sink<T, E> sink) throws E;
+    void writeTo(Handler<T, E> handler) throws E;
 }

@@ -14,33 +14,33 @@ import net.fortytwo.sesametools.replay.calls.CloseIterationCall;
 public class RecorderIteration<T, E extends Exception> implements CloseableIteration<T, E> {
     private final String id;
     private final CloseableIteration<T, E> baseIteration;
-    private final Sink<SailConnectionCall, E> querySink;
+    private final Handler<SailConnectionCall, E> queryHandler;
 
     public RecorderIteration(final CloseableIteration<T, E> baseIteration,
                              final String id,
-                             final Sink<SailConnectionCall, E> querySink) {
+                             final Handler<SailConnectionCall, E> queryHandler) {
         this.baseIteration = baseIteration;
         this.id = id;
-        this.querySink = querySink;
+        this.queryHandler = queryHandler;
     }
 
     public void close() throws E {
-        querySink.put(new CloseIterationCall(id));
+        queryHandler.handle(new CloseIterationCall(id));
         baseIteration.close();
     }
 
     public boolean hasNext() throws E {
-        querySink.put(new HasNextCall(id));
+        queryHandler.handle(new HasNextCall(id));
         return baseIteration.hasNext();
     }
 
     public T next() throws E {
-        querySink.put(new NextCall(id));
+        queryHandler.handle(new NextCall(id));
         return baseIteration.next();
     }
 
     public void remove() throws E {
-        querySink.put(new RemoveCall(id));
+        queryHandler.handle(new RemoveCall(id));
         baseIteration.remove();
     }
 }

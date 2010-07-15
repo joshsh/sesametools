@@ -20,7 +20,7 @@ import java.io.PrintStream;
  */
 public class RecorderSail implements StackableSail {
     private final Sail baseSail;
-    private final Sink<SailConnectionCall, SailException> querySink;
+    private final Handler<SailConnectionCall, SailException> queryHandler;
 
     public RecorderSail(final Sail baseSail, final OutputStream out) {
         this.baseSail = baseSail;
@@ -28,8 +28,8 @@ public class RecorderSail implements StackableSail {
                 ? (PrintStream) out
                 : new PrintStream(out);
 
-        this.querySink = new Sink<SailConnectionCall, SailException>() {
-            public void put(final SailConnectionCall sailQuery) throws SailException {
+        this.queryHandler = new Handler<SailConnectionCall, SailException>() {
+            public void handle(final SailConnectionCall sailQuery) throws SailException {
                 ps.println(sailQuery.toString());
             }
         };
@@ -56,7 +56,7 @@ public class RecorderSail implements StackableSail {
     }
 
     public SailConnection getConnection() throws SailException {
-        return new RecorderSailConnection(baseSail, querySink);
+        return new RecorderSailConnection(baseSail, queryHandler);
     }
 
     public ValueFactory getValueFactory() {
