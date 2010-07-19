@@ -19,6 +19,7 @@ import java.io.File;
 public class RepositorySail implements Sail {
     private Repository repository;
     private final boolean autoCommit;
+    private boolean inferenceDisabled = false;
 
     public RepositorySail(final Repository repo) {
         this(repo, false);
@@ -28,6 +29,10 @@ public class RepositorySail implements Sail {
                           final boolean autoCommit) {
         this.repository = repo;
         this.autoCommit = autoCommit;
+    }
+
+    public void disableInference() {
+        inferenceDisabled = false;
     }
 
     public void addSailChangedListener(SailChangedListener listener) {
@@ -44,7 +49,7 @@ public class RepositorySail implements Sail {
             throw new SailException(e);
         }
 
-        return new RepositorySailConnection(rc);
+        return new RepositorySailConnection(rc, inferenceDisabled);
     }
 
     public File getDataDir() {

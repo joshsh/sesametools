@@ -25,9 +25,12 @@ import org.openrdf.sail.SailException;
  */
 public class RepositorySailConnection implements SailConnection {
     private RepositoryConnection repoConnection;
+    private final boolean inferenceDisabled;
 
-    public RepositorySailConnection(final RepositoryConnection repoConnection) {
+    public RepositorySailConnection(final RepositoryConnection repoConnection,
+                                    final boolean inferenceDisabled) {
         this.repoConnection = repoConnection;
+        this.inferenceDisabled = inferenceDisabled;
     }
 
     public void addConnectionListener(SailConnectionListener arg0) {
@@ -115,7 +118,7 @@ public class RepositorySailConnection implements SailConnection {
             throws SailException {
         try {
             return new RepositoryStatementIteration(
-                    repoConnection.getStatements(subj, pred, obj, includeInferred, contexts));
+                    repoConnection.getStatements(subj, pred, obj, includeInferred && !inferenceDisabled, contexts));
         } catch (RepositoryException e) {
             throw new SailException(e);
         }
