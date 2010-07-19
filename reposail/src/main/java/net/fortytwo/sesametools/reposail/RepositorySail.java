@@ -32,7 +32,7 @@ public class RepositorySail implements Sail {
     }
 
     public void disableInference() {
-        inferenceDisabled = false;
+        inferenceDisabled = true;
     }
 
     public void addSailChangedListener(SailChangedListener listener) {
