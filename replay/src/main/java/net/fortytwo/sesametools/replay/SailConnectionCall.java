@@ -40,7 +40,7 @@ import java.util.StringTokenizer;
  */
 public abstract class SailConnectionCall<T, R> {
     protected static final char DELIM = '\t';
-    private static final String DELIM_STRING = "\t";
+    private static final String COMMA = ",";
 
     private static ValueFactory valueFactory = new ValueFactoryImpl();
 
@@ -166,7 +166,7 @@ public abstract class SailConnectionCall<T, R> {
         if (0 == s2.length()) {
             return new Resource[0];
         } else {
-            String[] vals = s2.split(DELIM_STRING);
+            String[] vals = s2.split(COMMA);
             Resource[] contexts = new Resource[vals.length];
             for (int i = 0; i < vals.length; i++) {
                 contexts[i] = parseResource(vals[i]);
@@ -247,7 +247,7 @@ public abstract class SailConnectionCall<T, R> {
             if (first) {
                 first = false;
             } else {
-                sb.append(DELIM_STRING);
+                sb.append(COMMA);
             }
 
             sb.append(toString(ctx));
