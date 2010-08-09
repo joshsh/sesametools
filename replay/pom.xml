@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>replay</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
     <name>ReplaySail</name>
     <description>A pair of Sail implementations which allow Sail operations to be first recorded to a log file, then
@@ -37,6 +37,11 @@
             <artifactId>sesame-sail-api</artifactId>
             <version>2.2.4</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-rio-ntriples</artifactId>
+            <version>2.2.4</version>
         </dependency>
 
         <!-- test dependencies -->

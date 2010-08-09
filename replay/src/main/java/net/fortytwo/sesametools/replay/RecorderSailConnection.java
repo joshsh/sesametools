@@ -1,4 +1,3 @@
-
 package net.fortytwo.sesametools.replay;
 
 import net.fortytwo.sesametools.replay.calls.AddStatementCall;
@@ -36,12 +35,17 @@ public class RecorderSailConnection implements SailConnection {
     private final String id = "" + new Random().nextInt(0xFFFF);
     private final Handler<SailConnectionCall, SailException> queryHandler;
     private final SailConnection baseSailConnection;
+    private final ReplayConfiguration config;
     private int iterationCount = 0;
 
     public RecorderSailConnection(final Sail baseSail,
+                                  final ReplayConfiguration config,
                                   final Handler<SailConnectionCall, SailException> queryHandler) throws SailException {
         this.queryHandler = queryHandler;
-        queryHandler.handle(new ConstructorCall(id));
+        this.config = config;
+        if (config.logTransactions) {
+            queryHandler.handle(new ConstructorCall(id));
+        }
         this.baseSailConnection = baseSail.getConnection();
     }
 
@@ -51,29 +55,39 @@ public class RecorderSailConnection implements SailConnection {
                              final URI pred,
                              final Value obj,
                              final Resource... contexts) throws SailException {
-        queryHandler.handle(new AddStatementCall(id, subj, pred, obj, contexts));
+        if (config.logWriteOperations) {
+            queryHandler.handle(new AddStatementCall(id, subj, pred, obj, contexts));
+        }
         baseSailConnection.addStatement(subj, pred, obj, contexts);
     }
 
     // Note: clearing statements does not change the configuration of cached
     // values.
     public void clear(final Resource... contexts) throws SailException {
-        queryHandler.handle(new ClearCall(id, contexts));
+        if (config.logWriteOperations) {
+            queryHandler.handle(new ClearCall(id, contexts));
+        }
         baseSailConnection.clear(contexts);
     }
 
     public void clearNamespaces() throws SailException {
-        queryHandler.handle(new ClearNamespacesCall(id));
+        if (config.logWriteOperations) {
+            queryHandler.handle(new ClearNamespacesCall(id));
+        }
         baseSailConnection.clearNamespaces();
     }
 
     public void close() throws SailException {
-        queryHandler.handle(new CloseConnectionCall(id));
+        if (config.logTransactions) {
+            queryHandler.handle(new CloseConnectionCall(id));
+        }
         baseSailConnection.close();
     }
 
     public void commit() throws SailException {
-        queryHandler.handle(new CommitCall(id));
+        if (config.logTransactions) {
+            queryHandler.handle(new CommitCall(id));
+        }
         baseSailConnection.commit();
     }
 
@@ -86,11 +100,15 @@ public class RecorderSailConnection implements SailConnection {
 
     public CloseableIteration<? extends Resource, SailException> getContextIDs()
             throws SailException {
-        queryHandler.handle(new GetContextIDsCall(id));
-        return new RecorderIteration<Resource, SailException>(
-                (CloseableIteration<Resource, SailException>) baseSailConnection.getContextIDs(),
-                nextIterationId(),
-                queryHandler);
+        if (config.logReadOperations) {
+            queryHandler.handle(new GetContextIDsCall(id));
+            return new RecorderIteration<Resource, SailException>(
+                    (CloseableIteration<Resource, SailException>) baseSailConnection.getContextIDs(),
+                    nextIterationId(),
+                    queryHandler);
+        } else {
+            return baseSailConnection.getContextIDs();
+        }
     }
 
     private String nextIterationId() {
@@ -99,27 +117,37 @@ public class RecorderSailConnection implements SailConnection {
     }
 
     public String getNamespace(final String prefix) throws SailException {
-        queryHandler.handle(new GetNamespaceCall(id, prefix));
+        if (config.logReadOperations) {
+            queryHandler.handle(new GetNamespaceCall(id, prefix));
+        }
         return baseSailConnection.getNamespace(prefix);
     }
 
     public CloseableIteration<? extends Namespace, SailException> getNamespaces()
             throws SailException {
-        queryHandler.handle(new GetNamespacesCall(id));
-        return new RecorderIteration<Namespace, SailException>(
-                (CloseableIteration<Namespace, SailException>) baseSailConnection.getNamespaces(),
-                nextIterationId(),
-                queryHandler);
+        if (config.logReadOperations) {
+            queryHandler.handle(new GetNamespacesCall(id));
+            return new RecorderIteration<Namespace, SailException>(
+                    (CloseableIteration<Namespace, SailException>) baseSailConnection.getNamespaces(),
+                    nextIterationId(),
+                    queryHandler);
+        } else {
+            return baseSailConnection.getNamespaces();
+        }
     }
 
     public CloseableIteration<? extends Statement, SailException> getStatements(
             final Resource subj, final URI pred, final Value obj, final boolean includeInferred, final Resource... contexts)
             throws SailException {
-        queryHandler.handle(new GetStatementsCall(id, subj, pred, obj, includeInferred, contexts));
-        return new RecorderIteration<Statement, SailException>(
-                (CloseableIteration<Statement, SailException>) baseSailConnection.getStatements(subj, pred, obj, includeInferred, contexts),
-                nextIterationId(),
-                queryHandler);
+        if (config.logReadOperations) {
+            queryHandler.handle(new GetStatementsCall(id, subj, pred, obj, includeInferred, contexts));
+            return new RecorderIteration<Statement, SailException>(
+                    (CloseableIteration<Statement, SailException>) baseSailConnection.getStatements(subj, pred, obj, includeInferred, contexts),
+                    nextIterationId(),
+                    queryHandler);
+        } else {
+            return baseSailConnection.getStatements(subj, pred, obj, includeInferred, contexts);
+        }
     }
 
     public boolean isOpen() throws SailException {
@@ -127,7 +155,9 @@ public class RecorderSailConnection implements SailConnection {
     }
 
     public void removeNamespace(final String prefix) throws SailException {
-        queryHandler.handle(new RemoveNamespaceCall(id, prefix));
+        if (config.logWriteOperations) {
+            queryHandler.handle(new RemoveNamespaceCall(id, prefix));
+        }
         baseSailConnection.removeNamespace(prefix);
     }
 
@@ -135,22 +165,30 @@ public class RecorderSailConnection implements SailConnection {
                                  final URI pred,
                                  final Value obj,
                                  final Resource... contexts) throws SailException {
-        queryHandler.handle(new RemoveStatementsCall(id, subj, pred, obj, contexts));
+        if (config.logWriteOperations) {
+            queryHandler.handle(new RemoveStatementsCall(id, subj, pred, obj, contexts));
+        }
         baseSailConnection.removeStatements(subj, pred, obj, contexts);
     }
 
     public void rollback() throws SailException {
-        queryHandler.handle(new RollbackCall(id));
+        if (config.logTransactions) {
+            queryHandler.handle(new RollbackCall(id));
+        }
         baseSailConnection.rollback();
     }
 
     public void setNamespace(final String prefix, final String name) throws SailException {
-        queryHandler.handle(new SetNamespaceCall(id, prefix, name));
+        if (config.logWriteOperations) {
+            queryHandler.handle(new SetNamespaceCall(id, prefix, name));
+        }
         baseSailConnection.setNamespace(prefix, name);
     }
 
     public long size(final Resource... contexts) throws SailException {
-        queryHandler.handle(new SizeCall(id, contexts));
+        if (config.logReadOperations) {
+            queryHandler.handle(new SizeCall(id, contexts));
+        }
         return baseSailConnection.size(contexts);
     }
 }

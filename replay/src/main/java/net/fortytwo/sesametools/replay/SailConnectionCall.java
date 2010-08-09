@@ -28,6 +28,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.rio.ntriples.NTriplesUtil;
 import org.openrdf.sail.SailException;
 
 import java.util.StringTokenizer;
@@ -39,7 +40,7 @@ import java.util.StringTokenizer;
  */
 public abstract class SailConnectionCall<T, R> {
     protected static final char DELIM = '\t';
-    private static final String COMMA = ",";
+    private static final String DELIM_STRING = "\t";
 
     private static ValueFactory valueFactory = new ValueFactoryImpl();
 
@@ -136,8 +137,7 @@ public abstract class SailConnectionCall<T, R> {
             return null;
         }
 
-        String s2 = s.substring(1, s.length() - 1);
-        return valueFactory.createURI(s2);
+        return NTriplesUtil.parseURI(s, valueFactory);
     }
 
     protected Resource parseResource(final String s) {
@@ -145,9 +145,7 @@ public abstract class SailConnectionCall<T, R> {
             return null;
         }
 
-        return ('<' == s.charAt(0))
-                ? parseURI(s)
-                : parseBNode(s);
+        return NTriplesUtil.parseResource(s, valueFactory);
     }
 
     protected Value parseValue(final String s) {
@@ -155,46 +153,7 @@ public abstract class SailConnectionCall<T, R> {
             return null;
         }
 
-        return ('\"' == s.charAt(0))
-                ? parseLiteral(s)
-                : parseResource(s);
-    }
-
-    protected BNode parseBNode(final String s) {
-        if (s.equals("null")) {
-            return null;
-        }
-
-        int i = s.indexOf(":");
-        String s2 = s.substring(i + 1, s.length());
-        return valueFactory.createBNode(s2);
-    }
-
-    protected Literal parseLiteral(final String s) {
-        if (s.equals("null")) {
-            return null;
-        }
-
-        int lastQuote = s.lastIndexOf("\"");
-        int lastAt = s.lastIndexOf("@");
-        int lastDoubleHat = s.lastIndexOf("^^");
-
-        String label = Formatting.unescapeString(s.substring(1, lastQuote));
-        String language = null;
-        URI datatype = null;
-
-        if (lastAt > lastQuote) {
-            language = s.substring(lastAt + 1, s.length());
-        } else if (lastDoubleHat > lastQuote) {
-            String typeStr = s.substring(lastDoubleHat + 2, s.length());
-            datatype = parseURI(typeStr);
-        }
-
-        return (null == language)
-                ? (null == datatype)
-                ? valueFactory.createLiteral(label)
-                : valueFactory.createLiteral(label, datatype)
-                : valueFactory.createLiteral(label, language);
+        return NTriplesUtil.parseValue(s, valueFactory);
     }
 
     protected boolean parseBoolean(final String s) {
@@ -207,7 +166,7 @@ public abstract class SailConnectionCall<T, R> {
         if (0 == s2.length()) {
             return new Resource[0];
         } else {
-            String[] vals = s2.split(COMMA);
+            String[] vals = s2.split(DELIM_STRING);
             Resource[] contexts = new Resource[vals.length];
             for (int i = 0; i < vals.length; i++) {
                 contexts[i] = parseResource(vals[i]);
@@ -233,12 +192,22 @@ public abstract class SailConnectionCall<T, R> {
         return "\"" + Formatting.escapeString(v) + "\"";
     }
 
-    protected String toString(final URI v) {
+    protected String toString(final Value v) {
         if (null == v) {
             return "null";
         }
 
-        return "<" + v + ">";
+        return (v instanceof Resource)
+                ? toString((Resource) v)
+                : toString((Literal) v);
+    }
+
+    protected String toString(final Literal v) {
+        if (null == v) {
+            return "null";
+        }
+
+        return NTriplesUtil.toNTriplesString(v);
     }
 
     protected String toString(final Resource v) {
@@ -251,14 +220,12 @@ public abstract class SailConnectionCall<T, R> {
                 : toString((BNode) v);
     }
 
-    protected String toString(final Value v) {
+    protected String toString(final URI v) {
         if (null == v) {
             return "null";
         }
 
-        return (v instanceof Resource)
-                ? toString((Resource) v)
-                : toString((Literal) v);
+        return NTriplesUtil.toNTriplesString(v);
     }
 
     protected String toString(final BNode v) {
@@ -266,24 +233,7 @@ public abstract class SailConnectionCall<T, R> {
             return "null";
         }
 
-        return "_:" + v.getID();
-    }
-
-    protected String toString(final Literal v) {
-        if (null == v) {
-            return "null";
-        }
-
-        StringBuilder sb = new StringBuilder("\"")
-                .append(Formatting.escapeString(v.getLabel()))
-                .append("\"");
-        if (null != v.getLanguage()) {
-            sb.append("@").append(v.getLanguage());
-        } else if (null != v.getDatatype()) {
-            sb.append("^^").append(toString(v.getDatatype()));
-        }
-
-        return sb.toString();
+        return NTriplesUtil.toNTriplesString(v);
     }
 
     protected String toString(final boolean v) {
@@ -297,7 +247,7 @@ public abstract class SailConnectionCall<T, R> {
             if (first) {
                 first = false;
             } else {
-                sb.append(COMMA);
+                sb.append(DELIM_STRING);
             }
 
             sb.append(toString(ctx));

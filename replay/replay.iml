@@ -29,6 +29,7 @@
     <orderEntry type="library" exported="" name="Maven: info.aduna.commons:aduna-commons-text:2.2" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-queryalgebra-model:2.2.4" level="project" />
     <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-queryalgebra-evaluation:2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="Maven: org.openrdf.sesame:sesame-rio-ntriples:2.2.4" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:3.8.1" level="project" />
   </component>
 </module>
