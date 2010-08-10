@@ -40,6 +40,8 @@ import java.util.StringTokenizer;
  */
 public abstract class SailConnectionCall<T, R> {
     protected static final char DELIM = '\t';
+    
+    // Use a comma instead of whitespace so that lists of named graphs appear as a single token.
     private static final String COMMA = ",";
 
     private static ValueFactory valueFactory = new ValueFactoryImpl();
