@@ -2,7 +2,6 @@ package net.fortytwo.sesametools.rdftransaction;
 
 import org.openrdf.http.protocol.transaction.TransactionWriter;
 import org.openrdf.http.protocol.transaction.operations.AddStatementOperation;
-import org.openrdf.http.protocol.transaction.operations.ClearNamespacesOperation;
 import org.openrdf.http.protocol.transaction.operations.ClearOperation;
 import org.openrdf.http.protocol.transaction.operations.RemoveNamespaceOperation;
 import org.openrdf.http.protocol.transaction.operations.RemoveStatementsOperation;
@@ -52,6 +51,8 @@ public class RDFTransactionSailConnection extends SailConnectionWrapper {
         } catch (IOException e) {
             throw new SailException(e);
         }
+
+        operations.clear();
     }
 
     @Override
@@ -100,6 +101,7 @@ public class RDFTransactionSailConnection extends SailConnectionWrapper {
     public void clearNamespaces() throws SailException {
         this.getWrappedConnection().clearNamespaces();
 
-        operations.add(new ClearNamespacesOperation());
+        // FIXME: this should be restored.  It is temporarily disabled due to an AllegroGraph bug.
+        //operations.add(new ClearNamespacesOperation());
     }
 }
