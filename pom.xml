@@ -18,7 +18,7 @@
         <module>decompose</module>
         <module>deduplication</module>
         <module>readonly</module>
-	<module>rdftransaction</module>
+        <module>rdftransaction</module>
         <module>replay</module>
         <module>reposail</module>
         <module>writeonly</module>

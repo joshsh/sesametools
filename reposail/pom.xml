@@ -18,6 +18,11 @@
 
     <repositories>
         <repository>
+            <id>fortytwo</id>
+            <name>fortytwo.net Maven repository</name>
+            <url>http://fortytwo.net/maven2</url>
+        </repository>
+        <repository>
             <id>aduna-repo</id>
             <name>Aduna repository</name>
             <url>http://repo.aduna-software.org/maven2/releases</url>
@@ -25,7 +30,7 @@
     </repositories>
 
     <dependencies>
-        <dependency>                             
+        <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>common</artifactId>
             <version>1.0</version>
