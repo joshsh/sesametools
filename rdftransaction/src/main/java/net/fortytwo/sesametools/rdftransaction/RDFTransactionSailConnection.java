@@ -14,10 +14,10 @@ import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.helpers.SailConnectionWrapper;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * User: josh
@@ -26,25 +26,49 @@ import java.util.List;
  */
 public class RDFTransactionSailConnection extends SailConnectionWrapper {
     private final List<TransactionOperation> operations;
+    private final List<TransactionOperation> buffer;
     private final TransactionWriter writer;
     private final RDFTransactionSail sail;
+    private final int commitsPerUpload;
+    private int commits = 0;
 
+    /**
+     * @param c the wrapped connection
+     * @param sail the owner Sail
+     * @param commitsPerUpload if transactions should be grouped together, rather than uploaded
+     *                         individually.  Note: when the SailConnection is closed, any leftover
+     * transactions (committed but not uploaded) will be uploaded.
+     */
     public RDFTransactionSailConnection(final SailConnection c,
-                                        final RDFTransactionSail sail) {
+                                        final RDFTransactionSail sail,
+                                        final int commitsPerUpload) {
         super(c);
         this.sail = sail;
         this.operations = new LinkedList<TransactionOperation>();
+        this.buffer = new LinkedList<TransactionOperation>();
         this.writer = new TransactionWriter();
+        this.commitsPerUpload = commitsPerUpload;
     }
 
     @Override
     public void commit() throws SailException {
+
         this.getWrappedConnection().commit();
 
+        buffer.addAll(operations);
+        operations.clear();
+
+        commits++;
+        if (commits == commitsPerUpload) {
+            commitAll();
+        }
+    }
+
+    private void commitAll() throws SailException {
         try {
-            if (0 < operations.size()) {
+            if (0 < buffer.size()) {
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                writer.serialize(operations, bos);
+                writer.serialize(buffer, bos);
                 sail.uploadTransactionEntity(bos.toByteArray());
                 bos.close();
             }
@@ -52,7 +76,8 @@ public class RDFTransactionSailConnection extends SailConnectionWrapper {
             throw new SailException(e);
         }
 
-        operations.clear();
+        buffer.clear();
+        commits = 0;
     }
 
     @Override
@@ -103,5 +128,11 @@ public class RDFTransactionSailConnection extends SailConnectionWrapper {
 
         // FIXME: this should be restored.  It is temporarily disabled due to an AllegroGraph bug.
         //operations.add(new ClearNamespacesOperation());
+    }
+
+    @Override
+    public void close() throws SailException {
+        commitAll();
+        super.close();
     }
 }
