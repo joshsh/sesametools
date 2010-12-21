@@ -1,0 +1,22 @@
+{
+    "http://example.org/Arthur" : {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" : [
+            {
+                "value" : "http://xmlns.com/foaf/0.1/Person",
+                "type" : "uri"
+            },
+            {
+                "value" : "http://www.w3.org/2002/07/owl#Thing",
+                "type" : "uri",
+                "graphs" : ["http://example.org/graph1", "http://example.org/graph2"]
+            }
+        ],
+        "http://xmlns.com/foaf/0.1/name"   : [
+            {
+                "value" : "Arthur Dent",
+                "type" : "literal",
+                "lang" : "en"
+            }
+        ]
+    }
+}
