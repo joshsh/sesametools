@@ -26,7 +26,7 @@ import java.io.Writer;
  * Date: Dec 21, 2010
  * Time: 2:55:39 PM
  *
- * @author Joshua Shinavier (http://fortytwo.net)
+ * @author Joshua Shinavier (http://fortytwo.net).  Builds on code by Hannes Ebner
  */
 public class RDFJSONParser implements RDFParser {
 

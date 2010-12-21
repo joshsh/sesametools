@@ -20,7 +20,7 @@ import java.nio.charset.Charset;
  * Date: Dec 21, 2010
  * Time: 2:55:55 PM
  *
- * @author Joshua Shinavier (http://fortytwo.net)
+ * @author Joshua Shinavier (http://fortytwo.net).  Builds on code by Hannes Ebner
  */
 public class RDFJSONWriter implements RDFWriter {
     public static final RDFFormat RDFJSON_FORMAT = new RDFFormat(

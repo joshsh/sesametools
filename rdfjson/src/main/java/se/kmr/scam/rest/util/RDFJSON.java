@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * A utility class to help converting Sesame Graphs from and to RDF/JSON.
  *
- * @author Hannes Ebner <hebner@kth.se>
+ * @author Hannes Ebner <hebner@kth.se>, with tweaks by Joshua Shinavier
  */
 public class RDFJSON {
 
