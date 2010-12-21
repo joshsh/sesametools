@@ -15,9 +15,12 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 
 /**
- * User: josh
+ * RDFWriter implementation for the proposed RDF/JSON format (see http://n2.talis.com/wiki/RDF_JSON_Specification)
+ * <p/>
  * Date: Dec 21, 2010
  * Time: 2:55:55 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class RDFJSONWriter implements RDFWriter {
     public static final RDFFormat RDFJSON_FORMAT = new RDFFormat(
