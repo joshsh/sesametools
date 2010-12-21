@@ -45,11 +45,11 @@
             <artifactId>sesame-rio-api</artifactId>
             <version>2.3.2</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-lgpl</artifactId>
             <version>1.2.0</version>
-        </dependency>
+        </dependency>-->
 
         <!-- test dependencies -->
         <dependency>

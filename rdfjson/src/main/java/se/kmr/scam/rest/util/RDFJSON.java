@@ -1,8 +1,5 @@
 package se.kmr.scam.rest.util;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,8 +15,6 @@ import org.openrdf.model.impl.GraphImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -193,6 +188,7 @@ public class RDFJSON {
      * @param graph A Sesame Graph.
      * @return An RDF/JSON string if successful, otherwise null.
      */
+    /*
     public static String graphToRdfJsonJackson(Graph graph) {
         JsonFactory f = new JsonFactory();
         StringWriter sw = new StringWriter();
@@ -253,6 +249,6 @@ public class RDFJSON {
             log.error(ioe.getMessage(), ioe);
         }
         return null;
-    }
+    }*/
 
 }
