@@ -7,7 +7,6 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.XMLSchema;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,6 +32,7 @@ public class RDFJSONParserTest extends RDFJSONTestBase {
         assertExpected(g,
                 vf.createStatement(ARTHUR, RDF.TYPE, FOAF.PERSON),
                 vf.createStatement(ARTHUR, RDF.TYPE, vf.createURI(OWL.NAMESPACE + "Thing")),
+                vf.createStatement(ARTHUR, RDF.TYPE, vf.createURI(OWL.NAMESPACE + "Thing"), GRAPH1),
                 vf.createStatement(ARTHUR, FOAF.NAME, vf.createLiteral("Arthur Dent", "en")),
                 vf.createStatement(ARTHUR, FOAF.KNOWS, P1),
                 vf.createStatement(P1, FOAF.NAME, vf.createLiteral("Ford Prefect", XMLSchema.STRING)));
@@ -55,17 +55,52 @@ public class RDFJSONParserTest extends RDFJSONTestBase {
 
     protected void assertExpected(final Graph graph,
                                   final Statement... expectedStatements) throws Exception {
-        Set<Statement> expected = new HashSet<Statement>();
-        expected.addAll(Arrays.asList(expectedStatements));
-        for (Statement t : expected) {
-            if (!graph.contains(t)) {
-                fail("expected statement not found: " + t);
+        Set<StatementHolder> expected = new HashSet<StatementHolder>();
+        for (Statement st : expectedStatements) {
+            expected.add(new StatementHolder(st));
+        }
+        Set<StatementHolder> actual = new HashSet<StatementHolder>();
+        for (Statement st : graph) {
+            actual.add(new StatementHolder(st));
+        }
+        for (StatementHolder t : expected) {
+            if (!actual.contains(t)) {
+                fail("expected statement not found: " + t.statement);
             }
         }
-        for (Statement t : graph) {
+        for (StatementHolder t : actual) {
             if (!expected.contains(t)) {
-                fail("unexpected statement found: " + t);
+                fail("unexpected statement found: " + t.statement);
             }
         }
+    }
+
+    private class StatementHolder {
+        private final Statement statement;
+
+        public StatementHolder(Statement statement) {
+            this.statement = statement;
+        }
+
+        public int hashCode() {
+            int h = statement.hashCode();
+            if (null != statement.getContext()) {
+                h += statement.getContext().hashCode();
+            }
+            return h;
+        }
+
+        public boolean equals(final Object other) {
+            return other instanceof StatementHolder
+                    && statement.equals(((StatementHolder) other).statement)
+                    && nullSafeEqual(statement.getContext(), ((StatementHolder) other).statement.getContext());
+        }
+    }
+
+    private boolean nullSafeEqual(final Object first,
+                                  final Object second) {
+        return first == null
+                ? second == null
+                : second != null && first.equals(second);
     }
 }

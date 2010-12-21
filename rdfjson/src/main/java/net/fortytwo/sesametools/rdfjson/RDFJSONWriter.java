@@ -49,7 +49,7 @@ public class RDFJSONWriter implements RDFWriter {
 
     public void endRDF() throws RDFHandlerException {
         String s = RDFJSON.graphToRdfJson(graph);
-        //System.out.println("here it is: " + s);
+        //System.out.println("written: " + s);
         try {
             writer.write(s);
             writer.flush();

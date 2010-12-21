@@ -22,7 +22,8 @@ public abstract class RDFJSONTestBase extends TestCase {
     protected static final String BASE_URI = "http://example.org/base#";
     protected static final URI
             ABOUT = vf.createURI("http://example.org/about"),
-            ARTHUR = vf.createURI("http://example.org/Arthur");
+            ARTHUR = vf.createURI("http://example.org/Arthur"),
+            GRAPH1 = vf.createURI("http://example.org/graph1");
     protected static final BNode
             PERSON = vf.createBNode("person"),
             P1 = vf.createBNode("p1");

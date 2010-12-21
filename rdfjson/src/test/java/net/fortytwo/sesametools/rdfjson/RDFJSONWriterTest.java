@@ -20,15 +20,23 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
     public void testAll() throws Exception {
         JSONObject j;
         JSONArray values;
+        JSONArray contexts;
 
         j = parseAndWrite("example1.json");
         JSONObject a = j.getJSONObject(ARTHUR.toString());
         values = a.getJSONArray(RDF.TYPE.toString());
         assertEquals(2, values.length());
-        assertEquals(FOAF.PERSON.toString(), values.getJSONObject(0).getString("value"));
         assertEquals("uri", values.getJSONObject(0).getString("type"));
-        assertEquals(OWL.NAMESPACE + "Thing", values.getJSONObject(1).getString("value"));
         assertEquals("uri", values.getJSONObject(1).getString("type"));
+        JSONObject t = values.getJSONObject(0);
+        if (FOAF.PERSON.toString().equals(t.getString("value"))) {
+            t = values.getJSONObject(1);
+        }
+        //assertEquals(FOAF.PERSON.toString(), values.getJSONObject(0).getString("value"));
+        assertEquals(OWL.NAMESPACE + "Thing", t.getString("value"));
+        contexts = t.getJSONArray("graphs");
+        assertEquals(2, contexts.length());
+        assertTrue("null".equals(contexts.getString(0)) || "null".equals(contexts.getString(1)));
         values = a.getJSONArray(FOAF.KNOWS.toString());
         assertEquals(1, values.length());
         JSONObject f = values.getJSONObject(0);

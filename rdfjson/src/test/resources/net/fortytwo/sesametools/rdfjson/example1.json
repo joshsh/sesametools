@@ -8,7 +8,7 @@
             {
                 "value" : "http://www.w3.org/2002/07/owl#Thing",
                 "type" : "uri",
-                "graphs" : ["http://example.org/graph1", "http://example.org/graph2"]
+                "graphs" : ["http://example.org/graph1", null]
             }
         ],
         "http://xmlns.com/foaf/0.1/name"   : [
