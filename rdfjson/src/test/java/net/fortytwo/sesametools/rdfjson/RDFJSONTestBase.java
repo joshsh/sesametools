@@ -24,7 +24,8 @@ public abstract class RDFJSONTestBase extends TestCase {
             ABOUT = vf.createURI("http://example.org/about"),
             ARTHUR = vf.createURI("http://example.org/Arthur");
     protected static final BNode
-            PERSON = vf.createBNode("person");
+            PERSON = vf.createBNode("person"),
+            P1 = vf.createBNode("p1");
 
     protected interface FOAF {
         static final String NAMESPACE = "http://xmlns.com/foaf/0.1/";
@@ -50,6 +51,8 @@ public abstract class RDFJSONTestBase extends TestCase {
         }
 
         public void handleStatement(Statement statement) throws RDFHandlerException {
+            //System.out.println("received: " + statement);
+            //System.out.println("\t" + statement.getSubject().getClass());
             graph.add(statement);
         }
 

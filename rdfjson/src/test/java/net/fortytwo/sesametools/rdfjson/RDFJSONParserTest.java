@@ -4,10 +4,10 @@ import org.openrdf.model.Graph;
 import org.openrdf.model.Statement;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.XMLSchema;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,14 +24,18 @@ public class RDFJSONParserTest extends RDFJSONTestBase {
         g = parseToGraph("example0.json");
         assertEquals(12, g.size());
 
-        for (Statement st : g) {
-            System.out.println(st);
-        }
+        //for (Statement st : g) {
+        //    System.out.println(st);
+        //}
 
-        assertExpected("example1.json",
+        g = parseToGraph("example1.json");
+
+        assertExpected(g,
                 vf.createStatement(ARTHUR, RDF.TYPE, FOAF.PERSON),
                 vf.createStatement(ARTHUR, RDF.TYPE, vf.createURI(OWL.NAMESPACE + "Thing")),
-                vf.createStatement(ARTHUR, FOAF.NAME, vf.createLiteral("Arthur Dent", "en")));
+                vf.createStatement(ARTHUR, FOAF.NAME, vf.createLiteral("Arthur Dent", "en")),
+                vf.createStatement(ARTHUR, FOAF.KNOWS, P1),
+                vf.createStatement(P1, FOAF.NAME, vf.createLiteral("Ford Prefect", XMLSchema.STRING)));
     }
 
     protected Graph parseToGraph(final String fileName) throws Exception {
@@ -49,17 +53,16 @@ public class RDFJSONParserTest extends RDFJSONTestBase {
         return c.getGraph();
     }
 
-    protected void assertExpected(final String fileName,
+    protected void assertExpected(final Graph graph,
                                   final Statement... expectedStatements) throws Exception {
-        Collection<Statement> results = parseToGraph(fileName);
         Set<Statement> expected = new HashSet<Statement>();
         expected.addAll(Arrays.asList(expectedStatements));
         for (Statement t : expected) {
-            if (!results.contains(t)) {
+            if (!graph.contains(t)) {
                 fail("expected statement not found: " + t);
             }
         }
-        for (Statement t : results) {
+        for (Statement t : graph) {
             if (!expected.contains(t)) {
                 fail("unexpected statement found: " + t);
             }

@@ -17,6 +17,19 @@
                 "type" : "literal",
                 "lang" : "en"
             }
+        ],
+        "http://xmlns.com/foaf/0.1/knows" : [
+            {
+                "value": "_:p1",
+                "type" : "bnode"
+            }
         ]
+    },
+    "_:p1" : {
+        "http://xmlns.com/foaf/0.1/name" : [{
+            "value" : "Ford Prefect",
+            "type": "literal",
+            "datatype" : "http://www.w3.org/2001/XMLSchema#string"
+        }]
     }
 }

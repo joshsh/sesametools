@@ -51,11 +51,9 @@ public class RDFJSON {
 			while (subjects.hasNext()) {
 				String subjStr = subjects.next();
 				Resource subject = null;
-				try {
-					subject = vf.createURI(subjStr);
-				} catch (IllegalArgumentException iae) {
-					subject = vf.createBNode(subjStr);
-				}
+                subject =  subjStr.startsWith("_:")
+                    ? vf.createBNode(subjStr.substring(2))
+                    : vf.createURI(subjStr);
 				JSONObject pObj = input.getJSONObject(subjStr);
 				Iterator<String> predicates = pObj.keys();
 				while (predicates.hasNext()) {
@@ -85,12 +83,12 @@ public class RDFJSON {
 							if (lang != null) {
 								object = vf.createLiteral(value, lang);
 							} else if (datatype != null) {
-								object = vf.createLiteral(value, datatype);
+								object = vf.createLiteral(value, vf.createURI(datatype));
 							} else {
 								object = vf.createLiteral(value);
 							}
 						} else if ("bnode".equals(type)) {
-							object = vf.createBNode(value);
+							object = vf.createBNode(value.substring(2));
 						} else if ("uri".equals(type)) {
 							object = vf.createURI(value);
 						}

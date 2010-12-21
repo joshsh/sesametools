@@ -18,20 +18,6 @@ import java.io.InputStream;
  */
 public class RDFJSONWriterTest extends RDFJSONTestBase {
     public void testAll() throws Exception {
-        RDFJSONParser p = new RDFJSONParser();
-        //RDFCollector c = new RDFCollector();
-        //p.setRDFHandler(c);
-        RDFWriter w = new RDFJSONWriter(System.out);
-        p.setRDFHandler(w);
-
-        String[] fileNames = new String[]{"example1.json", "example0.json"};
-        for (String file : fileNames) {
-            p.parse(RDFJSONTestBase.class.getResourceAsStream(file), BASE_URI);
-
-            //w.startRDF();
-            //w.endRDF();
-        }
-
         JSONObject j;
         JSONArray values;
 
@@ -43,9 +29,12 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
         assertEquals("uri", values.getJSONObject(0).getString("type"));
         assertEquals(OWL.NAMESPACE + "Thing", values.getJSONObject(1).getString("value"));
         assertEquals("uri", values.getJSONObject(1).getString("type"));
+        values = a.getJSONArray(FOAF.KNOWS.toString());
+        assertEquals(1, values.length());
+        JSONObject f = values.getJSONObject(0);
+        assertEquals("bnode", f.getString("type"));
 
-        j = parseAndWrite("example0.json");
-        
+        //j = parseAndWrite("example0.json");
     }
 
     private JSONObject parseAndWrite(final String fileName) throws Exception {
