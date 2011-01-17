@@ -10,12 +10,6 @@
     <name>RDF/JSON utils</name>
     <description>Writer and parser for the RDF/JSON format</description>
 
-    <parent>
-        <groupId>net.fortytwo.sesametools</groupId>
-        <artifactId>sesametools</artifactId>
-        <version>1.0</version>
-    </parent>
-
     <repositories>
         <repository>
             <id>fortytwo</id>

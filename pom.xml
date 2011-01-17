@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>sesametools</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>pom</packaging>
     <name>SesameTools</name>
     <description>Miscellaneous utilities for use with OpenRDF Sesame</description>
@@ -18,7 +18,7 @@
         <module>decompose</module>
         <module>deduplication</module>
         <module>readonly</module>
-	<module>rdfjson</module>
+        <module>rdfjson</module>
         <module>rdftransaction</module>
         <module>replay</module>
         <module>reposail</module>
@@ -28,5 +28,38 @@
     <build>
         <directory>${basedir}/target</directory>
     </build>
+
+    <!-- Note: plugin versions are the most recent (in repo1.maven.org) as of 2008.12.12 -->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <!--<configLocation>${basedir}/src/site/checkstyle.xml</configLocation>-->
+                    <!--<aggregate>true</aggregate>-->
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.1</version>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>

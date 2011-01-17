@@ -5,16 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>deduplication</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
     <name>DeduplicationSail</name>
     <description>A Sail implementation which avoids duplicate statements</description>
-
-    <parent>
-        <groupId>net.fortytwo.sesametools</groupId>
-        <artifactId>sesametools</artifactId>
-        <version>1.0</version>
-    </parent>
 
     <repositories>
         <repository>
@@ -33,12 +27,12 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>common</artifactId>
-            <version>1.0</version>
+            <version>1.1</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-sail-api</artifactId>
-            <version>2.2.4</version>
+            <version>2.3.2</version>
             <type>jar</type>
         </dependency>
 
@@ -46,7 +40,7 @@
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-sail-memory</artifactId>
-            <version>2.2.4</version>
+            <version>2.3.2</version>
             <type>jar</type>
             <scope>test</scope>
         </dependency>
@@ -60,13 +54,13 @@
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-trig</artifactId>
-            <version>2.2.4</version>
+            <version>2.3.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-repository-sail</artifactId>
-            <version>2.2.4</version>
+            <version>2.3.2</version>
             <type>jar</type>
             <scope>test</scope>
         </dependency>
@@ -76,8 +70,6 @@
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
         <directory>target</directory>
-        <outputDirectory>target/classes</outputDirectory>
-        <testOutputDirectory>target/test-classes</testOutputDirectory>
         <finalName>${artifactId}-${version}</finalName>
         <resources>
             <resource>
