@@ -22,6 +22,7 @@
         <module>rdftransaction</module>
         <module>replay</module>
         <module>reposail</module>
+	<module>sesamize</module>
         <module>writeonly</module>
     </modules>
 
