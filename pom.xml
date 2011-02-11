@@ -17,6 +17,7 @@
         <module>debug</module>
         <module>decompose</module>
         <module>deduplication</module>
+	<module>nquads</module>
         <module>readonly</module>
         <module>rdfjson</module>
         <module>rdftransaction</module>

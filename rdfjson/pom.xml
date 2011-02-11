@@ -7,7 +7,7 @@
     <artifactId>rdfjson</artifactId>
     <version>0.1</version>
     <packaging>jar</packaging>
-    <name>RDF/JSON utils</name>
+    <name>RDF/JSON utilities</name>
     <description>Writer and parser for the RDF/JSON format</description>
 
     <repositories>
