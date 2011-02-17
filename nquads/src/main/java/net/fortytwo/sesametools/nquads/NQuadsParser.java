@@ -2,19 +2,10 @@ package net.fortytwo.sesametools.nquads;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.repository.util.RDFInserter;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.nativerdf.NativeStore;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 public class NQuadsParser extends ModifiedNTriplesParser {
     protected Resource context;
 
+    /*
     // FIXME: delete me
     public static void main(final String[] args) throws Exception {
         String baseURI = "http://example.org/bogusBaseURI/";
@@ -63,6 +55,7 @@ public class NQuadsParser extends ModifiedNTriplesParser {
             sail.shutDown();
         }
     }
+    */
 
     @Override
     public RDFFormat getRDFFormat() {
