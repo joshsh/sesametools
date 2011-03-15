@@ -1,0 +1,21 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix p: <http://example.org/person/>.
+@prefix g: <http://example.org/graph/>.
+
+{
+    p:arthur a foaf:Person;
+    	rdfs:comment "he's a jerk".
+}
+
+g:demoGraph
+{
+	p:ford a foaf:Person;
+		foaf:knows p:arthur, p:zaphod;
+		rdfs:comment "he really knows where his towel is".
+		
+	p:zaphod a foaf:Person;
+		foaf:knows p:ford;
+		rdfs:comment "so cool you could keep a side of meat in him for a month".
+}

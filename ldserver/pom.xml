@@ -48,7 +48,7 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>rdfjson</artifactId>
-            <version>1.3</version>
+            <version>1.1</version>
         </dependency>
 
         <!-- Sesame -->
