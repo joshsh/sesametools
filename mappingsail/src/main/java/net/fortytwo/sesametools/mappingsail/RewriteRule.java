@@ -7,6 +7,6 @@ import org.openrdf.model.URI;
  * Date: Aug 11, 2009
  * Time: 3:35:10 PM
  */
-public interface URIRewriter {
+public interface RewriteRule {
     URI rewrite(URI original);
 }

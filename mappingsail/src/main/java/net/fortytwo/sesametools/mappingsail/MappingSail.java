@@ -6,6 +6,9 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.helpers.SailWrapper;
 
 /**
+ * A Sail which maps between the internal URI space of a lower-level data store, and an externally visible URI space
+ * (for example, published Linked Data).
+ *
  * Author: josh
  * Date: Aug 11, 2009
  * Time: 3:30:26 PM
@@ -13,6 +16,10 @@ import org.openrdf.sail.helpers.SailWrapper;
 public class MappingSail extends SailWrapper {
     private final MappingSchema schema;
 
+    /**
+     * @param baseSail the internal data store
+     * @param schema a set of rules for URI rewriting
+     */
     public MappingSail(final Sail baseSail,
                        final MappingSchema schema) {
         this.setBaseSail(baseSail);

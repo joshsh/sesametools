@@ -15,7 +15,7 @@ import org.openrdf.sail.helpers.SailConnectionWrapper;
  * Date: Aug 11, 2009
  * Time: 3:32:06 PM
  */
-public class MappingSailConnection extends SailConnectionWrapper {
+class MappingSailConnection extends SailConnectionWrapper {
     private final MappingSchema rewriters;
     private final ValueFactory valueFactory;
 
@@ -34,15 +34,15 @@ public class MappingSailConnection extends SailConnectionWrapper {
                                                                                 final boolean includeInferred,
                                                                                 Resource... contexts) throws SailException {
         if (subj instanceof URI) {
-            subj = rewriters.getRewriter(MappingSchema.PartOfSpeech.SUBJECT, MappingSchema.Action.TO_STORE).rewrite((URI) subj);
+            subj = rewriters.getRewriter(MappingSchema.PartOfSpeech.SUBJECT, MappingSchema.Direction.INBOUND).rewrite((URI) subj);
         }
-        pred = rewriters.getRewriter(MappingSchema.PartOfSpeech.PREDICATE, MappingSchema.Action.TO_STORE).rewrite(pred);
+        pred = rewriters.getRewriter(MappingSchema.PartOfSpeech.PREDICATE, MappingSchema.Direction.INBOUND).rewrite(pred);
         if (obj instanceof URI) {
-            obj = rewriters.getRewriter(MappingSchema.PartOfSpeech.OBJECT, MappingSchema.Action.TO_STORE).rewrite((URI) obj);
+            obj = rewriters.getRewriter(MappingSchema.PartOfSpeech.OBJECT, MappingSchema.Direction.INBOUND).rewrite((URI) obj);
         }
         for (int i = 0; i < contexts.length; i++) {
             if (contexts[i] instanceof URI) {
-                contexts[i] = rewriters.getRewriter(MappingSchema.PartOfSpeech.GRAPH, MappingSchema.Action.TO_STORE).rewrite((URI) contexts[i]);
+                contexts[i] = rewriters.getRewriter(MappingSchema.PartOfSpeech.CONTEXT, MappingSchema.Direction.INBOUND).rewrite((URI) contexts[i]);
             }
         }
 
@@ -74,20 +74,20 @@ public class MappingSailConnection extends SailConnectionWrapper {
 
             if (subject instanceof URI) {
                 subject = rewriters.getRewriter(
-                        MappingSchema.PartOfSpeech.SUBJECT, MappingSchema.Action.FROM_STORE)
+                        MappingSchema.PartOfSpeech.SUBJECT, MappingSchema.Direction.OUTBOUND)
                         .rewrite((URI) subject);
             }
             predicate = rewriters.getRewriter(
-                    MappingSchema.PartOfSpeech.PREDICATE, MappingSchema.Action.FROM_STORE)
+                    MappingSchema.PartOfSpeech.PREDICATE, MappingSchema.Direction.OUTBOUND)
                     .rewrite(predicate);
             if (object instanceof URI) {
                 object = rewriters.getRewriter(
-                        MappingSchema.PartOfSpeech.OBJECT, MappingSchema.Action.FROM_STORE)
+                        MappingSchema.PartOfSpeech.OBJECT, MappingSchema.Direction.OUTBOUND)
                         .rewrite((URI) object);
             }
             if (null != context && context instanceof URI) {
                 context = rewriters.getRewriter(
-                        MappingSchema.PartOfSpeech.GRAPH, MappingSchema.Action.FROM_STORE)
+                        MappingSchema.PartOfSpeech.CONTEXT, MappingSchema.Direction.OUTBOUND)
                         .rewrite((URI) context);
             }
 
