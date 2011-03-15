@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>rdfjson</artifactId>
-    <version>0.1</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
     <name>RDF/JSON utilities</name>
     <description>Writer and parser for the RDF/JSON format</description>
@@ -59,8 +59,6 @@
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
         <directory>target</directory>
-        <outputDirectory>target/classes</outputDirectory>
-        <testOutputDirectory>target/test-classes</testOutputDirectory>
         <finalName>${artifactId}-${version}</finalName>
         <resources>
             <resource>

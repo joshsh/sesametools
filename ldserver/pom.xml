@@ -40,6 +40,16 @@
             <artifactId>mappingsail</artifactId>
             <version>1.1</version>
         </dependency>
+        <dependency>
+            <groupId>net.fortytwo.sesametools</groupId>
+            <artifactId>nquads</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.fortytwo.sesametools</groupId>
+            <artifactId>rdfjson</artifactId>
+            <version>1.3</version>
+        </dependency>
 
         <!-- Sesame -->
         <dependency>
@@ -50,12 +60,55 @@
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-queryresultio-sparqlxml</artifactId>
-            <version>2.2.4</version>
+            <version>2.3.2</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-queryresultio-sparqljson</artifactId>
-            <version>2.2.4</version>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-rio-ntriples</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-rio-n3</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-rio-turtle</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-rio-trig</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-rio-trix</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-rio-rdfxml</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-sail-memory</artifactId>
+            <version>2.3.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-repository-sail</artifactId>
+            <version>2.3.2</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- Restlet -->
