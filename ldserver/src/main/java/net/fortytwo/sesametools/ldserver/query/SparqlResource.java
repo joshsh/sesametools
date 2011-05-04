@@ -37,6 +37,7 @@ public class SparqlResource extends QueryResource {
             if (null == query) {
                 throw new IllegalArgumentException("no query argument specified");
             }
+            //System.out.println("query = " + query);
 
             String output = arguments.get("output");
 
