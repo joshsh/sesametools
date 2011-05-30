@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>sesametools</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <packaging>pom</packaging>
     <name>Sesame Tools</name>
     <description>Miscellaneous utilities for use with OpenRDF Sesame</description>
@@ -17,16 +17,16 @@
         <module>debug</module>
         <module>decompose</module>
         <module>deduplication</module>
-	<module>ldserver</module>
-	<module>lubm</module>
-	<module>mappingsail</module>
-	<module>nquads</module>
+        <module>ldserver</module>
+        <module>lubm</module>
+        <module>mappingsail</module>
+        <module>nquads</module>
         <module>readonly</module>
         <module>rdfjson</module>
         <module>rdftransaction</module>
         <module>replay</module>
         <module>reposail</module>
-	<module>sesamize</module>
+        <module>sesamize</module>
         <module>writeonly</module>
     </modules>
 

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>rdfjson</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
     <name>RDF/JSON utilities</name>
     <description>Writer and parser for the RDF/JSON format</description>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>common</artifactId>
-            <version>1.0</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-api</artifactId>
-            <version>2.3.2</version>
+            <version>2.4.0</version>
         </dependency>
         <!--<dependency>
             <groupId>org.codehaus.jackson</groupId>

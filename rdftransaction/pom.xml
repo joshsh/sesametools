@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>rdftransaction</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
     <name>RDFTransactionSail</name>
     <description>A write-only Sail which generates RDF transactions instead of performing per-call updates</description>
@@ -27,18 +27,18 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>common</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-sail-api</artifactId>
-            <version>2.3.2</version>
+            <version>2.4.0</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-http-protocol</artifactId>
-            <version>2.3.2</version>
+            <version>2.4.0</version>
         </dependency>
 
         <!-- test dependencies -->

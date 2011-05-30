@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>common</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
     <name>Sesametools common utilities</name>
     <description>Common utilities for Sesametools</description>
@@ -33,18 +33,18 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.5.2</version>
+            <version>1.6.1</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-sail-api</artifactId>
-            <version>2.3.2</version>
+            <version>2.4.0</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-queryalgebra-evaluation</artifactId>
-            <version>2.3.2</version>
+            <version>2.4.0</version>
             <type>jar</type>
         </dependency>
 

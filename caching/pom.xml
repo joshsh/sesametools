@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>caching</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
     <name>CachingSail</name>
     <description>An in-memory cache for Sail data</description>
@@ -27,12 +27,12 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>common</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-sail-memory</artifactId>
-            <version>2.3.2</version>
+            <version>2.4.0</version>
             <type>jar</type>
         </dependency>
 
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>debug</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -53,13 +53,13 @@
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-trig</artifactId>
-            <version>2.3.2</version>
+            <version>2.4.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-repository-sail</artifactId>
-            <version>2.3.2</version>
+            <version>2.4.0</version>
             <type>jar</type>
             <scope>test</scope>
         </dependency>
