@@ -160,6 +160,23 @@ public class NQuadsParser extends ModifiedNTriplesParser {
     protected int parseContext(int c)
             throws IOException, RDFParseException {
         // FIXME: context (in N-Quads) can be a literal
-        return parseSubject(c);
+        StringBuilder sb = new StringBuilder(100);
+
+        // subject is either an uriref (<foo://bar>) or a nodeID (_:node1)
+        if (c == '<') {
+            // subject is an uriref
+            c = parseUriRef(c, sb);
+            context = createURI(sb.toString());
+        } else if (c == '_') {
+            // subject is a bNode
+            c = parseNodeID(c, sb);
+            context = createBNode(sb.toString());
+        } else if (c == -1) {
+            throwEOFException();
+        } else {
+            reportFatalError("Expected '<' or '_', found: " + (char) c);
+        }
+
+        return c;
     }
 }

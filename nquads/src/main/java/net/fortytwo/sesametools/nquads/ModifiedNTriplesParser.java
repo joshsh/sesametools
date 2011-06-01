@@ -313,7 +313,7 @@ public class ModifiedNTriplesParser extends RDFParserBase {
         return c;
     }
 
-    private int parseUriRef(int c, StringBuilder uriRef)
+    protected int parseUriRef(int c, StringBuilder uriRef)
             throws IOException, RDFParseException {
         assert c == '<' : "Supplied char should be a '<', is: " + c;
 
@@ -333,7 +333,7 @@ public class ModifiedNTriplesParser extends RDFParserBase {
         return c;
     }
 
-    private int parseNodeID(int c, StringBuilder name)
+    protected int parseNodeID(int c, StringBuilder name)
             throws IOException, RDFParseException {
         assert c == '_' : "Supplied char should be a '_', is: " + c;
 
