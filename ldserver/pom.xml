@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>ldserver</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
     <packaging>jar</packaging>
     <name>LinkedDataServer</name>
     <description>A RESTful web service to publish a Sesame data store as Linked Data</description>
@@ -33,22 +33,22 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>common</artifactId>
-            <version>1.2</version>
+            <version>1.3</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>mappingsail</artifactId>
-            <version>1.2</version>
+            <version>1.3</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>nquads</artifactId>
-            <version>1.2</version>
+            <version>1.3</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>rdfjson</artifactId>
-            <version>1.2</version>
+            <version>1.3</version>
         </dependency>
 
         <!-- Sesame -->
