@@ -1,4 +1,4 @@
-Sesametools is a collection of useful components for use with the "Sesame":http://openrdf.org RDF framework.  It includes:
+SesameTools is a collection of useful components for use with the "Sesame":http://openrdf.org RDF framework.  It includes:
 * *CachingSail* -- an in-memory cache for Sail data
 * *Sesametools common utilities* -- miscellaneous useful classes
 * *ConstrainedSail* -- a Sail implementation which interacts only with given named graphs.  Useful for simple access control.
@@ -17,3 +17,5 @@ Sesametools is a collection of useful components for use with the "Sesame":http:
 * *WriteOnlySail* -- a write-only Sail implementation
 
 See also the "Sesametools API":http://fortytwo.net/projects/sesametools/api/.
+
+*Credits*: SesameTools is written and maintained by "Joshua Shinavier":https://github.com/joshsh.  Patches have been contributed by "fkleedorfer":https://github.com/fkleedorfer and "Peter Ansell":https://github.com/ansell.  The RDF/JSON parser and writer contain code by "Hannes Ebner":http://www.csc.kth.se/~hebner/.
