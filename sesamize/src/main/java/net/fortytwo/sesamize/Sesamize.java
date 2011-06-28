@@ -2,6 +2,9 @@ package net.fortytwo.sesamize;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import net.fortytwo.sesametools.rdfjson.RDFJSONFormat;
+import net.fortytwo.sesametools.rdfjson.RDFJSONParser;
+import net.fortytwo.sesametools.rdfjson.RDFJSONWriter;
 import net.fortytwo.sesamize.nquads.NQuadsFormat;
 import net.fortytwo.sesamize.nquads.NQuadsParser;
 import net.fortytwo.sesamize.nquads.NQuadsWriter;
@@ -98,9 +101,9 @@ public class Sesamize {
         rdfFormatByName.put("ntriple", RDFFormat.NTRIPLES);
         rdfFormatByName.put("nquad", NQuadsFormat.NQUADS);
         rdfFormatByName.put("nquads", NQuadsFormat.NQUADS);
-        rdfFormatByName.put("rdfjson", RDFJ);
-        rdfFormatByName.put("rdf/json", NQuadsFormat.NQUADS);
-        rdfFormatByName.put("rdf-json", NQuadsFormat.NQUADS);
+        rdfFormatByName.put("rdfjson", RDFJSONFormat.RDFJSON);
+        rdfFormatByName.put("rdf/json", RDFJSONFormat.RDFJSON);
+        rdfFormatByName.put("rdf-json", RDFJSONFormat.RDFJSON);
     }
 
     public static RDFFormat findRDFFormat(final String name) {
@@ -471,12 +474,16 @@ public class Sesamize {
                                              final OutputStream out) {
         return NQuadsFormat.NQUADS == format
                 ? new NQuadsWriter(out)
+                : RDFJSONFormat.RDFJSON == format
+                ? new RDFJSONWriter(out)
                 : Rio.createWriter(format, out);
     }
 
     private static RDFParser createParser(final RDFFormat format) {
         return NQuadsFormat.NQUADS == format
                 ? new NQuadsParser()
+                : RDFJSONFormat.RDFJSON == format
+                ? new RDFJSONParser()
                 : Rio.createParser(format);
     }
 
