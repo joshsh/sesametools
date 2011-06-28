@@ -98,6 +98,9 @@ public class Sesamize {
         rdfFormatByName.put("ntriple", RDFFormat.NTRIPLES);
         rdfFormatByName.put("nquad", NQuadsFormat.NQUADS);
         rdfFormatByName.put("nquads", NQuadsFormat.NQUADS);
+        rdfFormatByName.put("rdfjson", RDFJ);
+        rdfFormatByName.put("rdf/json", NQuadsFormat.NQUADS);
+        rdfFormatByName.put("rdf-json", NQuadsFormat.NQUADS);
     }
 
     public static RDFFormat findRDFFormat(final String name) {

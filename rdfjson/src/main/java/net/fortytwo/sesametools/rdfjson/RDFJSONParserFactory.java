@@ -16,7 +16,7 @@ public class RDFJSONParserFactory implements RDFParserFactory {
     }
 
     public RDFFormat getRDFFormat() {
-        return RDFJSONWriter.RDFJSON_FORMAT;
+        return RDFJSONFormat.RDFJSON;
     }
 
 }

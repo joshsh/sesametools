@@ -40,7 +40,7 @@ public class RDFJSONParser implements RDFParser {
     private DatatypeHandling datatypeHandling;
 
     public RDFFormat getRDFFormat() {
-        return RDFJSONWriter.RDFJSON_FORMAT;
+        return RDFJSONFormat.RDFJSON;
     }
 
     public void setValueFactory(final ValueFactory valueFactory) {

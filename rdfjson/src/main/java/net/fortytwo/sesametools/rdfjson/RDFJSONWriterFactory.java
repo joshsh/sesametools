@@ -15,7 +15,7 @@ import org.openrdf.rio.RDFWriterFactory;
 public class RDFJSONWriterFactory implements RDFWriterFactory {
 
     public RDFFormat getRDFFormat() {
-        return RDFJSONWriter.RDFJSON_FORMAT;
+        return RDFJSONFormat.RDFJSON;
     }
 
     public RDFWriter getWriter(OutputStream out) {

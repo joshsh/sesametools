@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
 
 /**
  * RDFWriter implementation for the proposed RDF/JSON format (see http://n2.talis.com/wiki/RDF_JSON_Specification)
@@ -23,13 +22,6 @@ import java.nio.charset.Charset;
  * @author Joshua Shinavier (http://fortytwo.net).  Builds on code by Hannes Ebner
  */
 public class RDFJSONWriter implements RDFWriter {
-    public static final RDFFormat RDFJSON_FORMAT = new RDFFormat(
-            "RDF/JSON",
-            "application/json",  // TODO: has a more specific MIME type been suggested for RDF/JSON?
-            Charset.forName("UTF-8"),  // See section 3 of the JSON RFC: http://www.ietf.org/rfc/rfc4627.txt
-            "json",
-            false,  // namespaces are not supported
-            true);  // contexts are supported
 
     private final Writer writer;
     private Graph graph;
@@ -43,7 +35,7 @@ public class RDFJSONWriter implements RDFWriter {
     }
 
     public RDFFormat getRDFFormat() {
-        return RDFJSON_FORMAT;
+        return RDFJSONFormat.RDFJSON;
     }
 
     public void startRDF() throws RDFHandlerException {
