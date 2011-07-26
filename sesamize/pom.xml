@@ -35,72 +35,72 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>nquads</artifactId>
-            <version>1.3</version>
+            <version>${sesametools.version}</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>rdfjson</artifactId>
-            <version>1.3</version>
+            <version>${sesametools.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-repository-sail</artifactId>
-            <version>2.4.2</version>
+            <version>${sesame.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-sail-memory</artifactId>
-            <version>2.4.2</version>
+            <version>${sesame.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-sail-nativerdf</artifactId>
-            <version>2.4.2</version>
+            <version>${sesame.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-queryparser-sparql</artifactId>
-            <version>2.4.2</version>
+            <version>${sesame.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-queryresultio-sparqlxml</artifactId>
-            <version>2.4.2</version>
+            <version>${sesame.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-queryresultio-sparqljson</artifactId>
-            <version>2.4.2</version>
+            <version>${sesame.version}</version>
         </dependency>
         <!--<dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-queryresultio-text</artifactId>
-            <version>2.4.2</version>
+            <version>${sesame.version}</version>
         </dependency> -->
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-ntriples</artifactId>
-            <version>2.4.2</version>
+            <version>${sesame.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-trig</artifactId>
-            <version>2.4.2</version>
+            <version>${sesame.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-trix</artifactId>
-            <version>2.4.2</version>
+            <version>${sesame.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-rdfxml</artifactId>
-            <version>2.4.2</version>
+            <version>${sesame.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-turtle</artifactId>
-            <version>2.4.2</version>
+            <version>${sesame.version}</version>
         </dependency>
         <dependency>
             <groupId>urbanophile</groupId>

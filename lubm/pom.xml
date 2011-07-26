@@ -34,20 +34,20 @@
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-repository-sail</artifactId>
-            <version>2.4.0</version>
+            <version>${sesame.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-queryparser-sparql</artifactId>
-            <version>2.4.0</version>
+            <version>${sesame.version}</version>
             <type>jar</type>
         </dependency>
         <!-- temporary -->
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-sail-memory</artifactId>
-            <version>2.4.0</version>
+            <version>${sesame.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
