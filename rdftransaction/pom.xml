@@ -6,14 +6,14 @@
 	<parent>
 		<groupId>net.fortytwo.sesametools</groupId>
 		<artifactId>sesametools</artifactId>
-		<version>1.3</version>
+		<version>1.4-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>rdftransaction</artifactId>
-    <version>1.3</version>
+    <version>1.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>RDFTransactionSail</name>
     <description>A write-only Sail which generates RDF transactions instead of performing per-call updates</description>
