@@ -18,7 +18,6 @@
         <module>decompose</module>
         <module>deduplication</module>
         <module>ldserver</module>
-        <module>lubm</module>
         <module>mappingsail</module>
         <module>nquads</module>
         <module>readonly</module>
