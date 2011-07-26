@@ -1,4 +1,4 @@
-package net.fortytwo.sesamize;
+package net.fortytwo.sesametools.sesamize;
 
 import org.openrdf.query.Binding;
 import org.openrdf.query.BindingSet;

@@ -1,4 +1,4 @@
-package net.fortytwo.sesamize.nquads;
+package net.fortytwo.sesametools.sesamize.nquads;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
