@@ -89,6 +89,11 @@ public class RDFJSONParser implements RDFParser {
 
         String s = toString(reader);
         Graph g = RDFJSON.rdfJsonToGraph(s);
+        
+        if(g == null) {
+        	throw new RDFParseException("Could not parse JSON RDF Graph");
+        }
+        
         rdfHandler.startRDF();
         for (Statement statement : g) {
             rdfHandler.handleStatement(statement);
