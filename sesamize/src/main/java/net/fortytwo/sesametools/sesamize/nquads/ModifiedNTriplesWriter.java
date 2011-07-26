@@ -3,7 +3,7 @@
  *
  * Licensed under the Aduna BSD-style license.
  */
-package net.fortytwo.sesamize.nquads;
+package net.fortytwo.sesametools.sesamize.nquads;
 
 import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
