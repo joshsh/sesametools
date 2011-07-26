@@ -1,6 +1,6 @@
 package net.fortytwo.sesametools.sesamize;
 
-import net.fortytwo.sesametools.sesamize.nquads.NQuadsFormat;
+import net.fortytwo.sesametools.nquads.NQuadsFormat;
 import org.openrdf.rio.RDFFormat;
 
 import java.io.File;
