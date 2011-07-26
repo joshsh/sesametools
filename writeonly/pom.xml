@@ -10,6 +10,11 @@
     <name>WriteOnlySail</name>
     <description>A write-only Sail implementation</description>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
     <repositories>
         <repository>
             <id>fortytwo</id>
