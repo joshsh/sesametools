@@ -5,7 +5,7 @@
 
 	<parent>
 		<groupId>net.fortytwo.sesametools</groupId>
-		<artifactId>sesametools</artifactId>
+        <artifactId>sesametools-all</artifactId>
 		<version>1.4-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
