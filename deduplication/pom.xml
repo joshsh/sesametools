@@ -13,7 +13,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>deduplication</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>${sesametools.version}</version>
     <packaging>jar</packaging>
     <name>DeduplicationSail</name>
     <description>A Sail implementation which avoids duplicate statements</description>
