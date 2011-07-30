@@ -13,7 +13,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>replay</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>${sesametools.version}</version>
     <packaging>jar</packaging>
     <name>ReplaySail</name>
     <description>A pair of Sail implementations which allow Sail operations to be first recorded to a log file, then reproduced from the log file
