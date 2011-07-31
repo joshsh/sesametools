@@ -39,11 +39,11 @@ public class RDFJSONWriter implements RDFWriter {
     }
 
     public void startRDF() throws RDFHandlerException {
-        graph = new GraphImpl();
+        graph = new OrderedGraphImpl();
     }
 
     public void endRDF() throws RDFHandlerException {
-        String s = RDFJSON.graphToRdfJson(graph);
+        String s = RDFJSON.graphToRdfJsonPreordered(graph);
         //System.out.println("written: " + s);
         try {
             writer.write(s);
