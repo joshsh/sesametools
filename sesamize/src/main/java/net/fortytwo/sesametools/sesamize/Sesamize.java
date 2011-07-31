@@ -1,13 +1,13 @@
-package net.fortytwo.sesamize;
+package net.fortytwo.sesametools.sesamize;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import net.fortytwo.sesametools.rdfjson.RDFJSONFormat;
 import net.fortytwo.sesametools.rdfjson.RDFJSONParser;
 import net.fortytwo.sesametools.rdfjson.RDFJSONWriter;
-import net.fortytwo.sesamize.nquads.NQuadsFormat;
-import net.fortytwo.sesamize.nquads.NQuadsParser;
-import net.fortytwo.sesamize.nquads.NQuadsWriter;
+import net.fortytwo.sesametools.nquads.NQuadsFormat;
+import net.fortytwo.sesametools.nquads.NQuadsParser;
+import net.fortytwo.sesametools.nquads.NQuadsWriter;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;

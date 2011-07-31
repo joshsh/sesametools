@@ -16,7 +16,7 @@ if [ "$JAVA_OPTIONS" = "" ] ; then
 fi
 
 # Launch the application
-$JAVA $JAVA_OPTIONS -cp $JAR net.fortytwo.sesamize.Sesamize $*
+$JAVA $JAVA_OPTIONS -cp $JAR net.fortytwo.sesametools.sesamize.Sesamize $*
 
 # Return the program's exit code
 exit $?

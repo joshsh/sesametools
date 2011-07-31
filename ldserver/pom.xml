@@ -3,13 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<parent>
-		<groupId>net.fortytwo.sesametools</groupId>
-		<artifactId>sesametools</artifactId>
-		<version>1.4-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
-
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>ldserver</artifactId>
@@ -17,6 +10,13 @@
     <packaging>jar</packaging>
     <name>LinkedDataServer</name>
     <description>A RESTful web service to publish a Sesame data store as Linked Data</description>
+
+	<parent>
+		<groupId>net.fortytwo.sesametools</groupId>
+        <artifactId>sesametools-all</artifactId>
+		<version>1.4-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 
     <repositories>
         <repository>
