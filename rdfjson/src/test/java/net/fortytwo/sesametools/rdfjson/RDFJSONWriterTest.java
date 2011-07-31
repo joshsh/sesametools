@@ -29,7 +29,7 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
         JSONArray contexts;
 
         j = parseAndWrite("example1.json");
-        System.out.println("j.toString="+j.toString(2));
+//        System.out.println("j.toString="+j.toString(2));
         JSONObject a = j.getJSONObject(ARTHUR.toString());
         values = a.getJSONArray(RDF.TYPE.toString());
 //        System.out.println(values.get(0));

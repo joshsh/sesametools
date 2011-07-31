@@ -1,6 +1,7 @@
 package se.kmr.scam.rest.util;
 
 import net.fortytwo.sesametools.ValueComparator;
+import net.fortytwo.sesametools.rdfjson.OrderedGraphImpl;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -49,7 +50,7 @@ public class RDFJSON {
      * @return A Sesame Graph if successful, otherwise null.
      */
     public static Graph rdfJsonToGraph(String json) {
-        Graph result = new GraphImpl();
+        Graph result = new OrderedGraphImpl();
         ValueFactory vf = result.getValueFactory();
 
         try {

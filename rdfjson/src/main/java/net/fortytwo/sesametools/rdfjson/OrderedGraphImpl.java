@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.AbstractCollection;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.TreeSet;
 
@@ -49,7 +51,6 @@ public class OrderedGraphImpl extends AbstractCollection<Statement> implements G
 	{
 		super();
 		statements = new TreeSet<Statement>(new StatementComparator());
-//		statements = new ArrayList<Statement>();
 		setValueFactory(valueFactory);
 	}
 
