@@ -206,7 +206,7 @@ public class RDFJSON {
      */
     public static String graphToRdfJsonPreordered(Graph graph) 
     {
-    	int outputCounter = 0;
+//    	int outputCounter = 0;
         JSONObject result = new JSONObject();
         try 
         {
@@ -226,72 +226,107 @@ public class RDFJSON {
 				// Dump everything if the subject changes after the first iteration
 				if(lastSubject != null && !nextSubject.equals(lastSubject))
         		{
+	    			if(lastContext != null)
+	    			{
+	    				contextArray.add(lastContext);
+	    			}
     				addObjectToArray(lastObject, objectArray, contextArray);
                     predicateArray.put(lastPredicate, objectArray);
                     result.put(lastSubject, predicateArray);
                     
-                    if(outputCounter < 3)
-                    {
-                    	outputCounter++;
-                    	System.out.println("lastSubject="+lastSubject);
-                    }
+//                    if(outputCounter < 3)
+//                    {
+//                    	outputCounter++;
+//                    	System.out.println("lastSubject="+lastSubject);
+//                    }
                     predicateArray = new JSONObject();
         			objectArray = new JSONArray();
         			contextArray = new JSONArray();
+        			
+        			lastSubject = nextSubject;
+        			lastPredicate = nextStatement.getPredicate();
+        			lastObject = nextStatement.getObject();
+        			lastContext = nextStatement.getContext();
+        			
         		}
+				else
+				{
+	
+					lastSubject = nextSubject;
+					
+					// Add the lastContext to contextArray
+					// Add the lastObject to objectArray,
+					// Add objectArray to the predicateArray using the lastPredicate as reference
+					if(lastPredicate != null && !nextStatement.getPredicate().equals(lastPredicate))
+	        		{
+//	                    if(outputCounter < 3)
+//	                    {
+//	                    	System.out.println("lastPredicate="+lastPredicate);
+//	                    }
+		    			if(lastContext != null)
+		    			{
+		    				contextArray.add(lastContext);
+		    			}
+	    				addObjectToArray(lastObject, objectArray, contextArray);
+	                    predicateArray.put(lastPredicate, objectArray);
+	                    
+	                    objectArray = new JSONArray();
+	                    contextArray = new JSONArray();
+	                    
+		    			lastPredicate = nextStatement.getPredicate();
+		    			lastObject = nextStatement.getObject();
+		    			lastContext = nextStatement.getContext();
+	        		}
+					else
+					{
+		    			lastPredicate = nextStatement.getPredicate();
+		    			
+		
+		    			// Add the lastObject to objectArray,
+		    			if(lastObject != null && !nextStatement.getObject().equals(lastObject))
+		    			{
+//		                    if(outputCounter < 3)
+//		                    {
+//		                    	System.out.println("lastObject="+lastObject);
+//		                    }
+		                    
+			    			if(lastContext != null)
+			    			{
+								// Add the lastContext to contextArray
+				    			contextArray.add(lastContext);
+			    			}
+			    			addObjectToArray(lastObject, objectArray, contextArray);
+		
+		                    contextArray = new JSONArray();
 
-				lastSubject = nextSubject;
-				
-				// Add the lastContext to contextArray
-				// Add the lastObject to objectArray,
-				// Add objectArray to the predicateArray using the lastPredicate as reference
-				if(lastPredicate != null && !nextStatement.getPredicate().equals(lastPredicate))
-        		{
-                    if(outputCounter < 3)
-                    {
-                    	System.out.println("lastPredicate="+lastPredicate);
-                    }
-                    contextArray.add(lastContext);
-    				addObjectToArray(lastObject, objectArray, contextArray);
-                    predicateArray.put(lastPredicate, objectArray);
-                    lastContext = null;
-                    lastObject = null;
-                    lastPredicate = null;
-                    objectArray = new JSONArray();
-                    contextArray = new JSONArray();
-        		}
-        		
-    			lastPredicate = nextStatement.getPredicate();
-
-				// Add the lastContext to contextArray
-    			contextArray.add(lastContext);
-
-    			// Add the lastObject to objectArray,
-    			if(lastObject != null && !nextStatement.getObject().equals(lastObject))
-    			{
-                    if(outputCounter < 3)
-                    {
-                    	System.out.println("lastObject="+lastObject);
-                    }
-                    
-    				addObjectToArray(lastObject, objectArray, contextArray);
-
-                    lastContext = null;
-                    lastObject = null;
-                    contextArray = new JSONArray();
-    			}
-    			
-    			lastObject = nextStatement.getObject();
-    			
-    			lastContext = nextStatement.getContext();
-
+			    			lastObject = nextStatement.getObject();
+			    			lastContext = nextStatement.getContext();
+		    			}
+		    			else
+		    			{
+			    			lastObject = nextStatement.getObject();
+			    			
+			    			if(lastContext != null)
+			    			{
+								// Add the lastContext to contextArray if it was not null
+				    			contextArray.add(lastContext);
+			    			}
+			    			
+			    			lastContext = nextStatement.getContext();
+		    			}
+		    			
+					}
+				}
         	}
         	
 
 			// the last subject/predicate/object/context will never get pushed inside the loop above, so push it here if we went into the loop
     		if(graph.size() > 0)
     		{
-    			contextArray.add(lastContext);
+    			if(lastContext != null)
+    			{
+    				contextArray.add(lastContext);
+    			}
     			addObjectToArray(lastObject, objectArray, contextArray);
                 predicateArray.put(lastPredicate, objectArray);
         		result.put(lastSubject.stringValue(), predicateArray);
@@ -338,10 +373,10 @@ public class RDFJSON {
 		    valueObj.put(RDFJSON.STRING_TYPE, RDFJSON.STRING_URI);
 		}
 		
-//		if (contexts.size() > 0) 
-//		{
-//		    valueObj.put(RDFJSON.STRING_GRAPHS, contexts);
-//		}
+		if (contexts.size() > 0) 
+		{
+		    valueObj.put(RDFJSON.STRING_GRAPHS, contexts);
+		}
 		valueArray.add(valueObj);
     }
 
