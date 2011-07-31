@@ -9,7 +9,9 @@ import org.openrdf.model.Statement;
  */
 public class StatementComparator implements Comparator<Statement>
 {
+	public final static int BEFORE = -1;
 	public final static int EQUALS = 0;
+	public final static int AFTER = 1;
 
 	// Uncomment this annotation when move to JRE6 as JRE5 has bug with this annotation => @Override
 	public int compare(Statement first, Statement second)
@@ -25,7 +27,25 @@ public class StatementComparator implements Comparator<Statement>
 			{
 				if(first.getObject().equals(second.getObject()))
 				{
-					return first.getContext().stringValue().compareTo(second.getContext().stringValue());
+					if(first.getContext() == null)
+					{
+						if(second.getContext() == null)
+						{
+							return EQUALS;
+						}
+						else
+						{
+							return BEFORE;
+						}
+					}
+					else if(second.getContext() == null)
+					{
+						return AFTER;
+					}
+					else
+					{
+						return first.getContext().stringValue().compareTo(second.getContext().stringValue());
+					}
 				}
 				else
 				{

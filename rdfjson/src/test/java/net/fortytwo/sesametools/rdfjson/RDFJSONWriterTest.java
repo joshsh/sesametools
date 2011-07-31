@@ -29,7 +29,7 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
         JSONArray contexts;
 
         j = parseAndWrite("example1.json");
-//        System.out.println("j.toString="+j.toString(2));
+        System.out.println("j.toString="+j.toString(2));
         JSONObject a = j.getJSONObject(ARTHUR.toString());
         values = a.getJSONArray(RDF.TYPE.toString());
 //        System.out.println(values.get(0));
@@ -45,7 +45,7 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
         //assertEquals(FOAF.PERSON.toString(), values.getJSONObject(0).getString("value"));
         assertEquals(OWL.NAMESPACE + "Thing", t.getString("value"));
         contexts = t.getJSONArray("graphs");
-        assertEquals(1, contexts.size());
+        assertEquals(2, contexts.size());
 //        System.out.println(contexts.get(0));
 //        System.out.println(contexts.get(1));
         

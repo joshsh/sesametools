@@ -226,7 +226,7 @@ public class RDFJSON {
 				// Dump everything if the subject changes after the first iteration
 				if(lastSubject != null && !nextSubject.equals(lastSubject))
         		{
-	    			if(lastContext != null)
+	    			if(lastContext != null || contextArray.size() == 0)
 	    			{
 	    				contextArray.add(lastContext);
 	    			}
@@ -263,7 +263,7 @@ public class RDFJSON {
 //	                    {
 //	                    	System.out.println("lastPredicate="+lastPredicate);
 //	                    }
-		    			if(lastContext != null)
+		    			if(lastContext != null || contextArray.size() == 0)
 		    			{
 		    				contextArray.add(lastContext);
 		    			}
@@ -290,7 +290,7 @@ public class RDFJSON {
 //		                    	System.out.println("lastObject="+lastObject);
 //		                    }
 		                    
-			    			if(lastContext != null)
+			    			if(lastContext != null || contextArray.size() == 0)
 			    			{
 								// Add the lastContext to contextArray
 				    			contextArray.add(lastContext);
@@ -306,7 +306,7 @@ public class RDFJSON {
 		    			{
 			    			lastObject = nextStatement.getObject();
 			    			
-			    			if(lastContext != null)
+			    			if(lastContext != null || contextArray.size() == 0)
 			    			{
 								// Add the lastContext to contextArray if it was not null
 				    			contextArray.add(lastContext);
@@ -323,7 +323,7 @@ public class RDFJSON {
 			// the last subject/predicate/object/context will never get pushed inside the loop above, so push it here if we went into the loop
     		if(graph.size() > 0)
     		{
-    			if(lastContext != null)
+    			if(lastContext != null || contextArray.size() == 0)
     			{
     				contextArray.add(lastContext);
     			}
@@ -373,9 +373,9 @@ public class RDFJSON {
 		    valueObj.put(RDFJSON.STRING_TYPE, RDFJSON.STRING_URI);
 		}
 		
-		if (contexts.size() > 0) 
+		if (contexts.size() > 0 && !(contexts.size() == 1 && contexts.contains(null)))
 		{
-		    valueObj.put(RDFJSON.STRING_GRAPHS, contexts);
+				valueObj.put(RDFJSON.STRING_GRAPHS, contexts);
 		}
 		valueArray.add(valueObj);
     }
