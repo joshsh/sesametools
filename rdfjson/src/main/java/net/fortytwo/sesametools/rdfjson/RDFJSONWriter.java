@@ -2,7 +2,6 @@ package net.fortytwo.sesametools.rdfjson;
 
 import org.openrdf.model.Graph;
 import org.openrdf.model.Statement;
-import org.openrdf.model.impl.GraphImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;

@@ -1,6 +1,5 @@
 package se.kmr.scam.rest.util;
 
-import net.fortytwo.sesametools.ValueComparator;
 import net.fortytwo.sesametools.rdfjson.OrderedGraphImpl;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
@@ -13,21 +12,17 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.GraphImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * A utility class to help converting Sesame Graphs from and to RDF/JSON.
  *
- * @author Hannes Ebner <hebner@kth.se>, with tweaks by Joshua Shinavier and Peter Ansell
+ * @author Hannes Ebner <hebner@kth.se>, with tweaks by Joshua Shinavier and the ordered implementation by Peter Ansell
  */
 public class RDFJSON {
 
@@ -227,6 +222,8 @@ public class RDFJSON {
 				// Dump everything if the subject changes after the first iteration
 				if(lastSubject != null && !nextSubject.equals(lastSubject))
         		{
+					//==================================================
+					// Dump the last variables starting from the context
 	    			if(lastContext != null || contextArray.size() == 0)
 	    			{
 	    				contextArray.add(lastContext);
@@ -234,20 +231,23 @@ public class RDFJSON {
     				addObjectToArray(lastObject, objectArray, contextArray);
                     predicateArray.put(lastPredicate, objectArray);
                     result.put(lastSubject, predicateArray);
+					//==================================================
                     
-//                    if(outputCounter < 3)
-//                    {
-//                    	outputCounter++;
-//                    	System.out.println("lastSubject="+lastSubject);
-//                    }
+					//==================================================
+					// Recreate the relevant temporary objects, now that 
+                    // they have been stored with the results
                     predicateArray = new JSONObject();
         			objectArray = new JSONArray();
         			contextArray = new JSONArray();
-        			
-        			lastSubject = nextSubject;
+        			//==================================================
+
+        			//==================================================
+        			// Change all of the pointers for the last objects over
+        			lastSubject = nextStatement.getSubject();
         			lastPredicate = nextStatement.getPredicate();
         			lastObject = nextStatement.getObject();
         			lastContext = nextStatement.getContext();
+        			//==================================================
         			
         		}
 				else
@@ -255,63 +255,69 @@ public class RDFJSON {
 	
 					lastSubject = nextSubject;
 					
-					// Add the lastContext to contextArray
-					// Add the lastObject to objectArray,
-					// Add objectArray to the predicateArray using the lastPredicate as reference
+	    			// Add the lastPredicate when it changes, as we know we have all of the objects and their related contexts for the last predicate now
 					if(lastPredicate != null && !nextStatement.getPredicate().equals(lastPredicate))
 	        		{
-//	                    if(outputCounter < 3)
-//	                    {
-//	                    	System.out.println("lastPredicate="+lastPredicate);
-//	                    }
+						//==================================================
+						// Dump the last variables starting from the context
 		    			if(lastContext != null || contextArray.size() == 0)
 		    			{
 		    				contextArray.add(lastContext);
 		    			}
 	    				addObjectToArray(lastObject, objectArray, contextArray);
 	                    predicateArray.put(lastPredicate, objectArray);
+						//==================================================
 	                    
+						//==================================================
+						// Recreate the relevant temporary objects, now that 
+	                    // they have been stored with the last predicate
 	                    objectArray = new JSONArray();
 	                    contextArray = new JSONArray();
+						//==================================================
 	                    
+						//==================================================
+	        			// Change the relevant pointers for the last objects over
 		    			lastPredicate = nextStatement.getPredicate();
 		    			lastObject = nextStatement.getObject();
 		    			lastContext = nextStatement.getContext();
+						//==================================================
 	        		}
 					else
 					{
 		    			lastPredicate = nextStatement.getPredicate();
 		    			
 		
-		    			// Add the lastObject to objectArray,
+		    			// Add the lastObject to objectArray when it changes, as we know we have all of the contexts for the object then
 		    			if(lastObject != null && !nextStatement.getObject().equals(lastObject))
 		    			{
-//		                    if(outputCounter < 3)
-//		                    {
-//		                    	System.out.println("lastObject="+lastObject);
-//		                    }
-		                    
+							//==================================================
+							// Dump the last variables starting from the context
 			    			if(lastContext != null || contextArray.size() == 0)
 			    			{
 								// Add the lastContext to contextArray
 				    			contextArray.add(lastContext);
 			    			}
 			    			addObjectToArray(lastObject, objectArray, contextArray);
+							//==================================================
 		
+							//==================================================
+							// Recreate the temporary context array, now that 
+		                    // they have been stored with the last object
 		                    contextArray = new JSONArray();
+							//==================================================
 
+							//==================================================
+		        			// Change the relevant pointers for the last objects over
 			    			lastObject = nextStatement.getObject();
 			    			lastContext = nextStatement.getContext();
+							//==================================================
 		    			}
 		    			else
 		    			{
 			    			lastObject = nextStatement.getObject();
 			    			
-			    			if(lastContext != null || contextArray.size() == 0)
-			    			{
-								// Add the lastContext to contextArray if it was not null
-				    			contextArray.add(lastContext);
-			    			}
+			    			// add the next context for the current object
+			    			contextArray.add(lastContext);
 			    			
 			    			lastContext = nextStatement.getContext();
 		    			}

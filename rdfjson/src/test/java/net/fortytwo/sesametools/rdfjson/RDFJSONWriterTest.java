@@ -9,7 +9,6 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.turtle.TurtleParser;
 import org.openrdf.rio.turtle.TurtleWriter;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
