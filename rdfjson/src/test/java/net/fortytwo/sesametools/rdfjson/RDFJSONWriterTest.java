@@ -58,7 +58,7 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
         //j = parseAndWrite("example0.json");
     }
     
-    public void testPerformance() throws Exception
+    private void testPerformance() throws Exception
     {
     	Date queryStartTime = new Date();
     	Date queryEndTime = new Date();
