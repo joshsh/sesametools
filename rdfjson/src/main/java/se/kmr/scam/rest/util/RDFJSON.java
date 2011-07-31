@@ -1,8 +1,5 @@
 package se.kmr.scam.rest.util;
 
-//import org.json.JSONArray;
-//import org.json.JSONException;
-//import org.json.JSONObject;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -43,7 +40,6 @@ public class RDFJSON {
         ValueFactory vf = result.getValueFactory();
 
         try {
-            //JSONObject input = new JSONObject(json);
             JSONObject input = JSONObject.fromObject(json);
         	Iterator<String> subjects = input.keys();
             while (subjects.hasNext()) {
@@ -58,7 +54,6 @@ public class RDFJSON {
                     String predStr = predicates.next();
                     URI predicate = vf.createURI(predStr);
                     JSONArray predArr = pObj.getJSONArray(predStr);
-//                    for (int i = 0; i < predArr.length(); i++) {
                 	for (int i = 0; i < predArr.size(); i++) {
                         Value object = null;
                         JSONObject obj = predArr.getJSONObject(i);
@@ -97,7 +92,6 @@ public class RDFJSON {
                             //System.out.println("a.length() = " + a.length());
                             for(int j = 0; j < a.size(); j++)
                             {
-                            //for (int j = 0; j < a.length(); j++) {
                                 // Note: any nulls here will result in statements in the default context.
                                 String s = a.getString(j);
                                 Resource context = s.equals("null") ? null : vf.createURI(s);
@@ -153,7 +147,6 @@ public class RDFJSON {
                         while (stmnts2.hasNext()) {
                             Resource context = stmnts2.next().getContext();
                             contexts.add(i, null == context ? null : context.toString());
-//                            contexts.put(i, null == context ? null : context.toString());
                             if (null != context) {
                                 nonDefaultContext = true;
                             }
@@ -178,7 +171,6 @@ public class RDFJSON {
                             valueObj.put("graphs", contexts);
                         }
                         valueArray.add(valueObj);
-//                        valueArray.put(valueObj);
                     }
                     predicateObj.put(predicate.stringValue(), valueArray);
                 }

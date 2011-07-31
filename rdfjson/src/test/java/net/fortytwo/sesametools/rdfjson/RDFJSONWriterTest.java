@@ -1,7 +1,5 @@
 package net.fortytwo.sesametools.rdfjson;
 
-//import org.json.JSONArray;
-//import org.json.JSONObject;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.openrdf.model.vocabulary.OWL;
@@ -27,7 +25,6 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
         j = parseAndWrite("example1.json");
         JSONObject a = j.getJSONObject(ARTHUR.toString());
         values = a.getJSONArray(RDF.TYPE.toString());
-//        assertEquals(2, values.length());
         assertEquals(2, values.size());
         assertEquals("uri", values.getJSONObject(0).getString("type"));
         assertEquals("uri", values.getJSONObject(1).getString("type"));
@@ -38,11 +35,9 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
         //assertEquals(FOAF.PERSON.toString(), values.getJSONObject(0).getString("value"));
         assertEquals(OWL.NAMESPACE + "Thing", t.getString("value"));
         contexts = t.getJSONArray("graphs");
-//        assertEquals(2, contexts.length());
         assertEquals(2, contexts.size());
         assertTrue("null".equals(contexts.getString(0)) || "null".equals(contexts.getString(1)));
         values = a.getJSONArray(FOAF.KNOWS.toString());
-//      assertEquals(2, values.length());
         assertEquals(1, values.size());
         JSONObject f = values.getJSONObject(0);
         assertEquals("bnode", f.getString("type"));
@@ -59,7 +54,6 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
             InputStream in = RDFJSONTestBase.class.getResourceAsStream(fileName);
             try {
                 p.parse(in, BASE_URI);
-                //return new JSONObject(new String(bos.toByteArray()));
                 return JSONObject.fromObject(new String(bos.toByteArray()));
             } finally {
                 in.close();
