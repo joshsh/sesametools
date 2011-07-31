@@ -1,7 +1,7 @@
 package net.fortytwo.sesametools.rdfjson;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.rio.RDFParser;
@@ -33,8 +33,7 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
         values = a.getJSONArray(RDF.TYPE.toString());
 //        System.out.println(values.get(0));
 //        System.out.println(values.get(1));
-//        System.out.println(values.get(2));
-        assertEquals(2, values.size());
+        assertEquals(2, values.length());
         assertEquals("uri", values.getJSONObject(0).getString("type"));
         assertEquals("uri", values.getJSONObject(1).getString("type"));
         JSONObject t = values.getJSONObject(0);
@@ -44,13 +43,13 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
         //assertEquals(FOAF.PERSON.toString(), values.getJSONObject(0).getString("value"));
         assertEquals(OWL.NAMESPACE + "Thing", t.getString("value"));
         contexts = t.getJSONArray("graphs");
-        assertEquals(2, contexts.size());
+        assertEquals(2, contexts.length());
 //        System.out.println(contexts.get(0));
 //        System.out.println(contexts.get(1));
         
-//        assertTrue("null".equals(contexts.getString(0)) || "null".equals(contexts.getString(1)));
+        assertTrue("null".equals(contexts.getString(0)) || "null".equals(contexts.getString(1)));
         values = a.getJSONArray(FOAF.KNOWS.toString());
-        assertEquals(1, values.size());
+        assertEquals(1, values.length());
         JSONObject f = values.getJSONObject(0);
         assertEquals("bnode", f.getString("type"));
 
@@ -116,7 +115,7 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
         InputStream in = RDFJSONTestBase.class.getResourceAsStream(fileName);
         try {
             p.parse(in, BASE_URI);
-            return JSONObject.fromObject(stringWriter.toString());
+            return new JSONObject(stringWriter.toString());
         } finally {
             in.close();
         }
@@ -132,7 +131,7 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
         InputStream in = RDFJSONTestBase.class.getResourceAsStream(fileName);
         try {
             p.parse(in, BASE_URI);
-            return JSONObject.fromObject(stringWriter.toString());
+            return new JSONObject(stringWriter.toString());
         } finally {
             in.close();
         }

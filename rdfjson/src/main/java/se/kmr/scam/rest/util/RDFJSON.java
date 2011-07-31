@@ -1,9 +1,9 @@
 package se.kmr.scam.rest.util;
 
 import net.fortytwo.sesametools.rdfjson.OrderedGraphImpl;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONException;
-import net.sf.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Graph;
 import org.openrdf.model.Literal;
@@ -49,7 +49,7 @@ public class RDFJSON {
         ValueFactory vf = result.getValueFactory();
 
         try {
-            JSONObject input = JSONObject.fromObject(json);
+            JSONObject input = new JSONObject(json);
         	Iterator<String> subjects = input.keys();
             while (subjects.hasNext()) {
                 String subjStr = subjects.next();
@@ -63,7 +63,7 @@ public class RDFJSON {
                     String predStr = predicates.next();
                     URI predicate = vf.createURI(predStr);
                     JSONArray predArr = pObj.getJSONArray(predStr);
-                	for (int i = 0; i < predArr.size(); i++) {
+                	for (int i = 0; i < predArr.length(); i++) {
                         Value object = null;
                         JSONObject obj = predArr.getJSONObject(i);
                         if (!obj.has(RDFJSON.STRING_VALUE)) {
@@ -99,7 +99,7 @@ public class RDFJSON {
                         if (obj.has(RDFJSON.STRING_GRAPHS)) {
                             JSONArray a = obj.getJSONArray(RDFJSON.STRING_GRAPHS);
                             //System.out.println("a.length() = " + a.length());
-                            for(int j = 0; j < a.size(); j++)
+                            for(int j = 0; j < a.length(); j++)
                             {
                                 // Note: any nulls here will result in statements in the default context.
                                 String s = a.getString(j);
@@ -155,7 +155,7 @@ public class RDFJSON {
                         boolean nonDefaultContext = false;
                         while (stmnts2.hasNext()) {
                             Resource context = stmnts2.next().getContext();
-                            contexts.add(i, null == context ? null : context.stringValue());
+                            contexts.put(i, null == context ? null : context.stringValue());
                             if (null != context) {
                                 nonDefaultContext = true;
                             }
@@ -181,7 +181,7 @@ public class RDFJSON {
                         if (nonDefaultContext) {
                             valueObj.put(RDFJSON.STRING_GRAPHS, contexts);
                         }
-                        valueArray.add(valueObj);
+                        valueArray.put(valueObj);
                     }
                     predicateObj.put(predicate.stringValue(), valueArray);
                 }
@@ -202,7 +202,6 @@ public class RDFJSON {
      */
     public static String graphToRdfJsonPreordered(Graph graph) 
     {
-//    	int outputCounter = 0;
         JSONObject result = new JSONObject();
         try 
         {
@@ -224,13 +223,13 @@ public class RDFJSON {
         		{
 					//==================================================
 					// Dump the last variables starting from the context
-	    			if(lastContext != null || contextArray.size() == 0)
+	    			if(lastContext != null || contextArray.length() == 0)
 	    			{
-	    				contextArray.add(lastContext);
+	    				contextArray.put(contextArray.length(), lastContext);
 	    			}
     				addObjectToArray(lastObject, objectArray, contextArray);
-                    predicateArray.put(lastPredicate, objectArray);
-                    result.put(lastSubject, predicateArray);
+                    predicateArray.put(lastPredicate.stringValue(), objectArray);
+                    result.put(lastSubject.stringValue(), predicateArray);
 					//==================================================
                     
 					//==================================================
@@ -260,12 +259,12 @@ public class RDFJSON {
 	        		{
 						//==================================================
 						// Dump the last variables starting from the context
-		    			if(lastContext != null || contextArray.size() == 0)
+		    			if(lastContext != null || contextArray.length() == 0)
 		    			{
-		    				contextArray.add(lastContext);
+		    				contextArray.put(contextArray.length(), lastContext);
 		    			}
 	    				addObjectToArray(lastObject, objectArray, contextArray);
-	                    predicateArray.put(lastPredicate, objectArray);
+	                    predicateArray.put(lastPredicate.stringValue(), objectArray);
 						//==================================================
 	                    
 						//==================================================
@@ -292,10 +291,10 @@ public class RDFJSON {
 		    			{
 							//==================================================
 							// Dump the last variables starting from the context
-			    			if(lastContext != null || contextArray.size() == 0)
+			    			if(lastContext != null || contextArray.length() == 0)
 			    			{
 								// Add the lastContext to contextArray
-				    			contextArray.add(lastContext);
+			    				contextArray.put(contextArray.length(), lastContext);
 			    			}
 			    			addObjectToArray(lastObject, objectArray, contextArray);
 							//==================================================
@@ -317,7 +316,7 @@ public class RDFJSON {
 			    			lastObject = nextStatement.getObject();
 			    			
 			    			// add the next context for the current object
-			    			contextArray.add(lastContext);
+		    				contextArray.put(contextArray.length(), lastContext);
 			    			
 			    			lastContext = nextStatement.getContext();
 		    			}
@@ -330,12 +329,12 @@ public class RDFJSON {
 			// the last subject/predicate/object/context will never get pushed inside the loop above, so push it here if we went into the loop
     		if(graph.size() > 0)
     		{
-    			if(lastContext != null || contextArray.size() == 0)
+    			if(lastContext != null || contextArray.length() == 0)
     			{
-    				contextArray.add(lastContext);
+    				contextArray.put(contextArray.length(), lastContext);
     			}
     			addObjectToArray(lastObject, objectArray, contextArray);
-                predicateArray.put(lastPredicate, objectArray);
+                predicateArray.put(lastPredicate.stringValue(), objectArray);
         		result.put(lastSubject.stringValue(), predicateArray);
     		}
     		
@@ -350,8 +349,9 @@ public class RDFJSON {
 	/**
 	 * @param contexts
 	 * @param nonDefaultContext
+	 * @throws JSONException 
 	 */
-	private static void addObjectToArray(Value object, JSONArray valueArray, JSONArray contexts)
+	private static void addObjectToArray(Value object, JSONArray valueArray, JSONArray contexts) throws JSONException
 	{
 		JSONObject valueObj = new JSONObject();
 		
@@ -379,12 +379,15 @@ public class RDFJSON {
 		{
 		    valueObj.put(RDFJSON.STRING_TYPE, RDFJSON.STRING_URI);
 		}
-		
-		if (contexts.size() > 0 && !(contexts.size() == 1 && contexts.contains(null)))
+
+		// net.sf.json line
+		//		if (contexts.size() > 0 && !(contexts.size() == 1 && contexts.contains(null)))
+		// org.json line
+		if(contexts.length() > 0 && !(contexts.length() == 1 && contexts.isNull(0)))
 		{
 				valueObj.put(RDFJSON.STRING_GRAPHS, contexts);
 		}
-		valueArray.add(valueObj);
+		valueArray.put(valueObj);
     }
 
     /**
