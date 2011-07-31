@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>rdfjson</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4</version>
     <packaging>jar</packaging>
     <name>RDF/JSON utilities</name>
     <description>Writer and parser for the RDF/JSON format</description>
@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>net.fortytwo.sesametools</groupId>
         <artifactId>sesametools-all</artifactId>
-		<version>1.4-SNAPSHOT</version>
+		<version>1.4</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
