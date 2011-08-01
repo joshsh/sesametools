@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>sesametools-all</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4</version>
     <packaging>pom</packaging>
     <name>Sesame Tools</name>
     <description>Miscellaneous utilities for use with OpenRDF Sesame</description>
@@ -21,9 +21,9 @@
         <module>ldserver</module>
         <module>mappingsail</module>
         <module>nquads</module>
-        <module>readonly</module>
         <module>rdfjson</module>
         <module>rdftransaction</module>
+        <module>readonly</module>
         <module>replay</module>
         <module>reposail</module>
         <module>sesamize</module>
@@ -31,8 +31,9 @@
     </modules>
 
     <properties>
-        <sesametools.version>1.4-SNAPSHOT</sesametools.version>
+        <sesametools.version>1.4</sesametools.version>
         <sesame.version>2.4.2</sesame.version>
+        <junit.version>4.5</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>

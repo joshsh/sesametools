@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>debug</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4</version>
     <packaging>jar</packaging>
     <name>DebugSail</name>
     <description>A verbose Sail implementation, for debugging purposes</description>
@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>net.fortytwo.sesametools</groupId>
         <artifactId>sesametools-all</artifactId>
-		<version>1.4-SNAPSHOT</version>
+		<version>1.4</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -48,8 +48,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <type>jar</type>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -69,15 +68,13 @@
                 <directory>src/test/resources</directory>
             </testResource>
         </testResources>
-
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
         </plugins>
