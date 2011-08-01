@@ -1,6 +1,7 @@
 package net.fortytwo.sesametools.rdfjson;
 
-import org.openrdf.model.Graph;
+import net.fortytwo.sesametools.StatementComparator;
+
 import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
@@ -11,6 +12,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * RDFWriter implementation for the proposed RDF/JSON format (see http://n2.talis.com/wiki/RDF_JSON_Specification)
@@ -23,7 +26,7 @@ import java.io.Writer;
 public class RDFJSONWriter implements RDFWriter {
 
     private final Writer writer;
-    private Graph graph;
+    private Set<Statement> graph;
 
     public RDFJSONWriter(final OutputStream out) {
         this.writer = new OutputStreamWriter(out);
@@ -38,7 +41,7 @@ public class RDFJSONWriter implements RDFWriter {
     }
 
     public void startRDF() throws RDFHandlerException {
-        graph = new OrderedGraphImpl();
+        graph = new TreeSet<Statement>(new StatementComparator());
     }
 
     public void endRDF() throws RDFHandlerException {

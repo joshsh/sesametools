@@ -1,18 +1,14 @@
 package net.fortytwo.sesametools.rdfjson;
 
+import static org.junit.Assert.*;
+import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.*;
+
+import org.junit.Test;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.turtle.TurtleParser;
-import org.openrdf.rio.turtle.TurtleWriter;
-
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.Date;
 
 /**
  * Tests the RDF/JSON writer by way of the RDF/JSON parser.
@@ -21,13 +17,14 @@ import java.util.Date;
  * Date: Dec 21, 2010
  * Time: 5:26:27 PM
  */
-public class RDFJSONWriterTest extends RDFJSONTestBase {
+public class RDFJSONWriterTest {
+	@Test
     public void testAll() throws Exception {
         JSONObject j;
         JSONArray values;
         JSONArray contexts;
 
-        j = parseAndWrite("example1.json");
+        j = RDFJSONTestUtils.parseAndWrite("example1.json");
 //        System.out.println("j.toString="+j.toString(2));
         JSONObject a = j.getJSONObject(ARTHUR.toString());
         values = a.getJSONArray(RDF.TYPE.toString());
@@ -56,117 +53,6 @@ public class RDFJSONWriterTest extends RDFJSONTestBase {
         //j = parseAndWrite("example0.json");
     }
     
-    public void testPerformance() throws Exception
-    {
-    	Date queryStartTime = new Date();
-    	Date queryEndTime = new Date();
-    	long nextTotalTime = 0L;
-    	
-        queryStartTime = new Date();
-
-        assertNotNull(parseTurtleAndWriteTurtle("bio2rdf-configuration.ttl"));
-        
-        queryEndTime = new Date();
-        
-        nextTotalTime = queryEndTime.getTime()-queryStartTime.getTime();
-        
-        System.out.println("testPerformance: parse Turtle and write Turtle nextTotalTime="+nextTotalTime);
-
-        queryStartTime = new Date();
-
-        assertNotNull(parseJsonAndWriteTurtle("bio2rdf-configuration.json"));
-        
-        queryEndTime = new Date();
-        
-        nextTotalTime = queryEndTime.getTime()-queryStartTime.getTime();
-        
-        System.out.println("testPerformance: parse JSON and write Turtle nextTotalTime="+nextTotalTime);        
-        
-        queryStartTime = new Date();
-
-        assertNotNull(parseTurtleAndWriteJson("bio2rdf-configuration.ttl"));
-        
-        queryEndTime = new Date();
-        
-        nextTotalTime = queryEndTime.getTime()-queryStartTime.getTime();
-        
-        System.out.println("testPerformance: parse Turtle and write JSON nextTotalTime="+nextTotalTime);
-
-        queryStartTime = new Date();
-
-        assertNotNull(parseAndWrite("bio2rdf-configuration.json"));
-        
-        queryEndTime = new Date();
-        
-        nextTotalTime = queryEndTime.getTime()-queryStartTime.getTime();
-        
-        System.out.println("testPerformance: parse and write JSON nextTotalTime="+nextTotalTime);
-        
-        
-    }
     
-    private JSONObject parseAndWrite(final String fileName) throws Exception 
-    {
-        RDFJSONParser p = new RDFJSONParser();
-        Writer stringWriter = new StringWriter();
-        
-        RDFWriter w = new RDFJSONWriter(stringWriter);
-        p.setRDFHandler(w);
-        InputStream in = RDFJSONTestBase.class.getResourceAsStream(fileName);
-        try {
-            p.parse(in, BASE_URI);
-            return new JSONObject(stringWriter.toString());
-        } finally {
-            in.close();
-        }
-    }
-
-    private JSONObject parseTurtleAndWriteJson(final String fileName) throws Exception 
-    {
-        RDFParser p = new TurtleParser();
-        Writer stringWriter = new StringWriter();
-        
-        RDFWriter w = new RDFJSONWriter(stringWriter);
-        p.setRDFHandler(w);
-        InputStream in = RDFJSONTestBase.class.getResourceAsStream(fileName);
-        try {
-            p.parse(in, BASE_URI);
-            return new JSONObject(stringWriter.toString());
-        } finally {
-            in.close();
-        }
-    }
-
-    private String parseTurtleAndWriteTurtle(final String fileName) throws Exception 
-    {
-        RDFParser p = new TurtleParser();
-        Writer stringWriter = new StringWriter();
-
-        RDFWriter w = new TurtleWriter(stringWriter);
-        p.setRDFHandler(w);
-        InputStream in = RDFJSONTestBase.class.getResourceAsStream(fileName);
-        try {
-            p.parse(in, BASE_URI);
-            return stringWriter.toString();
-        } finally {
-            in.close();
-        }
-    }
-
-    private String parseJsonAndWriteTurtle(final String fileName) throws Exception 
-    {
-        RDFParser p = new RDFJSONParser();
-        Writer stringWriter = new StringWriter();
-
-        RDFWriter w = new TurtleWriter(stringWriter);
-        p.setRDFHandler(w);
-        InputStream in = RDFJSONTestBase.class.getResourceAsStream(fileName);
-        try {
-            p.parse(in, BASE_URI);
-            return stringWriter.toString();
-        } finally {
-            in.close();
-        }
-    }
     
 }

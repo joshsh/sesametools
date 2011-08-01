@@ -1,6 +1,5 @@
 package se.kmr.scam.rest.util;
 
-import net.fortytwo.sesametools.rdfjson.OrderedGraphImpl;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,12 +11,14 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * A utility class to help converting Sesame Graphs from and to RDF/JSON.
@@ -26,7 +27,8 @@ import java.util.LinkedList;
  */
 public class RDFJSON {
 
-    private static final String STRING_GRAPHS = "graphs";
+    private static final String STRING_NULL = "null";
+	private static final String STRING_GRAPHS = "graphs";
 	private static final String STRING_URI = "uri";
 	private static final String STRING_BNODE = "bnode";
 	private static final String STRING_DATATYPE = "datatype";
@@ -40,13 +42,12 @@ public class RDFJSON {
     /**
      * Implementation using the json.org API.
      *
-     * @param json The RDF/JSON string to be parsed and converted into a Sesame
-     *             Graph.
-     * @return A Sesame Graph if successful, otherwise null.
+     * @param json The RDF/JSON string to be parsed and converted into a Collection<Statement>.
+     * @return A Collection<Statement> if successful, otherwise null.
      */
-    public static Graph rdfJsonToGraph(String json) {
-        Graph result = new OrderedGraphImpl();
-        ValueFactory vf = result.getValueFactory();
+    public static Collection<Statement> rdfJsonToGraph(String json) {
+        Collection<Statement> result = new LinkedList<Statement>();
+        ValueFactory vf = new ValueFactoryImpl();
 
         try {
             JSONObject input = new JSONObject(json);
@@ -103,12 +104,13 @@ public class RDFJSON {
                             {
                                 // Note: any nulls here will result in statements in the default context.
                                 String s = a.getString(j);
-                                Resource context = s.equals("null") ? null : vf.createURI(s);
+                                //System.out.println("s = " + s);
+                                Resource context = s.equals(STRING_NULL) ? null : vf.createURI(s);
                                 //System.out.println("context = " + context);
-                                result.add(subject, predicate, object, context);
+                                result.add(vf.createStatement(subject, predicate, object, context));
                             }
                         } else {
-                            result.add(subject, predicate, object);
+                            result.add(vf.createStatement(subject, predicate, object));
                         }
                     }
                 }
@@ -197,10 +199,10 @@ public class RDFJSON {
     /**
 	 * Outputs an ordered Graph directly to JSON
      *
-     * @param graph A Sesame Graph that has been preordered in the order subject>predicate>object>context so that it can be output directly without any further checks
+     * @param graph A Set<Statement> that has been preordered in the order subject>predicate>object>context so that it can be output directly without any further checks
      * @return An RDF/JSON string if successful, otherwise null.
      */
-    public static String graphToRdfJsonPreordered(Graph graph) 
+    public static String graphToRdfJsonPreordered(Set<Statement> graph) 
     {
         JSONObject result = new JSONObject();
         try 
@@ -385,7 +387,7 @@ public class RDFJSON {
 		// org.json line
 		if(contexts.length() > 0 && !(contexts.length() == 1 && contexts.isNull(0)))
 		{
-				valueObj.put(RDFJSON.STRING_GRAPHS, contexts);
+			valueObj.put(RDFJSON.STRING_GRAPHS, contexts);
 		}
 		valueArray.put(valueObj);
     }
