@@ -13,7 +13,7 @@ public class StatementComparator implements Comparator<Statement>
 	public final static int EQUALS = 0;
 	public final static int AFTER = 1;
 
-	// Uncomment this annotation when move to JRE6 as JRE5 has bug with this annotation => @Override
+	@Override
 	public int compare(Statement first, Statement second)
 	{
 		if(first.equals(second))
