@@ -68,6 +68,12 @@
             <type>jar</type>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>net.fortytwo.sesametools</groupId>
+            <artifactId>sesametools-rdfjson-test-resources</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -83,10 +89,6 @@
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
-                <!-- exclude the bulky bio2rdf configuration files from testing -->
-                <excludes>
-                    <exclude>**/bio2rdf*</exclude>
-                </excludes>
             </testResource>
         </testResources>
         <plugins>
@@ -98,15 +100,16 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-            <!-- Added test excludes for Performance test -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.9</version>
                 <configuration>
-                    <excludes>
+                    <!-- The performance test is actually pretty lightweight in terms of running time.
+                         No need to exclude it for now. -->
+                    <!--<excludes>
                         <exclude>**/RDFJSONPerformanceTest*</exclude>
-                    </excludes>
+                    </excludes>-->
                 </configuration>
             </plugin>
         </plugins>
