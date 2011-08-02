@@ -19,7 +19,9 @@ public class StatementComparator implements Comparator<Statement>
 	@Override
 	public int compare(Statement first, Statement second)
 	{
-		if(first.equals(second))
+		// Cannot use Statement.equals as it does not take Context into account, 
+		// but can check for reference equality (==)
+		if(first == second)
 		{
 			return EQUALS;
 		}
@@ -30,43 +32,40 @@ public class StatementComparator implements Comparator<Statement>
 			{
 				if(first.getObject().equals(second.getObject()))
 				{
+					// Context is the only part of a statement that should legitimately be null
 					if(first.getContext() == null)
 					{
 						if(second.getContext() == null)
 						{
-//							System.out.println("both contexts were null, returning EQUALS first="+first+" second="+second);
 							return EQUALS;
 						}
 						else
 						{
-//							System.out.println("first context was null, but second was not null, returning BEFORE first="+first+" second="+second);
 							return BEFORE;
 						}
 					}
 					else if(second.getContext() == null)
 					{
-//						System.out.println("first context was not null, but second was null, returning AFTER first="+first+" second="+second);
 						return AFTER;
 					}
 					else
 					{
-//						System.out.println("first context was not null, and second was not null, returning comparison first="+first+" second="+second+" result="+first.getContext().stringValue().compareTo(second.getContext().stringValue()));
-						return first.getContext().stringValue().compareTo(second.getContext().stringValue());
+						return new ValueComparator().compare(first.getContext(), second.getContext());
 					}
 				}
 				else
 				{
-					return first.getObject().stringValue().compareTo(second.getObject().stringValue());
+					return new ValueComparator().compare(first.getObject(), second.getObject());
 				}
 			}
 			else
 			{
-				return first.getPredicate().stringValue().compareTo(second.getPredicate().stringValue());
+				return new ValueComparator().compare(first.getPredicate(), second.getPredicate());
 			}
 		}
 		else
 		{
-			return first.getSubject().stringValue().compareTo(second.getSubject().stringValue());
+			return new ValueComparator().compare(first.getSubject(), second.getSubject());
 		}
 	}
 

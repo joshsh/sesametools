@@ -24,6 +24,21 @@ public class ValueComparator implements Comparator<Value>
 	public final static int EQUALS = 0;
 	public final static int AFTER = 1;
 
+	/**
+	 * Sorts in the order nulls>BNodes>URIs>Literals
+	 * 
+	 * This is due to the fact that nulls are only applicable to contexts, 
+	 * and according to the OpenRDF documentation, the type of the null 
+	 * cannot be sufficiently distinguished from any other Value to make
+	 * an intelligent comparison to other Values
+	 * 
+	 * http://www.openrdf.org/doc/sesame2/api/org/openrdf/OpenRDFUtil.html#verifyContextNotNull(org.openrdf.model.Resource...)
+	 * 
+	 * BNodes are sorted according to the lexical compare of their identifiers,
+	 * which provides a way to sort statements with the same BNodes in the same positions, near each other
+	 * 
+	 * BNode sorting is not specified across sessions
+	 */
 	@Override
 	public int compare(Value first, Value second)
 	{
@@ -54,6 +69,9 @@ public class ValueComparator implements Comparator<Value>
 			if(second instanceof BNode)
 			{
 				// if both are BNodes, sort based on the lexical value of the internal ID
+				// Although this sorting is not guaranteed to be consistent across sessions,
+				// it provides a consistent sorting of statements in every case
+				// so that statements with the same BNode are sorted near each other
 				return ((BNode)first).getID().compareTo(((BNode)second).getID());
 			}
 			else
@@ -70,7 +88,6 @@ public class ValueComparator implements Comparator<Value>
 		{
 			if(second instanceof URI)
 			{
-				// if both are BNodes, sort based on the lexical value of the internal ID
 				return ((URI)first).stringValue().compareTo(((URI)second).stringValue());
 			}
 			else
