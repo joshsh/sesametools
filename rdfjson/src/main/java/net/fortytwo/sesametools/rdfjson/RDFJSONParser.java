@@ -1,6 +1,5 @@
 package net.fortytwo.sesametools.rdfjson;
 
-import org.openrdf.model.Graph;
 import org.openrdf.model.Statement;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.rio.ParseErrorListener;
@@ -19,6 +18,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Collection;
 
 /**
  * RDFParser implementation for the proposed RDF/JSON format (see http://n2.talis.com/wiki/RDF_JSON_Specification)
@@ -28,6 +28,7 @@ import java.io.Writer;
  *
  * @author Joshua Shinavier (http://fortytwo.net).  Builds on code by Hannes Ebner
  */
+@SuppressWarnings("unused")
 public class RDFJSONParser implements RDFParser {
 
     private ValueFactory valueFactory;
@@ -37,7 +38,7 @@ public class RDFJSONParser implements RDFParser {
     private boolean verifyData;
     private boolean preserveBNodeIDs;
     private boolean stopAtFirstError;
-    private DatatypeHandling datatypeHandling;
+	private DatatypeHandling datatypeHandling;
 
     public RDFFormat getRDFFormat() {
         return RDFJSONFormat.RDFJSON;
@@ -88,7 +89,7 @@ public class RDFJSONParser implements RDFParser {
         }
 
         String s = toString(reader);
-        Graph g = RDFJSON.rdfJsonToGraph(s);
+        Collection<Statement> g = RDFJSON.rdfJsonToGraph(s);
         
         if(g == null) {
         	throw new RDFParseException("Could not parse JSON RDF Graph");
