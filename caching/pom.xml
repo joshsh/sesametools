@@ -6,17 +6,17 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>caching</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>CachingSail</name>
     <description>An in-memory cache for Sail data</description>
 
-	<parent>
-		<groupId>net.fortytwo.sesametools</groupId>
-		<artifactId>sesametools-all</artifactId>
-		<version>1.4</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>net.fortytwo.sesametools</groupId>
+        <artifactId>sesametools-all</artifactId>
+        <version>1.5-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
     <repositories>
         <repository>

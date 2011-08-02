@@ -6,18 +6,19 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>replay</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>ReplaySail</name>
-    <description>A pair of Sail implementations which allow Sail operations to be first recorded to a log file, then reproduced from the log file
+    <description>A pair of Sail implementations which allow Sail operations to be first recorded to a log file, then
+        reproduced from the log file
     </description>
 
-	<parent>
-		<groupId>net.fortytwo.sesametools</groupId>
+    <parent>
+        <groupId>net.fortytwo.sesametools</groupId>
         <artifactId>sesametools-all</artifactId>
-		<version>1.4</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+        <version>1.5-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
     <repositories>
         <repository>

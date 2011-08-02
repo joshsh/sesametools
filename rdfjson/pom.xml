@@ -6,17 +6,17 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>rdfjson</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>RDF/JSON utilities</name>
     <description>Writer and parser for the RDF/JSON format</description>
 
-	<parent>
-		<groupId>net.fortytwo.sesametools</groupId>
+    <parent>
+        <groupId>net.fortytwo.sesametools</groupId>
         <artifactId>sesametools-all</artifactId>
-		<version>1.4</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+        <version>1.5-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
     <repositories>
         <repository>
@@ -37,13 +37,13 @@
             <artifactId>common</artifactId>
             <version>${sesametools.version}</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>1.0</version>
         </dependency>
-    
-   	    <dependency>
+
+        <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-api</artifactId>
             <version>${sesame.version}</version>
@@ -62,11 +62,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-        	<groupId>org.openrdf.sesame</groupId>
-        	<artifactId>sesame-rio-turtle</artifactId>
-        	<version>${sesame.version}</version>
-        	<type>jar</type>
-        	<scope>test</scope>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-rio-turtle</artifactId>
+            <version>${sesame.version}</version>
+            <type>jar</type>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -85,8 +85,8 @@
                 <directory>src/test/resources</directory>
                 <!-- exclude the bulky bio2rdf configuration files from testing -->
                 <excludes>
-                	<exclude>**/bio2rdf*</exclude>
-               	</excludes>
+                    <exclude>**/bio2rdf*</exclude>
+                </excludes>
             </testResource>
         </testResources>
         <plugins>
@@ -98,17 +98,17 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-			<!-- Added test excludes for Performance test -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.9</version>
-				<configuration>
-					<excludes>
-						<exclude>**/RDFJSONPerformanceTest*</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
+            <!-- Added test excludes for Performance test -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/RDFJSONPerformanceTest*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
