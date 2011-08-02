@@ -1,46 +1,85 @@
 package net.fortytwo.sesametools.rdfjson;
 
-import org.openrdf.model.Graph;
+import static org.junit.Assert.*;
+import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.*;
+
+import net.fortytwo.sesametools.StatementComparator;
+
+import org.junit.After;
+import org.junit.Test;
+
+import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.XMLSchema;
+import org.openrdf.rio.helpers.StatementCollector;
 
 import java.io.InputStream;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * User: josh
  * Date: Dec 21, 2010
  * Time: 3:54:39 PM
  */
-public class RDFJSONParserTest extends RDFJSONTestBase {
+public class RDFJSONParserTest {
 
-    public void testAll() throws Exception {
-        Graph g;
-
+	private Collection<Statement> g;
+	
+	@After
+	public void cleanup()
+	{
+		// make sure we nullify the graph after each test is complete
+		g = null;
+	}
+	
+	@Test
+    public void testSizeWithoutNullGraphs() throws Exception {
         g = parseToGraph("example0.json");
+
+//        for (Statement st : g) {
+//            System.out.println(st);
+//        }
+
         assertEquals(12, g.size());
 
-        //for (Statement st : g) {
-        //    System.out.println(st);
-        //}
+	}
+	
+	@Test
+    public void testSizeWithNullGraphs() throws Exception {
+        g = parseToGraph("example2.json");
+        
+//        for (Statement st : g) {
+//            System.out.println(st);
+//        }
 
+        assertEquals(6, g.size());
+	}
+	
+	@Test
+    public void testExpectedStatements() throws Exception
+    {
         g = parseToGraph("example1.json");
+        
+//        System.out.println("example1.json.size()="+g.size());
 
+        assertEquals(6, g.size());
+        
         assertExpected(g,
                 vf.createStatement(ARTHUR, RDF.TYPE, FOAF.PERSON),
-                vf.createStatement(ARTHUR, RDF.TYPE, vf.createURI(OWL.NAMESPACE + "Thing")),
+                vf.createStatement(ARTHUR, RDF.TYPE, vf.createURI(OWL.NAMESPACE + "Thing"), (Resource)null),
                 vf.createStatement(ARTHUR, RDF.TYPE, vf.createURI(OWL.NAMESPACE + "Thing"), GRAPH1),
                 vf.createStatement(ARTHUR, FOAF.NAME, vf.createLiteral("Arthur Dent", "en")),
                 vf.createStatement(ARTHUR, FOAF.KNOWS, P1),
                 vf.createStatement(P1, FOAF.NAME, vf.createLiteral("Ford Prefect", XMLSchema.STRING)));
     }
 
-    protected Graph parseToGraph(final String fileName) throws Exception {
+    protected Collection<Statement> parseToGraph(final String fileName) throws Exception {
         RDFJSONParser p = new RDFJSONParser();
-        RDFCollector c = new RDFCollector();
+        StatementCollector c = new StatementCollector();
         p.setRDFHandler(c);
 
         InputStream in = RDFJSONParser.class.getResourceAsStream(fileName);
@@ -50,57 +89,28 @@ public class RDFJSONParserTest extends RDFJSONTestBase {
             in.close();
         }
 
-        return c.getGraph();
+        return c.getStatements();
     }
 
-    protected void assertExpected(final Graph graph,
+    protected void assertExpected(final Collection<Statement> graph,
                                   final Statement... expectedStatements) throws Exception {
-        Set<StatementHolder> expected = new HashSet<StatementHolder>();
+        Set<Statement> expected = new TreeSet<Statement>(new StatementComparator());
         for (Statement st : expectedStatements) {
-            expected.add(new StatementHolder(st));
+            expected.add(st);
         }
-        Set<StatementHolder> actual = new HashSet<StatementHolder>();
+        Set<Statement> actual = new TreeSet<Statement>(new StatementComparator());
         for (Statement st : graph) {
-            actual.add(new StatementHolder(st));
+            actual.add(st);
         }
-        for (StatementHolder t : expected) {
+        for (Statement t : expected) {
             if (!actual.contains(t)) {
-                fail("expected statement not found: " + t.statement);
+                fail("expected statement not found: " + t);
             }
         }
-        for (StatementHolder t : actual) {
+        for (Statement t : actual) {
             if (!expected.contains(t)) {
-                fail("unexpected statement found: " + t.statement);
+                fail("unexpected statement found: " + t);
             }
         }
-    }
-
-    private class StatementHolder {
-        private final Statement statement;
-
-        public StatementHolder(Statement statement) {
-            this.statement = statement;
-        }
-
-        public int hashCode() {
-            int h = statement.hashCode();
-            if (null != statement.getContext()) {
-                h += statement.getContext().hashCode();
-            }
-            return h;
-        }
-
-        public boolean equals(final Object other) {
-            return other instanceof StatementHolder
-                    && statement.equals(((StatementHolder) other).statement)
-                    && nullSafeEqual(statement.getContext(), ((StatementHolder) other).statement.getContext());
-        }
-    }
-
-    private boolean nullSafeEqual(final Object first,
-                                  final Object second) {
-        return first == null
-                ? second == null
-                : second != null && first.equals(second);
     }
 }

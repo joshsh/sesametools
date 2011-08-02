@@ -8,14 +8,15 @@
             {
                 "value" : "http://www.w3.org/2002/07/owl#Thing",
                 "type" : "uri",
-                "graphs" : ["http://example.org/graph1", null]
+                "graphs" : [null, "http://example.org/graph1"]
             }
         ],
         "http://xmlns.com/foaf/0.1/name" : [
             {
                 "value" : "Arthur Dent",
                 "type" : "literal",
-                "lang" : "en"
+                "lang" : "en",
+                "graphs" : [null]
             }
         ],
         "http://xmlns.com/foaf/0.1/knows" : [
@@ -29,7 +30,8 @@
         "http://xmlns.com/foaf/0.1/name" : [{
             "value" : "Ford Prefect",
             "type": "literal",
-            "datatype" : "http://www.w3.org/2001/XMLSchema#string"
+            "datatype" : "http://www.w3.org/2001/XMLSchema#string",
+            "graphs" : ["http://example.org/graph1"]
         }]
     }
 }
