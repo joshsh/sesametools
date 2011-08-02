@@ -28,6 +28,7 @@ import java.util.Collection;
  *
  * @author Joshua Shinavier (http://fortytwo.net).  Builds on code by Hannes Ebner
  */
+@SuppressWarnings("unused")
 public class RDFJSONParser implements RDFParser {
 
     private ValueFactory valueFactory;
@@ -37,7 +38,7 @@ public class RDFJSONParser implements RDFParser {
     private boolean verifyData;
     private boolean preserveBNodeIDs;
     private boolean stopAtFirstError;
-    private DatatypeHandling datatypeHandling;
+	private DatatypeHandling datatypeHandling;
 
     public RDFFormat getRDFFormat() {
         return RDFJSONFormat.RDFJSON;

@@ -49,10 +49,8 @@ public class RDFJSONWriterTest {
         assertEquals(1, values.length());
         JSONObject f = values.getJSONObject(0);
         assertEquals("bnode", f.getString("type"));
+        assertTrue(f.getString("value").startsWith("_:"));
 
         //j = parseAndWrite("example0.json");
     }
-    
-    
-    
 }

@@ -45,10 +45,8 @@ public class RDFJSONWriter implements RDFWriter {
     }
 
     public void endRDF() throws RDFHandlerException {
-        String s = RDFJSON.graphToRdfJsonPreordered(graph);
-        //System.out.println("written: " + s);
+        RDFJSON.graphToRdfJsonPreordered(graph, writer);
         try {
-            writer.write(s);
             writer.flush();
         } catch (IOException e) {
             throw new RDFHandlerException(e);

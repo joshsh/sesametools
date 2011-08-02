@@ -15,6 +15,8 @@ import org.openrdf.model.impl.ValueFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -51,7 +53,8 @@ public class RDFJSON {
 
         try {
             JSONObject input = new JSONObject(json);
-        	Iterator<String> subjects = input.keys();
+        	@SuppressWarnings("unchecked")
+			Iterator<String> subjects = input.keys();
             while (subjects.hasNext()) {
                 String subjStr = subjects.next();
                 Resource subject = null;
@@ -59,7 +62,8 @@ public class RDFJSON {
                         ? vf.createBNode(subjStr.substring(2))
                         : vf.createURI(subjStr);
                 JSONObject pObj = input.getJSONObject(subjStr);
-                Iterator<String> predicates = pObj.keys();
+                @SuppressWarnings("unchecked")
+				Iterator<String> predicates = pObj.keys();
                 while (predicates.hasNext()) {
                     String predStr = predicates.next();
                     URI predicate = vf.createURI(predStr);
@@ -197,14 +201,31 @@ public class RDFJSON {
     }
 
     /**
-	 * Outputs an ordered Graph directly to JSON
+	 * Outputs an ordered set of Statements directly to JSON
      *
-     * @param graph A Set<Statement> that has been preordered in the order subject>predicate>object>context so that it can be output directly without any further checks
+     * @param graph A Set of Statements that are preordered in the 
+     * order subject>predicate>object>context so that it can be 
+     * output directly without any further checks
+     * 
      * @return An RDF/JSON string if successful, otherwise null.
      */
     public static String graphToRdfJsonPreordered(Set<Statement> graph) 
     {
-        JSONObject result = new JSONObject();
+    	Writer result = new StringWriter();
+    	
+    	if(graphToRdfJsonPreordered(graph, result) == null)
+    	{
+    		return null;
+    	}
+    	else
+    	{
+    		return result.toString();
+    	}
+    }
+    
+    public static Writer graphToRdfJsonPreordered(Set<Statement> graph, Writer writer) 
+    {
+    	JSONObject result = new JSONObject();
         try 
         {
         	Resource lastSubject = null;
@@ -218,20 +239,19 @@ public class RDFJSON {
         	
         	for(Statement nextStatement : graph)
         	{
-    			Resource nextSubject = nextStatement.getSubject();
-        		
 				// Dump everything if the subject changes after the first iteration
-				if(lastSubject != null && !nextSubject.equals(lastSubject))
+				if(lastSubject != null && !nextStatement.getSubject().equals(lastSubject))
         		{
 					//==================================================
 					// Dump the last variables starting from the context
+	    			// NOTE: This only works because StatementComparator orders nulls before all other values
 	    			if(lastContext != null || contextArray.length() == 0)
 	    			{
 	    				contextArray.put(contextArray.length(), lastContext);
 	    			}
     				addObjectToArray(lastObject, objectArray, contextArray);
                     predicateArray.put(lastPredicate.stringValue(), objectArray);
-                    result.put(lastSubject.stringValue(), predicateArray);
+                    result.put(resourceToString(lastSubject), predicateArray);
 					//==================================================
                     
 					//==================================================
@@ -249,18 +269,17 @@ public class RDFJSON {
         			lastObject = nextStatement.getObject();
         			lastContext = nextStatement.getContext();
         			//==================================================
-        			
         		}
 				else
 				{
-	
-					lastSubject = nextSubject;
+					lastSubject = nextStatement.getSubject();
 					
 	    			// Add the lastPredicate when it changes, as we know we have all of the objects and their related contexts for the last predicate now
 					if(lastPredicate != null && !nextStatement.getPredicate().equals(lastPredicate))
 	        		{
 						//==================================================
 						// Dump the last variables starting from the context
+		    			// NOTE: This only works because StatementComparator orders nulls before all other values
 		    			if(lastContext != null || contextArray.length() == 0)
 		    			{
 		    				contextArray.put(contextArray.length(), lastContext);
@@ -287,12 +306,12 @@ public class RDFJSON {
 					{
 		    			lastPredicate = nextStatement.getPredicate();
 		    			
-		
 		    			// Add the lastObject to objectArray when it changes, as we know we have all of the contexts for the object then
 		    			if(lastObject != null && !nextStatement.getObject().equals(lastObject))
 		    			{
 							//==================================================
 							// Dump the last variables starting from the context
+		        			// NOTE: This only works because StatementComparator orders nulls before all other values
 			    			if(lastContext != null || contextArray.length() == 0)
 			    			{
 								// Add the lastContext to contextArray
@@ -322,25 +341,26 @@ public class RDFJSON {
 			    			
 			    			lastContext = nextStatement.getContext();
 		    			}
-		    			
 					}
 				}
         	}
-        	
 
 			// the last subject/predicate/object/context will never get pushed inside the loop above, so push it here if we went into the loop
     		if(graph.size() > 0)
     		{
+    			// NOTE: This only works because StatementComparator orders nulls before all other values
     			if(lastContext != null || contextArray.length() == 0)
     			{
     				contextArray.put(contextArray.length(), lastContext);
     			}
     			addObjectToArray(lastObject, objectArray, contextArray);
                 predicateArray.put(lastPredicate.stringValue(), objectArray);
-        		result.put(lastSubject.stringValue(), predicateArray);
+        		result.put(resourceToString(lastSubject), predicateArray);
     		}
     		
-            return result.toString(2);
+            result.write(writer);
+            
+            return writer;
 	    } 
         catch (JSONException e) 
         {
@@ -348,19 +368,44 @@ public class RDFJSON {
 	    }
 	    return null;
 	}
-	/**
-	 * @param contexts
-	 * @param nonDefaultContext
-	 * @throws JSONException 
-	 */
+    
+    /**
+     * Returns the correct syntax for a Resource, 
+     * depending on whether it is a URI or a Blank Node (ie, BNode)
+     * 
+     * @param uriOrBnode The resource to serialise to a string
+     * @return The string value of the sesame resource
+     */
+    private static String resourceToString(Resource uriOrBnode)
+    {
+    	if(uriOrBnode instanceof URI)
+    	{
+    		return uriOrBnode.stringValue();
+    	}
+    	else
+    	{
+    		return "_:" + ((BNode)uriOrBnode).getID();
+    	}
+    }
+    
+    /**
+     * Helper method to reduce complexity of the JSON serialisation algorithm
+     * 
+     * Any null contexts will only be serialised to JSON if there are also non-null contexts in the contexts array
+     * 
+     * @param object The RDF value to serialise
+     * @param valueArray The JSON Array to serialise the object to
+     * @param contexts The set of contexts that are relevant to this object, including null contexts as they are found.
+     * @throws JSONException
+     */
 	private static void addObjectToArray(Value object, JSONArray valueArray, JSONArray contexts) throws JSONException
 	{
 		JSONObject valueObj = new JSONObject();
 		
-		valueObj.put(RDFJSON.STRING_VALUE, object.stringValue());
-		
 		if (object instanceof Literal) 
 		{
+			valueObj.put(RDFJSON.STRING_VALUE, object.stringValue());
+			
 		    valueObj.put(RDFJSON.STRING_TYPE, RDFJSON.STRING_LITERAL);
 		    Literal l = (Literal) object;
 		    
@@ -375,16 +420,24 @@ public class RDFJSON {
 		} 
 		else if (object instanceof BNode) 
 		{
+			valueObj.put(RDFJSON.STRING_VALUE, resourceToString((BNode)object));
+			
 		    valueObj.put(RDFJSON.STRING_TYPE, RDFJSON.STRING_BNODE);
 		} 
 		else if (object instanceof URI) 
 		{
-		    valueObj.put(RDFJSON.STRING_TYPE, RDFJSON.STRING_URI);
+			valueObj.put(RDFJSON.STRING_VALUE, resourceToString((URI)object));
+
+			valueObj.put(RDFJSON.STRING_TYPE, RDFJSON.STRING_URI);
 		}
 
 		// net.sf.json line
 		//		if (contexts.size() > 0 && !(contexts.size() == 1 && contexts.contains(null)))
 		// org.json line
+		//		if(contexts.length() > 0 && !(contexts.length() == 1 && contexts.isNull(0)))
+		
+		// if there is a context, and null is not the only context, 
+		// then, output the contexts for this object
 		if(contexts.length() > 0 && !(contexts.length() == 1 && contexts.isNull(0)))
 		{
 			valueObj.put(RDFJSON.STRING_GRAPHS, contexts);
