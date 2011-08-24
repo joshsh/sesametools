@@ -1,4 +1,3 @@
-
 package net.fortytwo.sesametools.caching;
 
 import net.fortytwo.sesametools.SailConnectionTripleSource;
@@ -102,17 +101,20 @@ public class CachingSailConnection implements SailConnection {
             EvaluationStrategyImpl strategy = new EvaluationStrategyImpl(tripleSource, dataSet);
 
             return strategy.evaluate(tupleExpr, bindingSet);
-        }
-        catch (QueryEvaluationException e) {
+        } catch (QueryEvaluationException e) {
             throw new SailException(e);
         }
     }
 
     @Override
-	public void executeUpdate(UpdateExpr arg0, Dataset arg1, BindingSet arg2,
-			boolean arg3) throws SailException {
-    	baseSailConnection.executeUpdate(arg0, arg1, arg2, arg3);
-	}
+    public void executeUpdate(final UpdateExpr updateExpr,
+                              final Dataset dataset,
+                              final BindingSet bindingSet,
+                              final boolean b) throws SailException {
+        cacheConnection.executeUpdate(updateExpr, dataset, bindingSet, b);
+        baseSailConnection.executeUpdate(updateExpr, dataset, bindingSet, b);
+        uncommittedChanges = true;
+    }
 
     public CloseableIteration<? extends Resource, SailException> getContextIDs()
             throws SailException {

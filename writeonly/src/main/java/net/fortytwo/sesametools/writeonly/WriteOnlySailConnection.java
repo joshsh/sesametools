@@ -80,10 +80,11 @@ public class WriteOnlySailConnection implements SailConnection {
         return new EmptyCloseableIteration<BindingSet, QueryEvaluationException>();
     }
 
-    @Override
-	public void executeUpdate(UpdateExpr arg0, Dataset arg1, BindingSet arg2,
-			boolean arg3) throws SailException {
-    	throw new SailException("Updates not implemented yet for this Sail");
+    public void executeUpdate(final UpdateExpr updateExpr,
+                              final Dataset dataset,
+                              final BindingSet bindingSet,
+                              final boolean b) throws SailException {
+    	throw new UnsupportedOperationException("Updates not implemented yet for this Sail");
 	}
 
     public CloseableIteration<? extends Resource, SailException> getContextIDs()

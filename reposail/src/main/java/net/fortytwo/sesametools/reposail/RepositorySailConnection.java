@@ -83,14 +83,14 @@ public class RepositorySailConnection implements SailConnection {
     public CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluate(
             TupleExpr arg0, Dataset arg1, BindingSet arg2, boolean arg3)
             throws SailException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException();
     }
 
-    @Override
-	public void executeUpdate(UpdateExpr arg0, Dataset arg1, BindingSet arg2,
-			boolean arg3) throws SailException {
-    	throw new SailException("Sail to Repository updates not implemented yet");
+    public void executeUpdate(final UpdateExpr updateExpr,
+                              final Dataset dataset,
+                              final BindingSet bindingSet,
+                              final boolean b) throws SailException {
+    	throw new UnsupportedOperationException("Sail to Repository updates not implemented yet");
 	}
 
 

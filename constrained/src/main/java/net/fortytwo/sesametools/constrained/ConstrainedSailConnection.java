@@ -1,10 +1,10 @@
 
 package net.fortytwo.sesametools.constrained;
 
+import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.sesametools.CompoundCloseableIteration;
 import net.fortytwo.sesametools.EmptyCloseableIteration;
 import net.fortytwo.sesametools.SailConnectionTripleSource;
-import info.aduna.iteration.CloseableIteration;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -15,6 +15,7 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
+import org.openrdf.query.algebra.UpdateExpr;
 import org.openrdf.query.algebra.evaluation.TripleSource;
 import org.openrdf.query.algebra.evaluation.impl.EvaluationStrategyImpl;
 import org.openrdf.query.impl.DatasetImpl;
@@ -106,7 +107,10 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
      * has write access.  If no context is given, statements will be written to
      * the default write context, provided that it is writable.
      */
-    public void addStatement(final Resource subj, final URI pred, final Value obj,
+    @Override
+    public void addStatement(final Resource subj,
+                             final URI pred,
+                             final Value obj,
                              final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
             if (writePermitted(defaultWriteContext)) {
@@ -132,6 +136,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
      * requestor has write access.  If no context is given, the default write
      * context will be cleared, provided this is writable and not null.
      */
+    @Override
     public void clear(final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
             if (null != defaultWriteContext) {
@@ -150,12 +155,14 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
         }
     }
 
+    @Override
     public void clearNamespaces() throws SailException {
         if (namespacesAreWritable) {
             super.clearNamespaces();
         }
     }
 
+    @Override
     public CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluate(
             final TupleExpr tupleExpr,
             final Dataset dataset,
@@ -195,6 +202,14 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
         return super.evaluate(tupleExpr, d, bindings, includeInferred);
     }
 
+    @Override
+    public void executeUpdate(final UpdateExpr updateExpr,
+                              final Dataset dataset,
+                              final BindingSet bindingSet,
+                              final boolean b) throws SailException {
+        throw new UnsupportedOperationException("SPARQL Update is not yet supported");
+    }
+
     private CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateByDecomposition(
             final TupleExpr tupleExpr,
             final Dataset dataset,
@@ -215,17 +230,20 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
      * @return an iterator containing only those context IDs to which the
      *         requestor has read access (excluding the null context).
      */
+    @Override
     public CloseableIteration<? extends Resource, SailException> getContextIDs()
             throws SailException {
         return new ReadableContextIteration(super.getContextIDs());
     }
 
+    @Override
     public String getNamespace(String prefix) throws SailException {
         return (namespacesAreReadable)
                 ? super.getNamespace(prefix)
                 : null;
     }
 
+    @Override
     public CloseableIteration<? extends Namespace, SailException> getNamespaces()
             throws SailException {
         return (namespacesAreReadable)
@@ -234,6 +252,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
     }
 
 
+    @Override
     public CloseableIteration<? extends Statement, SailException> getStatements(
             final Resource subj,
             final URI pred,
@@ -265,6 +284,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
         }
     }
 
+    @Override
     public void removeNamespace(final String prefix) throws SailException {
         if (namespacesAreWritable) {
             super.removeNamespace(prefix);
@@ -276,6 +296,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
      *                 given contexts to which the requestor has delete access.  If absent,
      *                 matching statements will be removed from the designated writeable context.
      */
+    @Override
     public void removeStatements(final Resource subj, final URI pred, final Value obj,
                                  final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
@@ -318,6 +339,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
         }
     }
 
+    @Override
     public void setNamespace(final String prefix, final String name) throws SailException {
         if (namespacesAreWritable) {
             super.setNamespace(prefix, name);
@@ -327,6 +349,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
     /**
      * Returns the number of readable statements in the given contexts.
      */
+    @Override
     public long size(final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
             return (allowWildcardSize)

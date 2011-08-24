@@ -1,4 +1,3 @@
-
 package net.fortytwo.sesametools.debug;
 
 import info.aduna.iteration.CloseableIteration;
@@ -58,11 +57,12 @@ public class DebugSailConnection implements SailConnection {
         return baseSailConnection.evaluate(tupleExpr, dataset, bindingSet, includeInferred);
     }
 
-    @Override
-	public void executeUpdate(UpdateExpr arg0, Dataset arg1, BindingSet arg2,
-			boolean arg3) throws SailException {
-    	baseSailConnection.executeUpdate(arg0, arg1, arg2, arg3);
-	}
+    public void executeUpdate(final UpdateExpr updateExpr,
+                              final Dataset dataset,
+                              final BindingSet bindingSet,
+                              final boolean b) throws SailException {
+        baseSailConnection.executeUpdate(updateExpr, dataset, bindingSet, b);
+    }
 
     public CloseableIteration<? extends Resource, SailException> getContextIDs()
             throws SailException {

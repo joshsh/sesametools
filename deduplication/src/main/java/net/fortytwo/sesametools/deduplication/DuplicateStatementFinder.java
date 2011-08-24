@@ -11,11 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: josh
- * Date: Oct 5, 2008
- * Time: 8:55:11 PM
- * To change this template use File | Settings | File Templates.
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class DuplicateStatementFinder {
 

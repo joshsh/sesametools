@@ -99,12 +99,12 @@ public class RecorderSailConnection implements SailConnection {
         return baseSailConnection.evaluate(tupleExpr, dataSet, bindingSet, includeInferred);
     }
 
-    @Override
-	public void executeUpdate(UpdateExpr arg0, Dataset arg1, BindingSet arg2,
-			boolean arg3) throws SailException {
-    	// TODO: add config for this new operation
-    	baseSailConnection.executeUpdate(arg0, arg1, arg2, arg3);
-	}
+    public void executeUpdate(final UpdateExpr updateExpr,
+                              final Dataset dataset,
+                              final BindingSet bindingSet,
+                              final boolean b) throws SailException {
+        throw new UnsupportedOperationException("SPARQL Update is not yet supported");
+    }
 
     public CloseableIteration<? extends Resource, SailException> getContextIDs()
             throws SailException {

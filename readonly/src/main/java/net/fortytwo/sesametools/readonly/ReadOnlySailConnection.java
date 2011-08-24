@@ -51,11 +51,12 @@ public class ReadOnlySailConnection implements SailConnection {
         return baseSailConnection.evaluate(tupleExpr, dataset, bindings, includeInferred);
     }
 
-    @Override
-	public void executeUpdate(UpdateExpr arg0, Dataset arg1, BindingSet arg2,
-			boolean arg3) throws SailException {
-    	throw new SailException("Updates are not supported for this Sail");
-	}
+    public void executeUpdate(final UpdateExpr updateExpr,
+                              final Dataset dataset,
+                              final BindingSet bindingSet,
+                              final boolean b) throws SailException {
+        throw new UnsupportedOperationException("SPARQL Update is not yet supported");
+    }
 
     public CloseableIteration<? extends Resource, SailException> getContextIDs() throws SailException {
         return baseSailConnection.getContextIDs();
