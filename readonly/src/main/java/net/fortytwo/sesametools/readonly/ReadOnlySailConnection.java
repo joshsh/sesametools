@@ -11,6 +11,7 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
+import org.openrdf.query.algebra.UpdateExpr;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailConnectionListener;
@@ -49,6 +50,12 @@ public class ReadOnlySailConnection implements SailConnection {
                                                                                        final boolean includeInferred) throws SailException {
         return baseSailConnection.evaluate(tupleExpr, dataset, bindings, includeInferred);
     }
+
+    @Override
+	public void executeUpdate(UpdateExpr arg0, Dataset arg1, BindingSet arg2,
+			boolean arg3) throws SailException {
+    	throw new SailException("Updates are not supported for this Sail");
+	}
 
     public CloseableIteration<? extends Resource, SailException> getContextIDs() throws SailException {
         return baseSailConnection.getContextIDs();

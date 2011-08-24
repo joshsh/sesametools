@@ -33,27 +33,25 @@
 
     <dependencies>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-sail-api</artifactId>
             <version>${sesame.version}</version>
             <type>jar</type>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-queryalgebra-evaluation</artifactId>
             <version>${sesame.version}</version>
             <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <type>jar</type>
+            <scope>compile</scope>
         </dependency>
 
         <!-- test dependencies -->
@@ -61,6 +59,20 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.16</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+            <type>jar</type>
             <scope>test</scope>
         </dependency>
     </dependencies>
