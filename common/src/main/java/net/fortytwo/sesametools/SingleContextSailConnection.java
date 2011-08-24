@@ -11,6 +11,7 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
+import org.openrdf.query.algebra.UpdateExpr;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
@@ -77,6 +78,12 @@ public class SingleContextSailConnection implements SailConnection {
 // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+	public void executeUpdate(UpdateExpr arg0, Dataset arg1, BindingSet arg2,
+			boolean arg3) throws SailException {
+    	baseSailConnection.executeUpdate(arg0, arg1, arg2, arg3);
+	}
 
     public CloseableIteration<? extends Resource, SailException> getContextIDs()
             throws SailException {

@@ -13,6 +13,7 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
+import org.openrdf.query.algebra.UpdateExpr;
 import org.openrdf.query.algebra.evaluation.TripleSource;
 import org.openrdf.query.algebra.evaluation.impl.EvaluationStrategyImpl;
 import org.openrdf.sail.Sail;
@@ -106,6 +107,12 @@ public class CachingSailConnection implements SailConnection {
             throw new SailException(e);
         }
     }
+
+    @Override
+	public void executeUpdate(UpdateExpr arg0, Dataset arg1, BindingSet arg2,
+			boolean arg3) throws SailException {
+    	baseSailConnection.executeUpdate(arg0, arg1, arg2, arg3);
+	}
 
     public CloseableIteration<? extends Resource, SailException> getContextIDs()
             throws SailException {
