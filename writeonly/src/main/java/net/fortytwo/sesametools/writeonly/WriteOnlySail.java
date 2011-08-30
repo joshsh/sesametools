@@ -11,9 +11,7 @@ import org.openrdf.sail.SailException;
 import java.io.File;
 
 /**
- * Author: josh
- * Date: Feb 18, 2008
- * Time: 12:56:00 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class WriteOnlySail implements Sail {
     private RDFHandler handler;

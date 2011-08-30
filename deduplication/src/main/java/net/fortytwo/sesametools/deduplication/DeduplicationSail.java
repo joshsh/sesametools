@@ -6,11 +6,7 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.helpers.SailWrapper;
 
 /**
- * Created by IntelliJ IDEA.
- * User: josh
- * Date: Sep 30, 2008
- * Time: 1:35:44 PM
- * To change this template use File | Settings | File Templates.
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class DeduplicationSail extends SailWrapper {
     public DeduplicationSail(final Sail baseSail) {

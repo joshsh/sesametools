@@ -14,11 +14,7 @@ import org.openrdf.sail.memory.MemoryStore;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: josh
- * Date: Oct 5, 2008
- * Time: 10:37:55 PM
- * To change this template use File | Settings | File Templates.
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class DuplicateStatementFinderTest extends TestCase {
     private static final String NS = "http://example.org/test/";

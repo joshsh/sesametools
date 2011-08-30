@@ -11,9 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * User: josh
- * Date: Apr 18, 2010
- * Time: 2:51:46 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class SparqlQueryRepresentation extends OutputRepresentation {
 

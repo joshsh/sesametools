@@ -23,9 +23,7 @@ import org.openrdf.sail.SailException;
 import net.fortytwo.sesametools.EmptyCloseableIteration;
 
 /**
- * Author: josh
- * Date: Feb 18, 2008
- * Time: 12:56:10 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class WriteOnlySailConnection implements SailConnection {
     private RDFHandler handler;

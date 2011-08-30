@@ -12,9 +12,7 @@ import org.openrdf.sail.SailException;
 import java.io.File;
 
 /**
- * Author: josh
- * Date: Feb 26, 2008
- * Time: 1:34:19 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RepositorySail implements Sail {
     private Repository repository;

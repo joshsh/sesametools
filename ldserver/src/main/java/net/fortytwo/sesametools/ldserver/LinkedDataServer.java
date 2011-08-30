@@ -15,10 +15,8 @@ import org.restlet.data.Protocol;
 
 /**
  * A RESTful web service which publishes the contents of a Sail data store as Linked Data.
- * <p/>
- * User: josh
- * Date: Oct 3, 2009
- * Time: 2:39:31 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class LinkedDataServer {
     public static final String SERVER_ATTR = "linked-data-server";

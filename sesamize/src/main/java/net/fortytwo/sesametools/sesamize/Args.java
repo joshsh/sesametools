@@ -12,9 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * User: josh
- * Date: Jul 4, 2010
- * Time: 2:25:33 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 class Args {
     public final Set<String> flags;

@@ -9,9 +9,7 @@ import org.openrdf.sail.helpers.SailWrapper;
  * A Sail which maps between the internal URI space of a lower-level data store, and an externally visible URI space
  * (for example, published Linked Data).
  *
- * Author: josh
- * Date: Aug 11, 2009
- * Time: 3:30:26 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class MappingSail extends SailWrapper {
     private final MappingSchema schema;

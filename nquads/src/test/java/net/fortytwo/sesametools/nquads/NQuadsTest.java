@@ -9,9 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 /**
- * User: josh
- * Date: 6/1/11
- * Time: 11:34 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class NQuadsTest extends TestCase {
     private static final String

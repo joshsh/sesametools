@@ -14,9 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * User: josh
- * Date: Oct 3, 2009
- * Time: 3:12:51 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class RDFRepresentation extends OutputRepresentation {
     private static final Logger LOGGER

@@ -16,9 +16,7 @@ import net.fortytwo.sesametools.SimpleDatasetImpl;
  * named graphs in the readable Dataset, and may only write statements to the
  * named graphs in the writeable Dataset.
  * <p/>
- * Author: josh
- * Date: Apr 4, 2008
- * Time: 4:04:14 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class ConstrainedSail extends SailWrapper {
 

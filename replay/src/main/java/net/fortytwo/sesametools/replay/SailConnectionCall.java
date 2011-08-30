@@ -34,9 +34,7 @@ import org.openrdf.sail.SailException;
 import java.util.StringTokenizer;
 
 /**
- * Author: josh
- * Date: Apr 30, 2008
- * Time: 4:56:44 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public abstract class SailConnectionCall<T, R> {
     protected static final char DELIM = '\t';

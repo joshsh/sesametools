@@ -1,7 +1,3 @@
-/*
- * Copyright Aduna (http://www.aduna-software.com/) (c) 1997-2007.
- * This code has been slightly modified (by Joshua Shinavier) so as to be used with NQuadsParser.
- */
 package net.fortytwo.sesametools.nquads;
 
 import org.openrdf.model.Literal;
@@ -27,9 +23,9 @@ import java.io.UnsupportedEncodingException;
  * N-Triples format. The N-Triples format is defined in <a
  * href="http://www.w3.org/TR/rdf-testcases/#ntriples">this section</a> of the
  * RDF Test Cases document.
- *
- * Date: May 18, 2009
- * Time: 6:12:35 PM
+ * <p/>
+ * Copyright Aduna (http://www.aduna-software.com/) (c) 1997-2007.
+ * This code has been slightly modified (by Joshua Shinavier) so as to be used with NQuadsParser.
  */
 public class ModifiedNTriplesParser extends RDFParserBase {
     /*-----------*
@@ -87,9 +83,11 @@ public class ModifiedNTriplesParser extends RDFParserBase {
      *                US-ASCII characters, as per the N-Triples specification.
      * @param baseURI The URI associated with the data in the InputStream, must not be
      *                <tt>null</tt>.
-     * @throws java.io.IOException              If an I/O error occurred while data was read from the InputStream.
-     * @throws org.openrdf.rio.RDFParseException        If the parser has found an unrecoverable parse error.
-     * @throws org.openrdf.rio.RDFHandlerException      If the configured statement handler encountered an unrecoverable
+     * @throws java.io.IOException      If an I/O error occurred while data was read from the InputStream.
+     * @throws org.openrdf.rio.RDFParseException
+     *                                  If the parser has found an unrecoverable parse error.
+     * @throws org.openrdf.rio.RDFHandlerException
+     *                                  If the configured statement handler encountered an unrecoverable
      *                                  error.
      * @throws IllegalArgumentException If the supplied input stream or base URI is <tt>null</tt>.
      */
@@ -102,8 +100,7 @@ public class ModifiedNTriplesParser extends RDFParserBase {
 
         try {
             parse(new InputStreamReader(in, "US-ASCII"), baseURI);
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             // Every platform should support the US-ASCII encoding...
             throw new RuntimeException(e);
         }
@@ -116,9 +113,11 @@ public class ModifiedNTriplesParser extends RDFParserBase {
      * @param reader  The Reader from which to read the data, must not be <tt>null</tt>.
      * @param baseURI The URI associated with the data in the Reader, must not be
      *                <tt>null</tt>.
-     * @throws java.io.IOException              If an I/O error occurred while data was read from the InputStream.
-     * @throws org.openrdf.rio.RDFParseException        If the parser has found an unrecoverable parse error.
-     * @throws org.openrdf.rio.RDFHandlerException      If the configured statement handler encountered an unrecoverable
+     * @throws java.io.IOException      If an I/O error occurred while data was read from the InputStream.
+     * @throws org.openrdf.rio.RDFParseException
+     *                                  If the parser has found an unrecoverable parse error.
+     * @throws org.openrdf.rio.RDFHandlerException
+     *                                  If the configured statement handler encountered an unrecoverable
      *                                  error.
      * @throws IllegalArgumentException If the supplied reader or base URI is <tt>null</tt>.
      */
@@ -155,8 +154,7 @@ public class ModifiedNTriplesParser extends RDFParserBase {
 
                 c = skipWhitespace(c);
             }
-        }
-        finally {
+        } finally {
             clear();
         }
 
@@ -427,8 +425,7 @@ public class ModifiedNTriplesParser extends RDFParserBase {
             throws RDFParseException {
         try {
             uri = NTriplesUtil.unescapeString(uri);
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             reportError(e.getMessage());
         }
 
@@ -439,8 +436,7 @@ public class ModifiedNTriplesParser extends RDFParserBase {
             throws RDFParseException {
         try {
             label = NTriplesUtil.unescapeString(label);
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             reportError(e.getMessage());
         }
 

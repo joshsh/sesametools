@@ -20,9 +20,7 @@ import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
 
 /**
- * Author: josh
- * Date: Feb 26, 2008
- * Time: 1:34:39 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RepositorySailConnection implements SailConnection {
     private RepositoryConnection repoConnection;

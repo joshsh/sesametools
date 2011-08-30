@@ -1,9 +1,7 @@
 package net.fortytwo.sesametools.replay;
 
 /**
- * User: josh
- * Date: Aug 9, 2010
- * Time: 1:02:21 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class ReplayConfiguration {
     public boolean logTransactions = true;

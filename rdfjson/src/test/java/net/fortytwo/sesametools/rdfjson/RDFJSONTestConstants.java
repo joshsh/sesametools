@@ -6,9 +6,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 
 /**
- * User: josh
- * Date: Dec 21, 2010
- * Time: 5:36:35 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public final class RDFJSONTestConstants {
     protected static final ValueFactory vf = new ValueFactoryImpl();

@@ -14,9 +14,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 /**
- * Author: josh
- * Date: Apr 30, 2008
- * Time: 4:35:31 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RecorderSail implements StackableSail {
     private final Sail baseSail;

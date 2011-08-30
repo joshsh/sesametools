@@ -1,13 +1,8 @@
 package net.fortytwo.sesametools.rdfjson;
 
-import static org.junit.Assert.*;
-import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.*;
-
 import net.fortytwo.sesametools.StatementComparator;
-
 import org.junit.After;
 import org.junit.Test;
-
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.vocabulary.OWL;
@@ -20,10 +15,17 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.ARTHUR;
+import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.BASE_URI;
+import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.FOAF;
+import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.GRAPH1;
+import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.P1;
+import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.vf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 /**
- * User: josh
- * Date: Dec 21, 2010
- * Time: 3:54:39 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RDFJSONParserTest {
 

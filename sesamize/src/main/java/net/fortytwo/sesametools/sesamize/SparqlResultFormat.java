@@ -1,9 +1,7 @@
 package net.fortytwo.sesametools.sesamize;
 
 /**
- * User: josh
- * Date: Apr 13, 2010
- * Time: 10:13:36 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public enum SparqlResultFormat {
     // Note: the XML format is defined first, so that it is the default format.

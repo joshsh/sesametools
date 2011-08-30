@@ -22,7 +22,7 @@ wget "http://localhost:8182/sparql?query=SELECT%20%3Fs%20%3Fp%20%3Fo%20%20WHERE%
  */
 
 /**
- *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class SparqlResource extends QueryResource {
     private final String query;

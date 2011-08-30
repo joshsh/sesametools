@@ -19,9 +19,6 @@ import java.io.UnsupportedEncodingException;
  * 1) "final" removed from NTriplesParser.getRDFFormat
  * 2) private member variables made public: reader, lineno, subject, predcate, object
  * 3) private methods: skipWhitespace, skipLine, parseSubject, parsePredicate, parseObject, throwEOFException
- * <p/>
- * Date: May 18, 2009
- * Time: 6:11:51 PM
  *
  * @author Joshua Shinavier (http://fortytwo.net).  Builds on code by Aduna.
  */

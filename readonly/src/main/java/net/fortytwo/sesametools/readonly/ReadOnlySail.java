@@ -9,9 +9,7 @@ import org.openrdf.sail.StackableSail;
 import java.io.File;
 
 /**
- * Author: josh
- * Date: Jul 23, 2008
- * Time: 12:20:19 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class ReadOnlySail implements StackableSail {
     private Sail baseSail;

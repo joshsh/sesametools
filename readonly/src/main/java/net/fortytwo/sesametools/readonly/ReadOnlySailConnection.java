@@ -21,9 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Author: josh
- * Date: Jul 23, 2008
- * Time: 12:23:48 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class ReadOnlySailConnection implements SailConnection {
     private final SailConnection baseSailConnection;

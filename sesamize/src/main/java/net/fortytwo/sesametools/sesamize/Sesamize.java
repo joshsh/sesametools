@@ -49,9 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * User: josh
- * Date: Jul 2, 2010
- * Time: 8:23:16 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Sesamize {
     private static final String

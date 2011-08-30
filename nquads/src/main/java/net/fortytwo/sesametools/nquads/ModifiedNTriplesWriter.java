@@ -1,7 +1,3 @@
-/*
- * Copyright Aduna (http://www.aduna-software.com/) (c) 1997-2007.
- * This code has been slightly modified (by Joshua Shinavier) so as to be used with NQuadsWriter.
- */
 package net.fortytwo.sesametools.nquads;
 
 import org.openrdf.model.BNode;
@@ -26,6 +22,9 @@ import java.nio.charset.Charset;
  * N-Triples format. The N-Triples format is defined in <a
  * href="http://www.w3.org/TR/rdf-testcases/#ntriples">this section</a> of the
  * RDF Test Cases document.
+ * <p/>
+ * Copyright Aduna (http://www.aduna-software.com/) (c) 1997-2007.
+ * This code has been slightly modified (by Joshua Shinavier) so as to be used with NQuadsWriter.
  */
 public class ModifiedNTriplesWriter implements RDFWriter {
 
@@ -89,11 +88,9 @@ public class ModifiedNTriplesWriter implements RDFWriter {
 
         try {
             writer.flush();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RDFHandlerException(e);
-        }
-        finally {
+        } finally {
             writingStarted = false;
         }
     }
@@ -130,8 +127,7 @@ public class ModifiedNTriplesWriter implements RDFWriter {
 
             writer.write(" .");
             writeNewLine();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RDFHandlerException(e);
         }
     }
@@ -142,8 +138,7 @@ public class ModifiedNTriplesWriter implements RDFWriter {
             writer.write("# ");
             writer.write(comment);
             writeNewLine();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RDFHandlerException(e);
         }
     }
@@ -175,5 +170,5 @@ public class ModifiedNTriplesWriter implements RDFWriter {
     protected void writeNewLine()
             throws IOException {
         writer.write("\n");
-	}
+    }
 }

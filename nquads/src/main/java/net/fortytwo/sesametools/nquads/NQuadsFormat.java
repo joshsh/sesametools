@@ -5,9 +5,6 @@ import org.openrdf.rio.RDFFormat;
 import java.nio.charset.Charset;
 
 /**
- * Date: Aug 3, 2009
- * Time: 3:25:39 PM
- *
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class NQuadsFormat extends RDFFormat {

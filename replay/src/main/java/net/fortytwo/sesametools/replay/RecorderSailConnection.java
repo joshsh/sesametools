@@ -32,6 +32,9 @@ import org.openrdf.sail.SailException;
 
 import java.util.Random;
 
+/**
+ * @author Joshua Shinavier (http://fortytwo.net).
+ */
 public class RecorderSailConnection implements SailConnection {
     private final String id = "" + new Random().nextInt(0xFFFF);
     private final Handler<SailConnectionCall, SailException> queryHandler;

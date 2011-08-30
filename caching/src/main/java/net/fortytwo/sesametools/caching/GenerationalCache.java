@@ -2,12 +2,9 @@ package net.fortytwo.sesametools.caching;
 
 import org.openrdf.model.Value;
 
+// Note: not thread-safe
 /**
- * Note: not thread-safe
- * <p/>
- * Author: josh
- * Date: Feb 21, 2008
- * Time: 6:07:49 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class GenerationalCache<T extends Value> { /*
     public enum PartOfSpeech { Subject, Predicate, Object };

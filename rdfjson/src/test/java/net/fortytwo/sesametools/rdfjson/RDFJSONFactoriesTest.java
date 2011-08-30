@@ -1,18 +1,18 @@
 package net.fortytwo.sesametools.rdfjson;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-
-import java.io.StringWriter;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 
+import java.io.StringWriter;
+
+import static org.junit.Assert.assertTrue;
+
 
 /**
- *
+ * @author Peter Ansell p_ansell@yahoo.com
  */
 public class RDFJSONFactoriesTest {
 

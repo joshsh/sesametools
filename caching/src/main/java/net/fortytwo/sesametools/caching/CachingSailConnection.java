@@ -24,6 +24,10 @@ import java.util.Set;
 // TODO: define rollback behavior
 
 // TODO: investigate inference
+
+/**
+ * @author Joshua Shinavier (http://fortytwo.net)
+ */
 public class CachingSailConnection implements SailConnection {
     private boolean cacheSubject, cachePredicate, cacheObject;
 

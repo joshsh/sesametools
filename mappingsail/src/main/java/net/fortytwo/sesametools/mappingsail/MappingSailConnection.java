@@ -11,9 +11,7 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.helpers.SailConnectionWrapper;
 
 /**
- * Author: josh
- * Date: Aug 11, 2009
- * Time: 3:32:06 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 class MappingSailConnection extends SailConnectionWrapper {
     private final MappingSchema rewriters;

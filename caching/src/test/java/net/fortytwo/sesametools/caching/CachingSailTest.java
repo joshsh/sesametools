@@ -18,6 +18,9 @@ import org.openrdf.sail.memory.MemoryStore;
 
 import java.io.InputStream;
 
+/**
+ * @author Joshua Shinavier (http://fortytwo.net)
+ */
 public class CachingSailTest extends TestCase {
     private static final String NS = "http://example.org/ns/";
     private static final long CAPACITY = 10000000l;

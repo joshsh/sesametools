@@ -11,9 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * User: josh
- * Date: Oct 3, 2009
- * Time: 2:57:31 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class RDFMediaTypes {
     private static final Map<RDFFormat, MediaType> rdfFormatToMediaTypeMap;

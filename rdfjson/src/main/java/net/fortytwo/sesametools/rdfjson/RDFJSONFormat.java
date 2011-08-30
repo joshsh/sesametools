@@ -5,9 +5,7 @@ import org.openrdf.rio.RDFFormat;
 import java.nio.charset.Charset;
 
 /**
- * User: josh
- * Date: 6/28/11
- * Time: 6:53 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RDFJSONFormat extends RDFFormat {
     public static RDFJSONFormat RDFJSON = new RDFJSONFormat();

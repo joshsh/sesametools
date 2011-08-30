@@ -19,7 +19,7 @@ import org.openrdf.sail.SailException;
  * A SailConnection which simply relays operations to another SailConnection.
  * Overload one or more methods for testing and debugging.
  *
- * @author josh
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class DebugSailConnection implements SailConnection {
     private final SailConnection baseSailConnection;

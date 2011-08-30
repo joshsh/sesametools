@@ -1,10 +1,9 @@
 
 package net.fortytwo.sesametools.constrained;
 
-import net.fortytwo.sesametools.SimpleDatasetImpl;
-import net.fortytwo.sesametools.constrained.ConstrainedSail;
 import info.aduna.iteration.CloseableIteration;
 import junit.framework.TestCase;
+import net.fortytwo.sesametools.SimpleDatasetImpl;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
@@ -19,9 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Author: josh
- * Date: Apr 8, 2008
- * Time: 11:24:53 AM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class ConstrainedSailTest extends TestCase {
     private static final URI

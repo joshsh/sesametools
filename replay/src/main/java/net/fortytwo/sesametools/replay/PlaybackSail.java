@@ -18,9 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Author: josh
- * Date: Apr 30, 2008
- * Time: 4:35:31 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class PlaybackSail implements StackableSail {
     private final Sail baseSail;

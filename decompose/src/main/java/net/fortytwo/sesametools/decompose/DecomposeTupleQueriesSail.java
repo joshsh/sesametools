@@ -9,9 +9,7 @@ import org.openrdf.sail.StackableSail;
 import java.io.File;
 
 /**
- * Author: josh
- * Date: Jun 2, 2008
- * Time: 12:24:08 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class DecomposeTupleQueriesSail implements StackableSail {
     private Sail baseSail;

@@ -8,10 +8,8 @@ import java.util.Map;
 /**
  * A set of rules for rewriting URIs based on direction (to or from the data store) and part of speech (the position
  * in an RDF statement in which a URI appears)
- * <p/>
- * Author: josh
- * Date: Aug 11, 2009
- * Time: 3:48:36 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class MappingSchema {
     /**

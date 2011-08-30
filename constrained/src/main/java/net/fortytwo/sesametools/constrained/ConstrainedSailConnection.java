@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * @author josh
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class ConstrainedSailConnection extends SailConnectionWrapper {
     // For now, we won't allow inferred statements through when statements from

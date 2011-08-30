@@ -8,9 +8,7 @@ import org.openrdf.sail.SailException;
 import java.util.StringTokenizer;
 
 /**
- * Author: josh
- * Date: Apr 30, 2008
- * Time: 5:00:13 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class HasNextCall extends SailConnectionCall<CloseableIteration<?, SailException>, Object> {
     public HasNextCall(final String id) {

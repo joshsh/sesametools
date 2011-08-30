@@ -21,9 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * User: josh
- * Date: Apr 13, 2010
- * Time: 10:13:36 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class SparqlTools {
     public enum SparqlResultFormat {

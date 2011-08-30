@@ -27,10 +27,8 @@ import java.util.logging.Logger;
  * the URI of the graph, without redirection.
  * <p/>
  * This conforms to the common expectation that RDF documents and corresponding named graphs have the same URI.
- * <p/>
- * User: josh
- * Date: Oct 3, 2009
- * Time: 2:55:27 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class GraphResource extends Resource {
     private static final Logger LOGGER = Logger.getLogger(GraphResource.class.getName());

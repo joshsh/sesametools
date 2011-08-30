@@ -20,9 +20,7 @@ import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 
 /**
- * Author: josh
- * Date: Jun 2, 2008
- * Time: 12:24:22 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class DecomposeTupleQueriesSailConnection implements SailConnection {
     private final SailConnection baseSailConnection;

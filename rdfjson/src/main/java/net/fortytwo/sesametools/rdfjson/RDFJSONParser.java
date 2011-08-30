@@ -22,9 +22,6 @@ import java.util.Collection;
 
 /**
  * RDFParser implementation for the proposed RDF/JSON format (see http://n2.talis.com/wiki/RDF_JSON_Specification)
- * <p/>
- * Date: Dec 21, 2010
- * Time: 2:55:39 PM
  *
  * @author Joshua Shinavier (http://fortytwo.net).  Builds on code by Hannes Ebner
  */

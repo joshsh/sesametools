@@ -11,9 +11,7 @@ import java.io.PrintStream;
 import java.util.List;
 
 /**
- * User: josh
- * Date: Jul 5, 2010
- * Time: 7:28:15 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class SPARQLResultsTabWriter implements TupleQueryResultWriter {
     private final PrintStream ps;

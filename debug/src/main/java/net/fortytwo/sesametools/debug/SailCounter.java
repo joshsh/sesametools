@@ -1,12 +1,12 @@
-
 package net.fortytwo.sesametools.debug;
 
+/**
+ * @author Joshua Shinavier (http://fortytwo.net)
+ */
 public class SailCounter {
     public enum Method {
         GetStatements
     }
-
-    ;
 
     private int countGetStatements;
 

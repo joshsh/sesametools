@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public abstract class QueryResource extends Resource {
     private static final Logger LOGGER = Logger.getLogger(QueryResource.class.getName());

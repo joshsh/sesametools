@@ -5,10 +5,8 @@ import org.openrdf.model.URI;
 /**
  * Represents a rule to map an original URI to a new URI.
  * Rules are considered to be complete and self contained: MappingSail does not impose its own rewriting logic.
- * <p/>
- * Author: josh
- * Date: Aug 11, 2009
- * Time: 3:35:10 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public interface RewriteRule {
     /**

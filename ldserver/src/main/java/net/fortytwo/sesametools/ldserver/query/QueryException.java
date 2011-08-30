@@ -1,9 +1,7 @@
 package net.fortytwo.sesametools.ldserver.query;
 
 /**
- * User: josh
- * Date: Apr 18, 2010
- * Time: 2:45:13 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class QueryException extends Exception {
     public QueryException(final Throwable cause) {

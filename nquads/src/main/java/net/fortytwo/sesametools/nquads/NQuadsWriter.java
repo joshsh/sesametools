@@ -13,9 +13,6 @@ import java.io.IOException;
 
 /**
  * RDFWriter implementation for the N-Quads RDF format.
- * <p/>
- * Date: Jul 9, 2010
- * Time: 7:18:32 PM
  *
  * @author Joshua Shinavier (http://fortytwo.net).  Builds on code by Aduna.
  */

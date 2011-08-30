@@ -6,6 +6,9 @@ import org.openrdf.model.Resource;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.sail.SailException;
 
+/**
+ * @author Joshua Shinavier (http://fortytwo.net).
+ */
 public class RepositoryResourceIteration implements CloseableIteration<Resource, SailException> {
     private CloseableIteration<? extends Resource, RepositoryException> innerIter;
 

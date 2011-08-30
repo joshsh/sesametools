@@ -1,21 +1,20 @@
 package net.fortytwo.sesametools.rdfjson;
 
-import static org.junit.Assert.*;
-import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.*;
-
-import org.junit.Test;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.Test;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
+
+import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.ARTHUR;
+import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.FOAF;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the RDF/JSON writer by way of the RDF/JSON parser.
  *
- * User: josh
- * Date: Dec 21, 2010
- * Time: 5:26:27 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RDFJSONWriterTest {
 	@Test

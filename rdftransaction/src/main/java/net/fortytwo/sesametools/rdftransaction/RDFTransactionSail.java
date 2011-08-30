@@ -7,10 +7,8 @@ import org.openrdf.sail.helpers.SailWrapper;
 
 /**
  * A Sail which uploads committed transactions in the application/x-rdftransaction format
- * 
- * User: josh
- * Date: Aug 10, 2010
- * Time: 12:13:17 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public abstract class RDFTransactionSail extends SailWrapper {
     private final int commitsPerUpload;

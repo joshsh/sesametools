@@ -34,10 +34,8 @@ import java.util.logging.Logger;
  * A request for an information resource is fulfilled with the resource itself.  No content negotiation occurs.
  * <p/>
  * A request for a non-information resource is fulfilled with a 303-redirect to an information resource of the appropriate media type.
- * <p/>
- * User: josh
- * Date: Oct 3, 2009
- * Time: 2:55:27 PM
+ *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class WebResource extends Resource {
     private static final Logger LOGGER = Logger.getLogger(WebResource.class.getName());

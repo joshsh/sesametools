@@ -15,8 +15,10 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Joshua Shinavier (http://fortytwo.net)
+ */
 // Note: assumes that the value factories of the base Sail and the MemoryStore
-
 // cache are compatible.
 public class CachingSail implements StackableSail {
     private static long DEFAULT_CAPACITY = 1000000l;

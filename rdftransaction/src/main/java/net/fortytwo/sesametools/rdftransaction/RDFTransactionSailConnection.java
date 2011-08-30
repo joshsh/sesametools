@@ -23,9 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
- * User: josh
- * Date: Aug 10, 2010
- * Time: 12:13:44 PM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RDFTransactionSailConnection extends SailConnectionWrapper {
     private final List<TransactionOperation> operations;

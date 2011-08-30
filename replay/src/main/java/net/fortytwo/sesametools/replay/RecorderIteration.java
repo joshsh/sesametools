@@ -7,9 +7,7 @@ import net.fortytwo.sesametools.replay.calls.RemoveCall;
 import net.fortytwo.sesametools.replay.calls.CloseIterationCall;
 
 /**
- * Author: josh
- * Date: May 12, 2008
- * Time: 10:45:32 AM
+ * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RecorderIteration<T, E extends Exception> implements CloseableIteration<T, E> {
     private final String id;

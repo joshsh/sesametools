@@ -1,4 +1,3 @@
-
 package net.fortytwo.sesametools.debug;
 
 import org.openrdf.model.ValueFactory;
@@ -13,7 +12,7 @@ import java.io.File;
  * A StackableSail which simply relays operations to the base Sail. Overload one
  * or more methods for testing and debugging.
  *
- * @author josh
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class DebugSail implements StackableSail {
     private final SailCounter counter;

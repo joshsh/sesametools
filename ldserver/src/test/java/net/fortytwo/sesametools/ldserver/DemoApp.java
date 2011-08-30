@@ -8,9 +8,7 @@ import org.openrdf.sail.Sail;
 import org.openrdf.sail.memory.MemoryStore;
 
 /**
- * User: josh
- * Date: 3/15/11
- * Time: 6:37 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class DemoApp {
     public static void main(final String[] args) throws Exception {
