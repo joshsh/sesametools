@@ -1,7 +1,6 @@
 package net.fortytwo.sesametools.deduplication;
 
 import junit.framework.TestCase;
-import net.fortytwo.sesametools.deduplication.DuplicateStatementFinder;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
@@ -53,7 +52,7 @@ public class DuplicateStatementFinderTest extends TestCase {
         assertEquals(2, dups.size());
         //...
 
-
+        sc.rollback();
         sc.close();
     }
 }
