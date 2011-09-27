@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>writeonly</artifactId>
-    <version>1.5</version>
+    <version>1.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>WriteOnlySail</name>
     <description>A write-only Sail implementation</description>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>net.fortytwo.sesametools</groupId>
         <artifactId>sesametools-all</artifactId>
-        <version>1.5</version>
+        <version>1.6-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

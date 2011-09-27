@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>sesametools-all</artifactId>
-    <version>1.5</version>
+    <version>1.6-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Sesame Tools</name>
     <description>Miscellaneous utilities for use with OpenRDF Sesame</description>
@@ -31,7 +31,7 @@
     </modules>
 
     <properties>
-        <sesametools.version>1.5</sesametools.version>
+        <sesametools.version>1.6-SNAPSHOT</sesametools.version>
         <sesame.version>2.5.0</sesame.version>
         <slf4j.version>1.6.2</slf4j.version>
         <junit.version>4.5</junit.version>
