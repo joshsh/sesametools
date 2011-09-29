@@ -18,6 +18,7 @@
         <module>debug</module>
         <module>decompose</module>
         <module>deduplication</module>
+	<module>jsonld</module>
         <module>ldserver</module>
         <module>mappingsail</module>
         <module>nquads</module>
