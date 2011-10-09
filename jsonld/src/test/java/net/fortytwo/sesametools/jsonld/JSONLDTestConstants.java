@@ -19,7 +19,7 @@ public final class JSONLDTestConstants {
         static final String NAMESPACE = "http://xmlns.com/foaf/0.1/";
         static final URI
                 AVATAR = vf.createURI(NAMESPACE + "avatar"),
-            HOMEPAGE = vf.createURI(NAMESPACE + "homepage"),
+                HOMEPAGE = vf.createURI(NAMESPACE + "homepage"),
                 KNOWS = vf.createURI(NAMESPACE + "knows"),
                 NAME = vf.createURI(NAMESPACE + "name"),
                 PERSON = vf.createURI(NAMESPACE + "Person");

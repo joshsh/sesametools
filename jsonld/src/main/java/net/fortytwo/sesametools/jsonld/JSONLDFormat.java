@@ -5,6 +5,8 @@ import org.openrdf.rio.RDFFormat;
 import java.nio.charset.Charset;
 
 /**
+ * The JSON-LD RDF format.
+ *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class JSONLDFormat extends RDFFormat {

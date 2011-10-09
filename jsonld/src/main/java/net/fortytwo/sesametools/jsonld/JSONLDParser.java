@@ -30,6 +30,9 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
+ * A parser for the JSON-LD RDF format.
+ * This implementation wraps the Stanbol JSON-LD library.
+ *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class JSONLDParser implements RDFParser {
@@ -92,7 +95,6 @@ public class JSONLDParser implements RDFParser {
             throw new IllegalStateException("RDF handler has not been set");
         }
 
-
         String s = toString(reader);
         JsonLd result;
         try {
@@ -124,9 +126,9 @@ public class JSONLDParser implements RDFParser {
 
         for (String s : j.getResourceSubjects()) {
             //System.out.println("subject: " + s);
-            Resource outSubject = toResource(s);
-
             JsonLdResource inSubject = j.getResource(s);
+
+            Resource outSubject = toResource(s);
 
             //for (String type : inSubject.getTypes()) {
             //    System.out.println("type: " + type);

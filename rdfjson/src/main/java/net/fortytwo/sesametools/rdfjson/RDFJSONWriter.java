@@ -26,7 +26,7 @@ public class RDFJSONWriter implements RDFWriter {
     private Set<Statement> graph;
 
     public RDFJSONWriter(final OutputStream out) {
-        this.writer = new OutputStreamWriter(out);
+        this(new OutputStreamWriter(out));
     }
 
     public RDFJSONWriter(final Writer writer) {
