@@ -1,0 +1,32 @@
+[{
+    "@subject": {
+        "@iri": "http://example.com/library"
+    },
+    "http://example.org/vocab#contains": {
+        "@iri": "http://example.org/library/the-republic"
+    },
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+        "@iri": "http://example.org/vocab#Library"
+    }
+}, {
+    "@subject": {
+        "@iri": "http://example.org/library/the-republic"
+    },
+    "http://example.org/vocab#contains": {
+        "@iri": "http://example.org/library/the-republic#introduction"
+    },
+    "http://purl.org/dc/terms/creator": "Plato",
+    "http://purl.org/dc/terms/title": "The Republic",
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+        "@iri": "http://example.org/vocab#Book"
+    }
+}, {
+    "@subject": {
+        "@iri": "http://example.org/library/the-republic#introduction"
+    },
+    "http://purl.org/dc/terms/description": "An introductory chapter on The Republic.",
+    "http://purl.org/dc/terms/title": "The Introduction",
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": {
+        "@iri": "http://example.org/vocab#Chapter"
+    }
+}]

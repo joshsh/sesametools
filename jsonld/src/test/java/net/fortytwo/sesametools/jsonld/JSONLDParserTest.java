@@ -1,6 +1,8 @@
 package net.fortytwo.sesametools.jsonld;
 
 import net.fortytwo.sesametools.StatementComparator;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFParser;
@@ -33,6 +35,18 @@ public class JSONLDParserTest {
                 vf.createStatement(BNODE1, JSONLDTestConstants.FOAF.HOMEPAGE, vf.createURI("http://manu.sporny.org/")));
     }
 
+    @Test
+    public void testCoerceIRI() throws Exception {
+        g = parseToGraph("example3.json");
+    }
+    
+    @Ignore
+    @Test
+    public void testArrays() throws Exception {
+        g = parseToGraph("example4.json");
+
+    }
+        
     protected Collection<Statement> parseToGraph(final String fileName) throws Exception {
         RDFParser p = new JSONLDParser();
         StatementCollector c = new StatementCollector();
