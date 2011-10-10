@@ -25,13 +25,23 @@ public class JSONLDParserTest {
 
     private Collection<Statement> g;
 
+        @Test
+    public void testSingleNodeNoContext() throws Exception {
+        g = parseToGraph("example1.json");
+
+        assertExpected(g,
+                vf.createStatement(BNODE1, JSONLDTestConstants.FOAF.NAME, vf.createLiteral("Manu Sporny")),
+                vf.createStatement(BNODE1, JSONLDTestConstants.SIOC.AVATAR, vf.createURI("http://twitter.com/account/profile_image/manusporny")),
+                vf.createStatement(BNODE1, JSONLDTestConstants.FOAF.HOMEPAGE, vf.createURI("http://manu.sporny.org/")));
+    }
+
     @Test
-    public void testSimple() throws Exception {
+    public void testSingleNodeWithContext() throws Exception {
         g = parseToGraph("example2.json");
 
         assertExpected(g,
                 vf.createStatement(BNODE1, JSONLDTestConstants.FOAF.NAME, vf.createLiteral("Manu Sporny")),
-                vf.createStatement(BNODE1, JSONLDTestConstants.FOAF.AVATAR, vf.createURI("http://twitter.com/account/profile_image/manusporny")),
+                vf.createStatement(BNODE1, JSONLDTestConstants.SIOC.AVATAR, vf.createURI("http://twitter.com/account/profile_image/manusporny")),
                 vf.createStatement(BNODE1, JSONLDTestConstants.FOAF.HOMEPAGE, vf.createURI("http://manu.sporny.org/")));
     }
 

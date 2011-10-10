@@ -18,10 +18,15 @@ public final class JSONLDTestConstants {
     protected interface FOAF {
         static final String NAMESPACE = "http://xmlns.com/foaf/0.1/";
         static final URI
-                AVATAR = vf.createURI(NAMESPACE + "avatar"),
                 HOMEPAGE = vf.createURI(NAMESPACE + "homepage"),
                 KNOWS = vf.createURI(NAMESPACE + "knows"),
                 NAME = vf.createURI(NAMESPACE + "name"),
                 PERSON = vf.createURI(NAMESPACE + "Person");
+    }
+
+    protected interface SIOC {
+        static final String NAMESPACE = "http://rdfs.org/sioc/ns#";
+        static final URI
+                AVATAR = vf.createURI(NAMESPACE + "avatar");
     }
 }
