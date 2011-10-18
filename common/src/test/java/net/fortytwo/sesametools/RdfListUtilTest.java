@@ -266,4 +266,23 @@ public class RdfListUtilTest
 
 	}
 	
+	/**
+	 * Test method for {@link net.fortytwo.sesametools.RdfListUtil#addList(org.openrdf.model.Resource, org.openrdf.model.URI, java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}.
+	 */
+	@Test
+	public void testGetListMultipleElementsNullContext() 
+	{
+		RdfListUtil.addList(testSubjectUri1, testPredicateUri1, testValuesMultipleElements, testGraph);
+		
+		Assert.assertEquals(7, testGraph.size());
+		
+		List<Value> results = RdfListUtil.getList(testSubjectUri1, testPredicateUri1, testGraph, null);
+		
+		Assert.assertEquals(3, results.size());
+		
+		Assert.assertTrue(results.contains(testObjectBNode1));
+		Assert.assertTrue(results.contains(testObjectLiteral1));
+		Assert.assertTrue(results.contains(testObjectUri1));
+		
+	}
 }
