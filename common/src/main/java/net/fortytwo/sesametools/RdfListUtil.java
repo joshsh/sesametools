@@ -29,7 +29,6 @@ public class RdfListUtil
 
 	}
 	
-	
 	/**
 	* Return the contents of the list serialized as an RDF list
 	* @param nextValues the list
@@ -38,8 +37,8 @@ public class RdfListUtil
 	*/
 	public static void addList(Resource subject, URI predicate, List<Value> nextValues, Graph graphToAddTo, Resource... contexts) 
 	{
-		ValueFactoryImpl vf = ValueFactoryImpl.getInstance();
-		Resource aHead = vf.createBNode();
+		final ValueFactoryImpl vf = ValueFactoryImpl.getInstance();
+		final Resource aHead = vf.createBNode();
 		Resource aCurr = aHead;
 	
 		if(nextValues.size() > 0)
@@ -69,7 +68,6 @@ public class RdfListUtil
 			
 			aCurr = aNext;
 		}
-	
 	}
 	
 	/**
@@ -156,7 +154,6 @@ public class RdfListUtil
 			return null;
 		}
 	}
-
 
 	private static Value getNextValue(Resource nextPointer, Graph graphToSearch, Resource context)
 	{

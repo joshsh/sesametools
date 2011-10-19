@@ -73,9 +73,13 @@ public class RdfListUtilTest
 		testSubjectUri1 = null;
 		testPredicateUri1 = null;
 		testObjectUri1 = null;
+		testObjectBNode1 = null;
+		testObjectLiteral1 = null;
+
 		testValuesEmpty = null;
 		testValuesSingleUri = null;
 		testValuesMultipleElements = null;
+		
 		testGraph = null;
 	}
 	
@@ -267,7 +271,7 @@ public class RdfListUtilTest
 	}
 	
 	/**
-	 * Test method for {@link net.fortytwo.sesametools.RdfListUtil#addList(org.openrdf.model.Resource, org.openrdf.model.URI, java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}.
+	 * Test method for {@link net.fortytwo.sesametools.RdfListUtil#getList(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}.
 	 */
 	@Test
 	public void testGetListMultipleElementsNullContext() 
@@ -285,4 +289,38 @@ public class RdfListUtilTest
 		Assert.assertTrue(results.contains(testObjectUri1));
 		
 	}
+	
+	/**
+	 * Test method for {@link net.fortytwo.sesametools.RdfListUtil#getList(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}.
+	 */
+	@Test
+	public void testGetListAfterInvalidGraphOperation() 
+	{
+		RdfListUtil.addList(testSubjectUri1, testPredicateUri1, testValuesMultipleElements, testGraph);
+		
+		Assert.assertEquals(7, testGraph.size());
+		
+		// Modify the graph in an invalid way to test getList
+		Iterator<Statement> matches = testGraph.match(null, RDF.REST, RDF.NIL);
+		
+		Assert.assertTrue(matches.hasNext());
+		
+		Statement matchedStatement = matches.next();
+		
+		Assert.assertFalse(matches.hasNext());
+		
+		Assert.assertTrue(testGraph.remove(matchedStatement));
+		
+		try
+		{
+			@SuppressWarnings("unused")
+			List<Value> results = RdfListUtil.getList(testSubjectUri1, testPredicateUri1, testGraph, null);
+			Assert.fail("Did not find expected exception");
+		}
+		catch(RuntimeException rex)
+		{
+			Assert.assertEquals("List structure was not complete", rex.getMessage());
+		}
+	}
+	
 }
