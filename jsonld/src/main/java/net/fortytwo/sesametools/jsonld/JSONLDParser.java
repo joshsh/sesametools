@@ -11,6 +11,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.rio.ParseErrorListener;
 import org.openrdf.rio.ParseLocationListener;
+import org.openrdf.rio.ParserConfig;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
@@ -42,10 +43,7 @@ public class JSONLDParser implements RDFParser {
     private RDFHandler rdfHandler;
     private ParseErrorListener parseErrorListener;
     private ParseLocationListener parseLocationListener;
-    private boolean verifyData;
-    private boolean preserveBNodeIDs;
-    private boolean stopAtFirstError;
-    private DatatypeHandling datatypeHandling;
+    private ParserConfig config = new ParserConfig();
 
     public RDFFormat getRDFFormat() {
         return JSONLDFormat.JSONLD;
@@ -67,20 +65,40 @@ public class JSONLDParser implements RDFParser {
         this.parseLocationListener = listener;
     }
 
+    public void setParserConfig(ParserConfig config) {
+        this.config = config;
+    }
+
+    public ParserConfig getParserConfig() {
+        return config;
+    }
+
     public void setVerifyData(final boolean verifyData) {
-        this.verifyData = verifyData;
+        config = new ParserConfig(verifyData,
+                config.stopAtFirstError(),
+                config.isPreserveBNodeIDs(),
+                config.datatypeHandling());
     }
 
     public void setPreserveBNodeIDs(final boolean preserveBNodeIDs) {
-        this.preserveBNodeIDs = preserveBNodeIDs;
+        config = new ParserConfig(config.verifyData(),
+                config.stopAtFirstError(),
+                preserveBNodeIDs,
+                config.datatypeHandling());
     }
 
     public void setStopAtFirstError(final boolean stopAtFirstError) {
-        this.stopAtFirstError = stopAtFirstError;
+        config = new ParserConfig(config.verifyData(),
+                stopAtFirstError,
+                config.isPreserveBNodeIDs(),
+                config.datatypeHandling());
     }
 
     public void setDatatypeHandling(final DatatypeHandling datatypeHandling) {
-        this.datatypeHandling = datatypeHandling;
+        config = new ParserConfig(config.verifyData(),
+                config.stopAtFirstError(),
+                config.isPreserveBNodeIDs(),
+                datatypeHandling);
     }
 
     public void parse(final InputStream in,
