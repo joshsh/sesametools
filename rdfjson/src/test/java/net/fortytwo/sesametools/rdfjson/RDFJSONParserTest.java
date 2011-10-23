@@ -3,7 +3,6 @@ package net.fortytwo.sesametools.rdfjson;
 import net.fortytwo.sesametools.StatementComparator;
 import org.junit.After;
 import org.junit.Test;
-import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
@@ -12,6 +11,7 @@ import org.openrdf.rio.helpers.StatementCollector;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -72,7 +72,7 @@ public class RDFJSONParserTest {
         
         assertExpected(g,
                 vf.createStatement(ARTHUR, RDF.TYPE, FOAF.PERSON),
-                vf.createStatement(ARTHUR, RDF.TYPE, vf.createURI(OWL.NAMESPACE + "Thing"), (Resource)null),
+                vf.createStatement(ARTHUR, RDF.TYPE, vf.createURI(OWL.NAMESPACE + "Thing"), null),
                 vf.createStatement(ARTHUR, RDF.TYPE, vf.createURI(OWL.NAMESPACE + "Thing"), GRAPH1),
                 vf.createStatement(ARTHUR, FOAF.NAME, vf.createLiteral("Arthur Dent", "en")),
                 vf.createStatement(ARTHUR, FOAF.KNOWS, P1),
@@ -97,9 +97,7 @@ public class RDFJSONParserTest {
     protected void assertExpected(final Collection<Statement> graph,
                                   final Statement... expectedStatements) throws Exception {
         Set<Statement> expected = new TreeSet<Statement>(new StatementComparator());
-        for (Statement st : expectedStatements) {
-            expected.add(st);
-        }
+        Collections.addAll(expected, expectedStatements);
         Set<Statement> actual = new TreeSet<Statement>(new StatementComparator());
         for (Statement st : graph) {
             actual.add(st);
