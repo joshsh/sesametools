@@ -83,7 +83,7 @@ public class ValueComparator implements Comparator<Value> {
         else {
             int cmp = first.stringValue().compareTo(second.stringValue());
 
-            if (0 == cmp) {
+            if (EQUALS == cmp) {
                 URI firstType = ((Literal) first).getDatatype();
                 URI secondType = ((Literal) second).getDatatype();
                 if (null == firstType) {
@@ -92,14 +92,14 @@ public class ValueComparator implements Comparator<Value> {
                         String secondLang = ((Literal) second).getLanguage();
 
                         return null == firstLang
-                                ? (null == secondLang ? 0 : -1)
-                                : (null == secondLang ? 1 : firstLang.compareTo(secondLang));
+                                ? (null == secondLang ? EQUALS : BEFORE)
+                                : (null == secondLang ? AFTER : firstLang.compareTo(secondLang));
                     } else {
-                        return -1;
+                        return BEFORE;
                     }
                 } else {
                     if (null == secondType) {
-                        return 1;
+                        return AFTER;
                     } else {
                         return firstType.stringValue().compareTo(secondType.stringValue());
                     }
