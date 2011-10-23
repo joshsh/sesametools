@@ -9,6 +9,10 @@ import org.openrdf.sail.StackableSail;
 import java.io.File;
 
 /**
+ * A Sail implementation which protects a base Sail from write operations.
+ * This Sail does not throw exceptions when write operations are attempted;
+ * it simply ignores them so that they have no effect.
+ *
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class ReadOnlySail implements StackableSail {
