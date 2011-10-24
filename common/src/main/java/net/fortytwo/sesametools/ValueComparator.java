@@ -83,7 +83,7 @@ public class ValueComparator implements Comparator<Value> {
         else {
             int cmp = first.stringValue().compareTo(second.stringValue());
 
-            if (0 == cmp) {
+            if (EQUALS == cmp) {
                 URI firstType = ((Literal) first).getDatatype();
                 URI secondType = ((Literal) second).getDatatype();
                 if (null == firstType) {
