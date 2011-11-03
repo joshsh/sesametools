@@ -10,11 +10,14 @@ import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RepositorySail implements Sail {
+    private static final Logger LOGGER = Logger.getLogger(RepositorySail.class.getName());
+
     private Repository repository;
     private final boolean autoCommit;
     private boolean inferenceDisabled = false;
@@ -42,7 +45,12 @@ public class RepositorySail implements Sail {
 
         try {
             rc = repository.getConnection();
-            rc.setAutoCommit(autoCommit);
+
+            try {
+                rc.setAutoCommit(autoCommit);
+            } catch (UnsupportedOperationException e) {
+                LOGGER.warning("could not set autoCommit flag");
+            }
         } catch (RepositoryException e) {
             throw new SailException(e);
         }
