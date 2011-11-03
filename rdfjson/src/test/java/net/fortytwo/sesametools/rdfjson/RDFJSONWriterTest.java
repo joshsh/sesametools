@@ -50,6 +50,12 @@ public class RDFJSONWriterTest {
         assertEquals("bnode", f.getString("type"));
         assertTrue(f.getString("value").startsWith("_:"));
 
+        // Blank node subject
+        JSONObject p1 = j.getJSONObject("_:p1");
+        JSONArray n = p1.getJSONArray(FOAF.NAME.stringValue());
+        assertEquals(1, n.length());
+        assertEquals("Ford Prefect", n.getJSONObject(0).get("value"));
+
         //j = parseAndWrite("example0.json");
     }
 }
