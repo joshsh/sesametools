@@ -25,7 +25,7 @@ public class JSONLDParserTest {
 
     private Collection<Statement> g;
 
-        @Test
+    @Test
     public void testSingleNodeNoContext() throws Exception {
         g = parseToGraph("example1.json");
 
@@ -49,14 +49,14 @@ public class JSONLDParserTest {
     public void testCoerceIRI() throws Exception {
         g = parseToGraph("example3.json");
     }
-    
+
     @Ignore
     @Test
     public void testArrays() throws Exception {
         g = parseToGraph("example4.json");
 
     }
-        
+
     protected Collection<Statement> parseToGraph(final String fileName) throws Exception {
         RDFParser p = new JSONLDParser();
         StatementCollector c = new StatementCollector();
