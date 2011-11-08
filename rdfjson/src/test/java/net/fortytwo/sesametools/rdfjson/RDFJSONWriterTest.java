@@ -58,4 +58,12 @@ public class RDFJSONWriterTest {
 
         //j = parseAndWrite("example0.json");
     }
+	
+	@Test
+	public void testRdfXmlParseRdfJsonWrite() throws Exception
+	{
+	    JSONObject j = RDFJSONTestUtils.parseXMLAndWriteJson("example3.xml");
+	    
+	    // TODO: add tests to check the results
+	}
 }

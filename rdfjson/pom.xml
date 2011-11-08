@@ -69,6 +69,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-rio-rdfxml</artifactId>
+            <version>${sesame.version}</version>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>sesametools-rdfjson-test-resources</artifactId>
             <version>1.0</version>
