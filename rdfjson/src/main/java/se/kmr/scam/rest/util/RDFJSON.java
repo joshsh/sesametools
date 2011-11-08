@@ -40,7 +40,7 @@ public class RDFJSON {
 	private static final String STRING_TYPE = "type";
 	private static final String STRING_VALUE = "value";
 	
-	private static Logger log = LoggerFactory.getLogger(RDFJSON.class);
+	private static final Logger log = LoggerFactory.getLogger(RDFJSON.class);
 
     /**
      * Implementation using the json.org API.
