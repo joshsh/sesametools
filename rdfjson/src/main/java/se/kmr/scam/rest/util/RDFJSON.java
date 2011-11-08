@@ -151,6 +151,19 @@ public class RDFJSON {
     	}
     }
     
+    /**
+     * Outputs an ordered set of Statements directly to JSON
+     *
+     * NOTE: The statements must be ordered by a comparator that orders null 
+     * before other values, or the contexts may not be written correctly
+     *
+     * @param graph A Set of Statements that are preordered in the 
+     * order subject>predicate>object>context so that it can be 
+     * output directly without any further checks
+     * @param writer The output writer to use
+     * 
+     * @return An RDF/JSON string if successful, otherwise null.
+     */
     public static Writer graphToRdfJsonPreordered(Set<Statement> graph, Writer writer) 
     {
     	JSONObject result = new JSONObject();
