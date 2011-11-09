@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -116,20 +117,49 @@ public class RDFJSONUnitTest
 
         URI testURI5 = vf.createURI("http://my.test.org/rdf/type/5");
 
-        testStatements.add(vf.createStatement(testURI1, testURI2, testURI3));
-        testStatements.add(vf.createStatement(testURI1, testURI2, testBNode1));
-        testStatements.add(vf.createStatement(testURI1, testURI2, testBNode2));
+        Statement testStatement1 = vf.createStatement(testURI1, testURI2, testURI3);
+        testStatements.add(testStatement1);
+        Statement testStatement2 = vf.createStatement(testURI1, testURI2, testBNode1);
+        testStatements.add(testStatement2);
+        Statement testStatement3 = vf.createStatement(testURI1, testURI2, testBNode2);
+        testStatements.add(testStatement3);
 
-        testStatements.add(vf.createStatement(testURI4, testURI2, testURI3));
-        testStatements.add(vf.createStatement(testURI4, testURI2, testBNode2));
-        testStatements.add(vf.createStatement(testURI4, testURI2, testBNode1));
+        Statement testStatement4 = vf.createStatement(testURI4, testURI2, testURI3);
+        testStatements.add(testStatement4);
+        Statement testStatement5 = vf.createStatement(testURI4, testURI2, testBNode2);
+        testStatements.add(testStatement5);
+        Statement testStatement6 = vf.createStatement(testURI4, testURI2, testBNode1);
+        testStatements.add(testStatement6);
         
-        testStatements.add(vf.createStatement(testBNode1, testURI5, testBNode2));
-        testStatements.add(vf.createStatement(testBNode1, testURI5, testURI1));
-        testStatements.add(vf.createStatement(testBNode1, testURI5, testURI4));
+        Statement testStatement7 = vf.createStatement(testBNode1, testURI5, testBNode2);
+        testStatements.add(testStatement7);
+        Statement testStatement8 = vf.createStatement(testBNode1, testURI5, testURI1);
+        testStatements.add(testStatement8);
+        Statement testStatement9 = vf.createStatement(testBNode1, testURI5, testURI4);
+        testStatements.add(testStatement9);
         
         log.info("testStatements="+testStatements);
         
+        Assert.assertEquals(9, testStatements.size());
+        
+        // Verify that the statements are in an acceptable order (testStatement5 and testStatement6 can be legitimately swapped)
+        
+        Iterator<Statement> testStatementIterator = testStatements.iterator();
+        
+        Assert.assertTrue(testStatementIterator.hasNext());
+        
+        // testStatement7 should always be first by virtue of the fact that it has two blank nodes and no other statements have two blank nodes
+        Assert.assertEquals(testStatement7, testStatementIterator.next());
+        Assert.assertTrue(testStatementIterator.hasNext());
+
+        // Then testStatement8
+        Assert.assertEquals(testStatement8, testStatementIterator.next());
+        Assert.assertTrue(testStatementIterator.hasNext());
+
+        // Then testStatement9
+        Assert.assertEquals(testStatement9, testStatementIterator.next());
+        Assert.assertTrue(testStatementIterator.hasNext());
+
         Writer testWriter2 = RDFJSON.graphToRdfJsonPreordered(testStatements, testWriter);
         
         // The returned writer should be the same as the one that was sent in
@@ -145,28 +175,18 @@ public class RDFJSONUnitTest
         
         log.info("testOutput="+testOutput);
 
-        // Test that a bnode is the first subject after the opening brace
-        Assert.assertTrue(testOutput.startsWith("\"_:", 1));
+        int firstBlankNode = testOutput.indexOf("\"_:");
         
-        // NOTE: We never test for the actual blank node id's as they are not stable by design
+        // Test that a bnode exists after the opening brace
+        Assert.assertTrue(firstBlankNode > 0);
         
-        int nextBrace = testOutput.indexOf("{", 1);
+        // The first value after the first blank node should be a blank node identifier
+        int firstValue = testOutput.indexOf("\"value\":\"_:", firstBlankNode);
         
-        // need at least one character for the blank node identifier after _:
-        Assert.assertTrue(nextBrace > 4);
+        Assert.assertTrue("A suitable blank node value was not found", firstValue > 0);
         
-        String rdfTypeString = "{\"http://my.test.org/rdf/type/5\":[{";
-        int rdfTypeStatement = testOutput.indexOf(rdfTypeString);
-        
-        // Test that the predicate for testURI5 is the next brace after the blank node by checking to see if they were at the same index
-        Assert.assertEquals(rdfTypeStatement, nextBrace);
-        
-        // The first value should be a blank node identifier
-        int firstValue = testOutput.indexOf("\"value\":\"_:");
-        
-        // check that the first value comes straight after the rdfTypeStatement
-        Assert.assertEquals(firstValue, rdfTypeStatement+rdfTypeString.length());
-        
+        // This should be guaranteed by the indexOf contract, but doing a quick check anyway
+        Assert.assertTrue(firstValue > firstBlankNode);
         
         // Do a quick check to see if the testOutput is valid JSON
         JSONObject testJSONObject = new JSONObject(testOutput);

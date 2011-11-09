@@ -178,8 +178,12 @@ public class RDFJSON {
         	JSONArray objectArray = new JSONArray();
         	JSONArray contextArray = new JSONArray();
         	
-        	for(Statement nextStatement : graph)
+        	Iterator<Statement> iterator = graph.iterator();
+        	
+        	while(iterator.hasNext())
         	{
+        	    Statement nextStatement = iterator.next();
+        	    
 				// Dump everything if the subject changes after the first iteration
 				if(lastSubject != null && !nextStatement.getSubject().equals(lastSubject))
         		{
