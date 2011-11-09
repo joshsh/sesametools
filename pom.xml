@@ -8,7 +8,7 @@
     <artifactId>sesametools-all</artifactId>
     <version>1.6</version>
     <packaging>pom</packaging>
-    <name>Sesame Tools</name>
+    <name>SesameTools</name>
     <description>Miscellaneous utilities for use with OpenRDF Sesame</description>
 
     <modules>
