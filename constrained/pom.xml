@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>constrained</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.6</version>
     <packaging>jar</packaging>
     <name>ConstrainedSail</name>
     <description>A Sail implementation which interacts only with given named graphs</description>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>net.fortytwo.sesametools</groupId>
         <artifactId>sesametools-all</artifactId>
-        <version>1.6-SNAPSHOT</version>
+        <version>1.6</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
