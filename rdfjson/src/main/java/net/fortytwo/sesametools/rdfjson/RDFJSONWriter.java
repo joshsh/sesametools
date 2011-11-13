@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -26,7 +27,7 @@ public class RDFJSONWriter implements RDFWriter {
     private Set<Statement> graph;
 
     public RDFJSONWriter(final OutputStream out) {
-        this(new OutputStreamWriter(out));
+        this(new OutputStreamWriter(out, Charset.forName("UTF-8")));
     }
 
     public RDFJSONWriter(final Writer writer) {
