@@ -8,15 +8,16 @@ import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailChangedListener;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RepositorySail implements Sail {
-    private static final Logger LOGGER = Logger.getLogger(RepositorySail.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(RepositorySail.class);
 
     private Repository repository;
     private final boolean autoCommit;
@@ -49,7 +50,7 @@ public class RepositorySail implements Sail {
             try {
                 rc.setAutoCommit(autoCommit);
             } catch (UnsupportedOperationException e) {
-                LOGGER.warning("could not set autoCommit flag");
+                LOGGER.warn("could not set autoCommit flag");
             }
         } catch (RepositoryException e) {
             throw new SailException(e);
