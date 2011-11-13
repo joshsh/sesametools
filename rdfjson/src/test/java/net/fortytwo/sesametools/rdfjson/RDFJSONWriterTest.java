@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 
+import java.util.Iterator;
+
 import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.ARTHUR;
 import static net.fortytwo.sesametools.rdfjson.RDFJSONTestConstants.FOAF;
 import static org.junit.Assert.assertEquals;
@@ -17,7 +19,7 @@ import static org.junit.Assert.assertTrue;
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RDFJSONWriterTest {
-	@Test
+    @Test
     public void testAll() throws Exception {
         JSONObject j;
         JSONArray values;
@@ -42,7 +44,7 @@ public class RDFJSONWriterTest {
         assertEquals(2, contexts.length());
 //        System.out.println(contexts.get(0));
 //        System.out.println(contexts.get(1));
-        
+
         assertTrue("null".equals(contexts.getString(0)) || "null".equals(contexts.getString(1)));
         values = a.getJSONArray(FOAF.KNOWS.toString());
         assertEquals(1, values.length());
@@ -57,5 +59,38 @@ public class RDFJSONWriterTest {
         assertEquals("Ford Prefect", n.getJSONObject(0).get("value"));
 
         //j = parseAndWrite("example0.json");
+    }
+
+	@Test
+	public void testRdfXmlParseRdfJsonWrite() throws Exception
+	{
+	    JSONObject j = RDFJSONTestUtils.parseXMLAndWriteJson("example3.xml");
+	    // TODO: add tests to check the results
+	}
+
+    @Test
+    public void testBlankNodes() throws Exception {
+        JSONObject j;
+
+        j = RDFJSONTestUtils.parseRdfXmlAndWriteJson("example3.rdf");
+
+        int subjects = 0;
+        int bnodes = 0;
+        Iterator keys = j.keys();
+        while (keys.hasNext()) {
+            String s = (String) keys.next();
+            if(s.startsWith("_:")) {
+                bnodes++;
+            }
+            subjects++;
+        }
+        assertEquals(1, bnodes);
+        assertEquals(2, subjects);
+
+        JSONObject o = j.getJSONObject("http://www.bbc.co.uk/things/76369f3b-65a0-4e69-8c52-859adfdefa49#id");
+        JSONArray a = o.getJSONArray("http://www.bbc.co.uk/ontologies/sport/discipline");
+        assertEquals(1, a.length());
+        assertEquals("bnode", a.getJSONObject(0).getString("type"));
+
     }
 }

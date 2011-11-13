@@ -4,7 +4,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openrdf.model.BNode;
-import org.openrdf.model.Graph;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -25,7 +24,9 @@ import java.util.Set;
 /**
  * A utility class to help converting Sesame Graphs from and to RDF/JSON.
  *
- * @author Hannes Ebner <hebner@kth.se>, with tweaks by Joshua Shinavier and the ordered implementation by Peter Ansell
+ * @author Hannes Ebner <hebner@kth.se>
+ * @author Joshua Shinavier 
+ * @author Peter Ansell
  */
 public class RDFJSON {
 
@@ -39,7 +40,7 @@ public class RDFJSON {
 	private static final String STRING_TYPE = "type";
 	private static final String STRING_VALUE = "value";
 	
-	private static Logger log = LoggerFactory.getLogger(RDFJSON.class);
+	private static final Logger log = LoggerFactory.getLogger(RDFJSON.class);
 
     /**
      * Implementation using the json.org API.
@@ -128,79 +129,6 @@ public class RDFJSON {
     }
 
     /**
-     * Implementation using the org.json API.
-     *
-     * @param graph A Sesame Graph.
-     * @return An RDF/JSON string if successful, otherwise null.
-     */
-    public static String graphToRdfJson(Graph graph) {
-        JSONObject result = new JSONObject();
-        try {
-            Collection<Resource> subjects = new LinkedList<Resource>();
-            for (Statement s1 : graph) {
-                subjects.add(s1.getSubject());
-            }
-            for (Resource subject : subjects) {
-                JSONObject predicateObj = new JSONObject();
-                Collection<URI> predicates = new LinkedList<URI>();
-                Iterator<Statement> s2 = graph.match(subject, null, null);
-                while (s2.hasNext()) {
-                    predicates.add(s2.next().getPredicate());
-                }
-                for (URI predicate : predicates) {
-                    JSONArray valueArray = new JSONArray();
-                    Iterator<Statement> stmnts = graph.match(subject, predicate, null);
-                    Collection<Value> objects = new LinkedList<Value>();
-                    while (stmnts.hasNext()) {
-                        objects.add(stmnts.next().getObject());
-                    }
-                    for (Value object : objects) {
-                        Iterator<Statement> stmnts2 = graph.match(subject, predicate, object);
-                        JSONArray contexts = new JSONArray();
-                        int i = 0;
-                        boolean nonDefaultContext = false;
-                        while (stmnts2.hasNext()) {
-                            Resource context = stmnts2.next().getContext();
-                            contexts.put(i, null == context ? null : context.stringValue());
-                            if (null != context) {
-                                nonDefaultContext = true;
-                            }
-                            i++;
-                        }
-                        
-                        
-                        JSONObject valueObj = new JSONObject();
-                        valueObj.put(RDFJSON.STRING_VALUE, object.stringValue());
-                        if (object instanceof Literal) {
-                            valueObj.put(RDFJSON.STRING_TYPE, RDFJSON.STRING_LITERAL);
-                            Literal l = (Literal) object;
-                            if (l.getLanguage() != null) {
-                                valueObj.put(RDFJSON.STRING_LANG, l.getLanguage());
-                            } else if (l.getDatatype() != null) {
-                                valueObj.put(RDFJSON.STRING_DATATYPE, l.getDatatype().stringValue());
-                            }
-                        } else if (object instanceof BNode) {
-                            valueObj.put(RDFJSON.STRING_TYPE, RDFJSON.STRING_BNODE);
-                        } else if (object instanceof URI) {
-                            valueObj.put(RDFJSON.STRING_TYPE, RDFJSON.STRING_URI);
-                        }
-                        if (nonDefaultContext) {
-                            valueObj.put(RDFJSON.STRING_GRAPHS, contexts);
-                        }
-                        valueArray.put(valueObj);
-                    }
-                    predicateObj.put(predicate.stringValue(), valueArray);
-                }
-                result.put(subject.stringValue(), predicateObj);
-            }
-            return result.toString(2);
-        } catch (JSONException e) {
-            log.error(e.getMessage(), e);
-        }
-        return null;
-    }
-
-    /**
 	 * Outputs an ordered set of Statements directly to JSON
      *
      * @param graph A Set of Statements that are preordered in the 
@@ -223,6 +151,19 @@ public class RDFJSON {
     	}
     }
     
+    /**
+     * Outputs an ordered set of Statements directly to JSON
+     *
+     * NOTE: The statements must be ordered by a comparator that orders null 
+     * before other values, or the contexts may not be written correctly
+     *
+     * @param graph A Set of Statements that are preordered in the 
+     * order subject>predicate>object>context so that it can be 
+     * output directly without any further checks
+     * @param writer The output writer to use
+     * 
+     * @return An RDF/JSON string if successful, otherwise null.
+     */
     public static Writer graphToRdfJsonPreordered(Set<Statement> graph, Writer writer) 
     {
     	JSONObject result = new JSONObject();
@@ -237,8 +178,12 @@ public class RDFJSON {
         	JSONArray objectArray = new JSONArray();
         	JSONArray contextArray = new JSONArray();
         	
-        	for(Statement nextStatement : graph)
+        	Iterator<Statement> iterator = graph.iterator();
+        	
+        	while(iterator.hasNext())
         	{
+        	    Statement nextStatement = iterator.next();
+        	    
 				// Dump everything if the subject changes after the first iteration
 				if(lastSubject != null && !nextStatement.getSubject().equals(lastSubject))
         		{
@@ -444,74 +389,4 @@ public class RDFJSON {
 		}
 		valueArray.put(valueObj);
     }
-
-    /**
-     * Implementation using the Streaming API of the Jackson framework.
-     *
-     * @param graph A Sesame Graph.
-     * @return An RDF/JSON string if successful, otherwise null.
-     */
-    /*
-    public static String graphToRdfJsonJackson(Graph graph) {
-        JsonFactory f = new JsonFactory();
-        StringWriter sw = new StringWriter();
-        JsonGenerator g = null;
-        try {
-            g = f.createJsonGenerator(sw);
-            g.useDefaultPrettyPrinter();
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            return null;
-        }
-
-        try {
-            g.writeStartObject(); // root object
-            Set<Resource> subjects = new HashSet<Resource>();
-            for (Statement s1 : graph) {
-                subjects.add(s1.getSubject());
-            }
-            for (Resource subject : subjects) {
-                g.writeObjectFieldStart(subject.stringValue()); // subject
-                Set<URI> predicates = new HashSet<URI>();
-                Iterator<Statement> s2 = graph.match(subject, null, null);
-                while (s2.hasNext()) {
-                    predicates.add(s2.next().getPredicate());
-                }
-                for (URI predicate : predicates) {
-                    g.writeArrayFieldStart(predicate.stringValue()); // predicate
-                    Iterator<Statement> stmnts = graph.match(subject, predicate, null);
-                    while (stmnts.hasNext()) {
-                        Value v = stmnts.next().getObject();
-                        g.writeStartObject(); // value
-                        g.writeStringField("value", v.stringValue());
-                        if (v instanceof Literal) {
-                            g.writeStringField("type", "literal");
-                            Literal l = (Literal) v;
-                            if (l.getLanguage() != null) {
-                                g.writeStringField("lang", l.getLanguage());
-                            } else if (l.getDatatype() != null) {
-                                g.writeStringField("datatype", l.getDatatype().stringValue());
-                            }
-                        } else if (v instanceof BNode) {
-                            g.writeStringField("type", "bnode");
-                        } else if (v instanceof URI) {
-                            g.writeStringField("type", "uri");
-                        }
-                        g.writeEndObject(); // value
-                    }
-                    g.writeEndArray(); // predicate
-                }
-                g.writeEndObject(); // subject
-            }
-            g.writeEndObject(); // root object
-            g.close();
-            return sw.toString();
-        } catch (JsonGenerationException e) {
-            log.error(e.getMessage(), e);
-        } catch (IOException ioe) {
-            log.error(ioe.getMessage(), ioe);
-        }
-        return null;
-    }*/
-
 }

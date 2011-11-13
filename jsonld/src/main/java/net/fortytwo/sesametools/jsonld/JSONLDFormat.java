@@ -14,7 +14,7 @@ public class JSONLDFormat extends RDFFormat {
 
     public JSONLDFormat() {
         super("JSON-LD",
-                "application/json",  // Per the spec as of 2011-09-28 (http://json-ld.org/spec/latest/)
+                "application/ld+json",  // Per the spec as of 2011-10-11 (http://json-ld.org/spec/latest/json-ld-syntax/)
                 Charset.forName("UTF-8"),  // See section 3 of the JSON RFC: http://www.ietf.org/rfc/rfc4627.txt
                 "json",
                 false,  // TODO: namespaces are not supported.  Right?
