@@ -131,6 +131,7 @@ public class RdfListUtil
         
         Map<Resource, List<Resource>> currentPointers = new HashMap<Resource, List<Resource>>();
         
+        // FIXME: Need to workaround bug where if contexts is a single null value that was not cast to Resource, the following will through an IllegalArgumentException
         Iterator<Statement> headStatementMatches = graphToSearch.match(subject, predicate, null, contexts);
         
         Map<Resource, Set<Resource>> headsMap = new HashMap<Resource, Set<Resource>>();
