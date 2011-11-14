@@ -281,7 +281,7 @@ public class RdfListUtilTest
 	}
 	
 	/**
-	 * Test method for {@link net.fortytwo.sesametools.RdfListUtil#getList(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}.
+	 * Test method for {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}.
 	 */
 	@Test
 	public void testGetListMultipleElementsNullContext() 
@@ -290,7 +290,7 @@ public class RdfListUtilTest
 		
 		Assert.assertEquals(7, testGraph.size());
 		
-		List<Value> results = RdfListUtil.getList(testSubjectUri1, testPredicateUri1, testGraph, null);
+		List<Value> results = RdfListUtil.getListAtNode(testSubjectUri1, testPredicateUri1, testGraph, null);
 		
 		Assert.assertEquals(3, results.size());
 		
@@ -301,7 +301,7 @@ public class RdfListUtilTest
 	}
 	
 	/**
-	 * Test method for {@link net.fortytwo.sesametools.RdfListUtil#getList(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}.
+	 * Test method for {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}.
 	 */
 	@Test
 	public void testGetListAfterInvalidGraphOperation() 
@@ -326,7 +326,7 @@ public class RdfListUtilTest
         try
 		{
 			@SuppressWarnings("unused")
-			List<Value> results = RdfListUtil.getList(testSubjectUri1, testPredicateUri1, testGraph, null);
+			List<Value> results = RdfListUtil.getListAtNode(testSubjectUri1, testPredicateUri1, testGraph, null);
 			Assert.fail("Did not find expected exception");
 		}
 		catch(RuntimeException rex)
@@ -393,7 +393,7 @@ public class RdfListUtilTest
         
         Assert.assertTrue(matchedStatement.getObject() instanceof BNode);
         
-        Collection<List<Value>> lists = RdfListUtil.getLists(testSubjectUri1, testPredicateUri1, testGraph, (Resource)null);
+        Collection<List<Value>> lists = RdfListUtil.getListsAtNode(testSubjectUri1, testPredicateUri1, testGraph, (Resource)null);
         
         Assert.assertEquals(1, lists.size());
     }
