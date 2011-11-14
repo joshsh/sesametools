@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,20 +26,20 @@ public class PlaybackSail implements StackableSail {
     private final Source<SailConnectionCall, SailException> querySource;
 
     private final Map<String, SailConnection> idToConnectionMap;
-    private final Map<String, ArrayList<CloseableIteration>> idToIterationsMap;
+    private final Map<String, List<CloseableIteration>> idToIterationsMap;
 
     public PlaybackSail(final Sail baseSail, Source<SailConnectionCall, SailException> querySource) {
         this.baseSail = baseSail;
         this.querySource = querySource;
         this.idToConnectionMap = new HashMap<String, SailConnection>();
-        this.idToIterationsMap = new HashMap<String, ArrayList<CloseableIteration>>();
+        this.idToIterationsMap = new HashMap<String, List<CloseableIteration>>();
     }
 
     public PlaybackSail(final Sail baseSail, final InputStream is) {
         this.baseSail = baseSail;
         this.querySource = new InputStreamSource(is);
         this.idToConnectionMap = new HashMap<String, SailConnection>();
-        this.idToIterationsMap = new HashMap<String, ArrayList<CloseableIteration>>();
+        this.idToIterationsMap = new HashMap<String, List<CloseableIteration>>();
     }
 
     public void setDataDir(final File file) {
@@ -116,7 +117,7 @@ public class PlaybackSail implements StackableSail {
     }
 
     private void addIteration(final String id, final CloseableIteration iter) {
-        ArrayList iters = idToIterationsMap.get(id);
+        List<CloseableIteration> iters = idToIterationsMap.get(id);
 
         if (null == iters) {
             iters = new ArrayList<CloseableIteration>();
