@@ -116,7 +116,23 @@ public class RdfListUtil
 		
 		Iterator<Statement> headStatementMatches = graphToSearch.match(subject, predicate, null, contexts);
 		
-		return null;
+		Map<Resource, Set<Resource>> headsMap = new HashMap<Resource, Set<Resource>>();
+		
+	    while(headStatementMatches.hasNext())
+	    {
+	        Statement nextHeadStatement = headStatementMatches.next();
+	        
+	        // TODO: best to silently fail here if the statement has a literal for its object??
+	        if(nextHeadStatement.getObject() instanceof Resource)
+	        {
+    	        addPointerToContext(headsMap, nextHeadStatement.getContext(), (Resource)nextHeadStatement.getObject());
+	        }
+	    }
+		
+        results = getListsHelper(headsMap, graphToSearch);
+
+        // TODO: should we return empty collections or null if nothing is found? I prefer empty collections
+		return results;
     }
     
     public static Collection<List<Value>> getLists(Collection<Resource> heads, Graph graphToSearch, Resource... contexts)
@@ -125,13 +141,14 @@ public class RdfListUtil
     }
 
     /**
-     * Helper method to enable exact knowledge of which contexts each head should be expected to be found in, as the source of this knowledge varies from case to case
+     * Helper method to enable exact knowledge of which contexts each head should be expected to be found in, 
+     * as the source of this knowledge varies from case to case
      * 
      * @param heads
      * @param graphToSearch
      * @return
      */
-    public static Collection<List<Value>> getLists(Map<Resource, Set<Resource>> heads, Graph graphToSearch)
+    public static Collection<List<Value>> getListsHelper(Map<Resource, Set<Resource>> heads, Graph graphToSearch)
     {
         Collection<List<Value>> results = new LinkedList<List<Value>>();
         
@@ -210,6 +227,7 @@ public class RdfListUtil
 		return results;
 	}
 	
+    // TODO: is there any way to distinguish between null context (ie, the default graph) and no context (ie, all graphs)
     private static void addPointerToContext(Map<Resource, Set<Resource>> map, Resource context, Resource nextPointer)
     {
         if(map.containsKey(nextPointer))
@@ -219,11 +237,12 @@ public class RdfListUtil
         else
         {
             Set<Resource> newSet = new HashSet<Resource>();
-            newSet.add(nextPointer);
+            newSet.add(context);
             map.put(nextPointer, newSet);
         }
     }
 
+    // TODO: is there any way to distinguish between null context (ie, the default graph) and no context (ie, all graphs)
     private static Resource getNextPointer(Resource nextPointer, Graph graphToSearch, Resource context) 
 	{
 		Iterator<Statement> pointerMatch = graphToSearch.match(nextPointer, RDF.REST, null, context);
@@ -252,6 +271,7 @@ public class RdfListUtil
 		}
 	}
 
+    // TODO: is there any way to distinguish between null context (ie, the default graph) and no context (ie, all graphs)
 	private static Value getNextValue(Resource nextPointer, Graph graphToSearch, Resource context)
 	{
 		Iterator<Statement> valueMatch = graphToSearch.match(nextPointer, RDF.FIRST, null, context);

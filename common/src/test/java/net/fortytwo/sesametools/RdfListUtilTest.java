@@ -336,7 +336,7 @@ public class RdfListUtilTest
 	}
 	
 	@Test
-	public void testGetListsSingleNullContext()
+	public void testGetListsHelperSingleNullContext()
 	{
         RdfListUtil.addListAtNode(testSubjectUri1, testPredicateUri1, testValuesMultipleElements, testGraph);
         
@@ -368,9 +368,33 @@ public class RdfListUtilTest
         heads.put(headNode, headContexts);
         
         
-        Collection<List<Value>> lists = RdfListUtil.getLists(heads, testGraph);
+        Collection<List<Value>> lists = RdfListUtil.getListsHelper(heads, testGraph);
         
         Assert.assertEquals(1, lists.size());
 	}
 	
+    @Test
+    public void testGetListsSingleNullContext()
+    {
+        RdfListUtil.addListAtNode(testSubjectUri1, testPredicateUri1, testValuesMultipleElements, testGraph);
+        
+        Assert.assertEquals(7, testGraph.size());
+
+        // verify that the head statement was inserted
+        Iterator<Statement> match = testGraph.match(this.testSubjectUri1, this.testPredicateUri1, null);
+        
+        Assert.assertTrue(match.hasNext());
+        
+        Statement matchedStatement = match.next();
+        
+        Assert.assertNotNull(matchedStatement);
+        
+        Assert.assertFalse(match.hasNext());
+        
+        Assert.assertTrue(matchedStatement.getObject() instanceof BNode);
+        
+        Collection<List<Value>> lists = RdfListUtil.getLists(testSubjectUri1, testPredicateUri1, testGraph, (Resource)null);
+        
+        Assert.assertEquals(1, lists.size());
+    }
 }
