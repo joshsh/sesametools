@@ -290,7 +290,7 @@ public class RdfListUtilTest
 		
 		Assert.assertEquals(7, testGraph.size());
 		
-		List<Value> results = RdfListUtil.getListAtNode(testSubjectUri1, testPredicateUri1, testGraph, null);
+		List<Value> results = RdfListUtil.getListAtNode(testSubjectUri1, testPredicateUri1, testGraph, (Resource)null);
 		
 		Assert.assertEquals(3, results.size());
 		
@@ -326,7 +326,7 @@ public class RdfListUtilTest
         try
 		{
 			@SuppressWarnings("unused")
-			List<Value> results = RdfListUtil.getListAtNode(testSubjectUri1, testPredicateUri1, testGraph, null);
+			List<Value> results = RdfListUtil.getListAtNode(testSubjectUri1, testPredicateUri1, testGraph, (Resource)null);
 			Assert.fail("Did not find expected exception");
 		}
 		catch(RuntimeException rex)
