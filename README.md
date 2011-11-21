@@ -6,6 +6,7 @@ SesameTools is a collection of useful components for use with the [Sesame](http:
 * **DebugSail** -- a verbose Sail implementation, for debugging purposes
 * **DecomposeSail** -- a Sail implementation which decomposes tuple queries into individual getStatements calls
 * **DeduplicationSail** -- a Sail implementation which avoids duplicate statements.  For use with triple stores such as AllegroGraph which otherwise allow duplicates.
+* **JSON-LD utilities** -- including a parser and writer for the [JSON-LD](http://json-ld.org/) RDF format.
 * [LinkedDataServer](https://github.com/joshsh/sesametools/wiki/LinkedDataServer) -- a RESTful web service to publish a Sesame data store as Linked Data
 * **MappingSail** -- a Sail which translates between two URI spaces.  Used by LinkedDataServer.
 * **N-Quads utilities** -- including an N-Quads parser and writer
