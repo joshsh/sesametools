@@ -187,7 +187,7 @@ public class RdfListUtil {
      * @param heads         the heads of the lists to fetch
      * @param graphToSearch the graph from which the list is to be fetched
      * @param contexts      the graph contexts from which the list is to be fetched
-     * @return all matching lists
+     * @return all matching lists.  If no matching lists are found, an empty collection is returned.
      */
     public static Collection<List<Value>> getLists(final Collection<Resource> heads,
                                                    final Graph graphToSearch,
@@ -212,7 +212,7 @@ public class RdfListUtil {
      * @param predicate     the predicate of a statement pointing to the list
      * @param graphToSearch the graph from which the list is to be fetched
      * @param contexts      the graph contexts from which the list is to be fetched
-     * @return all matching lists
+     * @return all matching lists.  If no matching lists are found, an empty collection is returned.
      */
     public static Collection<List<Value>> getListsAtNode(final Resource subject,
                                                          final URI predicate,
@@ -238,8 +238,6 @@ public class RdfListUtil {
 
         results = RdfListUtil.getListsHelper(headsMap, graphToSearch);
 
-        // TODO: should we return empty collections or null if nothing is found? I prefer empty
-        // collections
         return results;
     }
 
