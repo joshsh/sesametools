@@ -3,6 +3,8 @@
  */
 package net.fortytwo.sesametools;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,12 +14,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.openrdf.OpenRDFUtil;
 import org.openrdf.model.Graph;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 
 /**
@@ -26,51 +29,23 @@ import org.openrdf.model.vocabulary.RDF;
  */
 public class RdfListUtil
 {
-    /**
-	 * 
-	 */
-    private RdfListUtil()
+    public static void addList(final Resource head, final List<Value> nextValues, final Graph graphToAddTo,
+            final Resource... contexts)
     {
+        OpenRDFUtil.verifyContextNotNull(contexts);
         
-    }
-    
-    /**
-     * Return the contents of the list serialized as an RDF list
-     * 
-     * @param nextValues
-     *            the list
-     * @param graphToAddTo
-     *            the Graph to add the resulting list to
-     * @return the list as RDF
-     */
-    public static void addListAtNode(Resource subject, URI predicate, List<Value> nextValues, Graph graphToAddTo,
-            Resource... contexts)
-    {
-        final ValueFactoryImpl vf = ValueFactoryImpl.getInstance();
-        final Resource aHead = vf.createBNode();
-        
-        if(nextValues.size() > 0)
-        {
-            graphToAddTo.add(subject, predicate, aHead, contexts);
-        }
-        
-        addList(aHead, nextValues, graphToAddTo, contexts);
-    }
-    
-    public static void addList(Resource head, List<Value> nextValues, Graph graphToAddTo, Resource... contexts)
-    {
-        final ValueFactoryImpl vf = ValueFactoryImpl.getInstance();
+        final ValueFactory vf = graphToAddTo.getValueFactory();
         
         Resource aCurr = head;
-
+        
         int i = 0;
         
-        for(Value nextValue : nextValues)
+        for(final Value nextValue : nextValues)
         {
             // increment counter
             i++;
             
-            Resource aNext = vf.createBNode();
+            final Resource aNext = vf.createBNode();
             
             graphToAddTo.add(aCurr, RDF.FIRST, nextValue, contexts);
             
@@ -90,9 +65,78 @@ public class RdfListUtil
     }
     
     /**
+     * Return the contents of the list serialized as an RDF list
+     * 
+     * @param nextValues
+     *            the list
+     * @param graphToAddTo
+     *            the Graph to add the resulting list to
+     * @return the list as RDF
+     */
+    public static void addListAtNode(final Resource subject, final URI predicate, final List<Value> nextValues,
+            final Graph graphToAddTo, final Resource... contexts)
+    {
+        OpenRDFUtil.verifyContextNotNull(contexts);
+        
+        final ValueFactory vf = graphToAddTo.getValueFactory();
+        
+        final Resource aHead = vf.createBNode();
+        
+        if(nextValues.size() > 0)
+        {
+            graphToAddTo.add(subject, predicate, aHead, contexts);
+        }
+        
+        RdfListUtil.addList(aHead, nextValues, graphToAddTo, contexts);
+    }
+    
+    // TODO: is there any way to distinguish between null context (ie, the default graph) and no
+    // context (ie, all graphs)
+    private static void addPointerToContext(final Map<Resource, Set<Resource>> map, final Resource nextPointer,
+            final Resource... contexts)
+    {
+        OpenRDFUtil.verifyContextNotNull(contexts);
+        
+        final List<Resource> contextsList = Arrays.asList(contexts);
+        
+        if(map.containsKey(nextPointer))
+        {
+            map.get(nextPointer).addAll(contextsList);
+        }
+        else
+        {
+            final Set<Resource> newSet = new HashSet<Resource>();
+            newSet.addAll(contextsList);
+            map.put(nextPointer, newSet);
+        }
+    }
+    
+    public static List<Value> getList(final Resource head, final Graph graphToSearch, final Resource... contexts)
+    {
+        OpenRDFUtil.verifyContextNotNull(contexts);
+        
+        final Collection<Resource> heads = new ArrayList<Resource>(1);
+        heads.add(head);
+        
+        final Collection<List<Value>> results = RdfListUtil.getLists(heads, graphToSearch, contexts);
+        
+        if(results.size() > 1)
+        {
+            throw new RuntimeException("Found more than one list, possibly due to forking");
+        }
+        
+        if(results.size() == 1)
+        {
+            return results.iterator().next();
+        }
+        
+        return null;
+    }
+    
+    /**
      * Fetches a single headed list from the graph based on the given subject and predicate
      * 
-     * Note: We silently fail if no list is detected at all and return an empty list
+     * Note: We silently fail if no list is detected at all and return null
      * 
      * In addition, only the first triple matching the subject-predicate combination is used to
      * detect the head of the list.
@@ -105,9 +149,13 @@ public class RdfListUtil
      *             if the list structure was not complete, or it had cycles
      * @return
      */
-    public static List<Value> getListAtNode(Resource subject, URI predicate, Graph graphToSearch, Resource... contexts)
+    public static List<Value> getListAtNode(final Resource subject, final URI predicate, final Graph graphToSearch,
+            final Resource... contexts)
     {
-        Collection<List<Value>> allLists = getListsAtNode(subject, predicate, graphToSearch, contexts);
+        OpenRDFUtil.verifyContextNotNull(contexts);
+        
+        final Collection<List<Value>> allLists =
+                RdfListUtil.getListsAtNode(subject, predicate, graphToSearch, contexts);
         
         if(allLists.size() > 1)
         {
@@ -123,64 +171,80 @@ public class RdfListUtil
         return null;
     }
     
-    public static Collection<List<Value>> getListsAtNode(Resource subject, URI predicate, Graph graphToSearch,
-            Resource... contexts)
+    public static Collection<List<Value>> getLists(final Collection<Resource> heads, final Graph graphToSearch,
+            final Resource... contexts)
     {
+        OpenRDFUtil.verifyContextNotNull(contexts);
+        
+        final Map<Resource, Set<Resource>> headsMap = new HashMap<Resource, Set<Resource>>();
+        
+        for(final Resource nextHead : heads)
+        {
+            // No idea which of the contexts the head will be in, so need to use all of them
+            RdfListUtil.addPointerToContext(headsMap, nextHead, contexts);
+        }
+        
+        final Collection<List<Value>> results = RdfListUtil.getListsHelper(headsMap, graphToSearch);
+        
+        return results;
+    }
+    
+    public static Collection<List<Value>> getListsAtNode(final Resource subject, final URI predicate,
+            final Graph graphToSearch, final Resource... contexts)
+    {
+        OpenRDFUtil.verifyContextNotNull(contexts);
+        
         Collection<List<Value>> results = new LinkedList<List<Value>>();
         
-        Map<Resource, List<Resource>> currentPointers = new HashMap<Resource, List<Resource>>();
+        final Iterator<Statement> headStatementMatches = graphToSearch.match(subject, predicate, null, contexts);
         
-        // FIXME: Need to workaround bug where if contexts is a single null value that was not cast to Resource, the following will through an IllegalArgumentException
-        Iterator<Statement> headStatementMatches = graphToSearch.match(subject, predicate, null, contexts);
-        
-        Map<Resource, Set<Resource>> headsMap = new HashMap<Resource, Set<Resource>>();
+        final Map<Resource, Set<Resource>> headsMap = new HashMap<Resource, Set<Resource>>();
         
         while(headStatementMatches.hasNext())
         {
-            Statement nextHeadStatement = headStatementMatches.next();
+            final Statement nextHeadStatement = headStatementMatches.next();
             
             // TODO: best to silently fail here if the statement has a literal for its object??
             if(nextHeadStatement.getObject() instanceof Resource)
             {
-                addPointerToContext(headsMap, nextHeadStatement.getContext(), (Resource)nextHeadStatement.getObject());
+                RdfListUtil.addPointerToContext(headsMap, (Resource)nextHeadStatement.getObject(),
+                        nextHeadStatement.getContext());
             }
         }
         
-        results = getListsHelper(headsMap, graphToSearch);
+        results = RdfListUtil.getListsHelper(headsMap, graphToSearch);
         
         // TODO: should we return empty collections or null if nothing is found? I prefer empty
         // collections
         return results;
     }
     
-    public static Collection<List<Value>> getLists(Collection<Resource> heads, Graph graphToSearch,
-            Resource... contexts)
-    {
-        return null;
-    }
-    
     /**
      * Helper method to enable exact knowledge of which contexts each head should be expected to be
      * found in, as the source of this knowledge varies from case to case
+     * 
+     * Note: You should not need to use this method normally, it is package private to enable unit
+     * testing
      * 
      * @param heads
      * @param graphToSearch
      * @return
      */
-    public static Collection<List<Value>> getListsHelper(Map<Resource, Set<Resource>> heads, Graph graphToSearch)
+    static Collection<List<Value>> getListsHelper(final Map<Resource, Set<Resource>> heads, final Graph graphToSearch)
     {
-        Collection<List<Value>> results = new LinkedList<List<Value>>();
+        final Collection<List<Value>> results = new LinkedList<List<Value>>();
         
-        for(Resource nextHead : heads.keySet())
+        for(final Resource nextHead : heads.keySet())
         {
             // this map makes sure that we don't have cycles for each head
             // it is fine for one head to attach to another through some method, so we reset this
             // map for each head
-            Map<Resource, Set<Resource>> currentPointers = new HashMap<Resource, Set<Resource>>();
+            final Map<Resource, Set<Resource>> currentPointers = new HashMap<Resource, Set<Resource>>();
             
             if(nextHead != null && !nextHead.equals(RDF.NIL))
             {
-                Resource[] contextArray = heads.get(nextHead).toArray(new Resource[0]);
+                final Resource[] contextArray = heads.get(nextHead).toArray(new Resource[0]);
+                
                 Iterator<Statement> relevantStatements;
                 
                 // TODO: test whether a single null context in a varargs will make an array of
@@ -202,20 +266,21 @@ public class RdfListUtil
                 {
                     // for each of the matches for the head node, we plan to return at most one list
                     // as a result
-                    // TODO: modify this to allow for forking
-                    List<Value> nextResult = new LinkedList<Value>();
+                    // TODO: modify this section to clone the list each time a fork occurs
+                    final List<Value> nextResult = new LinkedList<Value>();
                     
-                    Statement headStatement = relevantStatements.next();
+                    final Statement headStatement = relevantStatements.next();
                     
                     while(nextPointer != null && !nextPointer.equals(RDF.NIL))
                     {
-                        addPointerToContext(currentPointers, headStatement.getContext(), nextPointer);
+                        RdfListUtil.addPointerToContext(currentPointers, nextPointer, headStatement.getContext());
                         
                         // use the headStatement context to get the next value.
                         // TODO: Is there a rationale for recognising lists distributed across
                         // contexts?
                         // If so, replace headStatement.getContext() with contexts
-                        Value nextValue = getNextValue(nextPointer, graphToSearch, headStatement.getContext());
+                        final Value nextValue =
+                                RdfListUtil.getNextValue(nextPointer, graphToSearch, headStatement.getContext());
                         
                         if(nextValue == null)
                         {
@@ -227,7 +292,8 @@ public class RdfListUtil
                         // TODO: Is there a rationale for recognising lists distributed across
                         // contexts?
                         // If so, replace headStatement.getContext() with contexts
-                        nextPointer = getNextPointer(nextPointer, graphToSearch, headStatement.getContext());
+                        nextPointer =
+                                RdfListUtil.getNextPointer(nextPointer, graphToSearch, headStatement.getContext());
                         
                         if(nextPointer == null)
                         {
@@ -254,29 +320,16 @@ public class RdfListUtil
     
     // TODO: is there any way to distinguish between null context (ie, the default graph) and no
     // context (ie, all graphs)
-    private static void addPointerToContext(Map<Resource, Set<Resource>> map, Resource context, Resource nextPointer)
+    private static Resource getNextPointer(final Resource nextPointer, final Graph graphToSearch,
+            final Resource... contexts)
     {
-        if(map.containsKey(nextPointer))
-        {
-            map.get(nextPointer).add(context);
-        }
-        else
-        {
-            Set<Resource> newSet = new HashSet<Resource>();
-            newSet.add(context);
-            map.put(nextPointer, newSet);
-        }
-    }
-    
-    // TODO: is there any way to distinguish between null context (ie, the default graph) and no
-    // context (ie, all graphs)
-    private static Resource getNextPointer(Resource nextPointer, Graph graphToSearch, Resource context)
-    {
-        Iterator<Statement> pointerMatch = graphToSearch.match(nextPointer, RDF.REST, null, context);
+        OpenRDFUtil.verifyContextNotNull(contexts);
+        
+        final Iterator<Statement> pointerMatch = graphToSearch.match(nextPointer, RDF.REST, null, contexts);
         
         if(pointerMatch.hasNext())
         {
-            Statement nextPointerMatch = pointerMatch.next();
+            final Statement nextPointerMatch = pointerMatch.next();
             
             if(pointerMatch.hasNext())
             {
@@ -300,13 +353,15 @@ public class RdfListUtil
     
     // TODO: is there any way to distinguish between null context (ie, the default graph) and no
     // context (ie, all graphs)
-    private static Value getNextValue(Resource nextPointer, Graph graphToSearch, Resource context)
+    private static Value getNextValue(final Resource nextPointer, final Graph graphToSearch, final Resource... contexts)
     {
-        Iterator<Statement> valueMatch = graphToSearch.match(nextPointer, RDF.FIRST, null, context);
+        OpenRDFUtil.verifyContextNotNull(contexts);
+        
+        final Iterator<Statement> valueMatch = graphToSearch.match(nextPointer, RDF.FIRST, null, contexts);
         
         if(valueMatch.hasNext())
         {
-            Statement nextValueMatch = valueMatch.next();
+            final Statement nextValueMatch = valueMatch.next();
             
             if(valueMatch.hasNext())
             {
@@ -320,6 +375,14 @@ public class RdfListUtil
         {
             return null;
         }
+    }
+    
+    /**
+	 * 
+	 */
+    private RdfListUtil()
+    {
+        
     }
     
 }
