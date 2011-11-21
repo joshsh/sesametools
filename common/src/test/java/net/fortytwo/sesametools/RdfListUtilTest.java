@@ -137,7 +137,7 @@ public class RdfListUtilTest
         
         Assert.assertFalse(headMatch.hasNext());
         
-        Assert.assertTrue(headMatchedStatement.getObject() instanceof BNode);
+        Assert.assertTrue(headMatchedStatement.getObject() instanceof Resource);
         
         // match the first element, which should be a bnode
         final Iterator<Statement> matchFirst1 =
@@ -151,7 +151,7 @@ public class RdfListUtilTest
         
         Assert.assertFalse(matchFirst1.hasNext());
         
-        Assert.assertTrue(firstListMatchedStatement1.getObject() instanceof BNode);
+        Assert.assertTrue(firstListMatchedStatement1.getObject() instanceof Resource);
         // TODO: is this check consistent with BlankNode theory?
         Assert.assertEquals(this.testObjectBNode1, firstListMatchedStatement1.getObject());
         
@@ -167,7 +167,7 @@ public class RdfListUtilTest
         
         Assert.assertFalse(matchRest1.hasNext());
         
-        Assert.assertTrue(restListMatchedStatement1.getObject() instanceof BNode);
+        Assert.assertTrue(restListMatchedStatement1.getObject() instanceof Resource);
         
         // match the next first node, which should be a literal
         final Iterator<Statement> matchFirst2 =
@@ -197,7 +197,7 @@ public class RdfListUtilTest
         
         Assert.assertFalse(matchRest2.hasNext());
         
-        Assert.assertTrue(restListMatchedStatement2.getObject() instanceof BNode);
+        Assert.assertTrue(restListMatchedStatement2.getObject() instanceof Resource);
         
         // match the next first node, which should be a URI
         final Iterator<Statement> matchFirst3 =
@@ -257,7 +257,7 @@ public class RdfListUtilTest
         
         Assert.assertFalse(match.hasNext());
         
-        Assert.assertTrue(matchedStatement.getObject() instanceof BNode);
+        Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
         
         // match the first element
         final Iterator<Statement> matchFirstOthers =
@@ -329,7 +329,7 @@ public class RdfListUtilTest
         
         Assert.assertFalse(matchFirst1.hasNext());
         
-        Assert.assertTrue(firstListMatchedStatement1.getObject() instanceof BNode);
+        Assert.assertTrue(firstListMatchedStatement1.getObject() instanceof Resource);
         
         // TODO: is this check consistent with BlankNode theory?
         Assert.assertEquals(this.testObjectBNode1, firstListMatchedStatement1.getObject());
@@ -345,7 +345,7 @@ public class RdfListUtilTest
         
         Assert.assertFalse(matchRest1.hasNext());
         
-        Assert.assertTrue(restListMatchedStatement1.getObject() instanceof BNode);
+        Assert.assertTrue(restListMatchedStatement1.getObject() instanceof Resource);
         
         // match the next first node, which should be a literal
         final Iterator<Statement> matchFirst2 =
@@ -375,7 +375,7 @@ public class RdfListUtilTest
         
         Assert.assertFalse(matchRest2.hasNext());
         
-        Assert.assertTrue(restListMatchedStatement2.getObject() instanceof BNode);
+        Assert.assertTrue(restListMatchedStatement2.getObject() instanceof Resource);
         
         // match the next first node, which should be a URI
         final Iterator<Statement> matchFirst3 =
@@ -491,7 +491,7 @@ public class RdfListUtilTest
         
         Assert.assertFalse(matchFirst1.hasNext());
         
-        Assert.assertTrue(firstListMatchedStatement1.getObject() instanceof BNode);
+        Assert.assertTrue(firstListMatchedStatement1.getObject() instanceof Resource);
         
         // TODO: is this check consistent with BlankNode theory?
         Assert.assertEquals(this.testObjectBNode1, firstListMatchedStatement1.getObject());
@@ -507,7 +507,7 @@ public class RdfListUtilTest
         
         Assert.assertFalse(matchRest1.hasNext());
         
-        Assert.assertTrue(restListMatchedStatement1.getObject() instanceof BNode);
+        Assert.assertTrue(restListMatchedStatement1.getObject() instanceof Resource);
         
         // match the next first node, which should be a literal
         final Iterator<Statement> matchFirst2 =
@@ -537,7 +537,7 @@ public class RdfListUtilTest
         
         Assert.assertFalse(matchRest2.hasNext());
         
-        Assert.assertTrue(restListMatchedStatement2.getObject() instanceof BNode);
+        Assert.assertTrue(restListMatchedStatement2.getObject() instanceof Resource);
         
         // match the next first node, which should be a URI
         final Iterator<Statement> matchFirst3 =
@@ -642,7 +642,7 @@ public class RdfListUtilTest
         
         Assert.assertFalse(match.hasNext());
         
-        Assert.assertTrue(matchedStatement.getObject() instanceof BNode);
+        Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
         
         final List<Value> results =
                 RdfListUtil.getList((BNode)matchedStatement.getObject(), this.testGraph, (Resource)null);
@@ -797,11 +797,71 @@ public class RdfListUtilTest
         
         Assert.assertFalse(match.hasNext());
         
-        Assert.assertTrue(matchedStatement.getObject() instanceof BNode);
+        Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
         
         final Collection<List<Value>> lists =
                 RdfListUtil
                         .getListsAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testGraph, (Resource)null);
+        
+        Assert.assertEquals(1, lists.size());
+    }
+    
+    @Test
+    public void testGetListsAfterAddListAtNodeSingleNullContext()
+    {
+        RdfListUtil.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
+                this.testGraph);
+        
+        Assert.assertEquals(7, this.testGraph.size());
+        
+        // verify that the head statement was inserted
+        final Iterator<Statement> match = this.testGraph.match(this.testSubjectUri1, this.testPredicateUri1, null);
+        
+        Assert.assertTrue(match.hasNext());
+        
+        final Statement matchedStatement = match.next();
+        
+        Assert.assertNotNull(matchedStatement);
+        
+        Assert.assertFalse(match.hasNext());
+        
+        Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
+        
+        Collection<Resource> heads = new ArrayList<Resource>(1);
+        heads.add((BNode)matchedStatement.getObject());
+        
+        final Collection<List<Value>> lists =
+                RdfListUtil
+                        .getLists(heads, this.testGraph, (Resource)null);
+        
+        Assert.assertEquals(1, lists.size());
+    }
+    
+    @Test
+    public void testGetListsAfterAddListBNodeHeadSingleNullContext()
+    {
+        RdfListUtil.addList(this.testListHeadBNode1, this.testValuesMultipleElements,
+                this.testGraph);
+        
+        Assert.assertEquals(6, this.testGraph.size());
+        
+        // verify that the head statement was inserted
+        final Iterator<Statement> match = this.testGraph.match(this.testListHeadBNode1, null, null);
+        
+        Assert.assertTrue(match.hasNext());
+        
+        final Statement matchedStatement = match.next();
+        
+        Assert.assertNotNull(matchedStatement);
+        
+        Assert.assertEquals(this.testListHeadBNode1, matchedStatement.getSubject());
+        
+        Collection<Resource> heads = new ArrayList<Resource>(1);
+        heads.add((BNode)matchedStatement.getSubject());
+        
+        final Collection<List<Value>> lists =
+                RdfListUtil
+                        .getLists(heads, this.testGraph);
         
         Assert.assertEquals(1, lists.size());
     }
@@ -825,7 +885,7 @@ public class RdfListUtilTest
         
         Assert.assertFalse(match.hasNext());
         
-        Assert.assertTrue(matchedStatement.getObject() instanceof BNode);
+        Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
         
         final Resource headNode = (Resource)matchedStatement.getObject();
         
