@@ -3,6 +3,15 @@
  */
 package net.fortytwo.sesametools;
 
+import org.openrdf.OpenRDFUtil;
+import org.openrdf.model.Graph;
+import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.vocabulary.RDF;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,20 +23,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.openrdf.OpenRDFUtil;
-import org.openrdf.model.Graph;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.vocabulary.RDF;
-
 /**
+ * A utility for translating RDF lists to and from native Java lists.
+ *
  * @author Peter Ansell p_ansell@yahoo.com
  */
 public class RdfListUtil {
-    public static void addList(final Resource head, final List<Value> nextValues, final Graph graphToAddTo,
+    /**
+     * Adds an RDF List with the given elements to a graph.
+     *
+     * @param head         the head resource of the list
+     * @param nextValues   the list to add.  If this list is empty, no statements will be written
+     * @param graphToAddTo the Graph to add the resulting list to
+     * @param contexts     the graph contexts into which to add the new statements.
+     *                     If no contexts are given, statements will be added to the default (null) context.
+     */
+    public static void addList(final Resource head,
+                               final List<Value> nextValues,
+                               final Graph graphToAddTo,
                                final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
@@ -55,18 +68,23 @@ public class RdfListUtil {
 
             aCurr = aNext;
         }
-
     }
 
     /**
      * Return the contents of the list serialized as an RDF list
      *
-     * @param nextValues   the list
+     * @param subject      the subject of a new statement pointing to the head of the list
+     * @param predicate    the predicate of a new statement pointing to the head of the list
+     * @param nextValues   the list to add.  If this list is empty, only the pointer statement will be written.
      * @param graphToAddTo the Graph to add the resulting list to
-     * @return the list as RDF
+     * @param contexts     the graph contexts into which to add the new statements.
+     *                     If no contexts are given, statements will be added to the default (null) context.
      */
-    public static void addListAtNode(final Resource subject, final URI predicate, final List<Value> nextValues,
-                                     final Graph graphToAddTo, final Resource... contexts) {
+    public static void addListAtNode(final Resource subject,
+                                     final URI predicate,
+                                     final List<Value> nextValues,
+                                     final Graph graphToAddTo,
+                                     final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
         final ValueFactory vf = graphToAddTo.getValueFactory();
@@ -82,7 +100,8 @@ public class RdfListUtil {
 
     // TODO: is there any way to distinguish between null context (ie, the default graph) and no
     // context (ie, all graphs)
-    private static void addPointerToContext(final Map<Resource, Set<Resource>> map, final Resource nextPointer,
+    private static void addPointerToContext(final Map<Resource, Set<Resource>> map,
+                                            final Resource nextPointer,
                                             final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
@@ -97,7 +116,17 @@ public class RdfListUtil {
         }
     }
 
-    public static List<Value> getList(final Resource head, final Graph graphToSearch, final Resource... contexts) {
+    /**
+     * Fetches a simple (non-branching) list from a graph.
+     *
+     * @param head          the head of the list
+     * @param graphToSearch the graph from which the list is to be fetched
+     * @param contexts      the graph contexts from which the list is to be fetched
+     * @return the contents of the list
+     */
+    public static List<Value> getList(final Resource head,
+                                      final Graph graphToSearch,
+                                      final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
         final Collection<Resource> heads = new ArrayList<Resource>(1);
@@ -124,14 +153,16 @@ public class RdfListUtil {
      * In addition, only the first triple matching the subject-predicate combination is used to
      * detect the head of the list.
      *
-     * @param subject
-     * @param predicate
-     * @param graphToSearch
-     * @param context
-     * @return
+     * @param subject       the subject of a statement pointing to the list
+     * @param predicate     the predicate of a statement pointing to the list
+     * @param graphToSearch the graph from which the list is to be fetched
+     * @param contexts      the graph contexts from which the list is to be fetched
+     * @return the contents of the list
      * @throws RuntimeException if the list structure was not complete, or it had cycles
      */
-    public static List<Value> getListAtNode(final Resource subject, final URI predicate, final Graph graphToSearch,
+    public static List<Value> getListAtNode(final Resource subject,
+                                            final URI predicate,
+                                            final Graph graphToSearch,
                                             final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
@@ -150,7 +181,16 @@ public class RdfListUtil {
         return null;
     }
 
-    public static Collection<List<Value>> getLists(final Collection<Resource> heads, final Graph graphToSearch,
+    /**
+     * Fetches a collection of generalized lists, where lists are allowed to branch from head to tail.
+     *
+     * @param heads         the heads of the lists to fetch
+     * @param graphToSearch the graph from which the list is to be fetched
+     * @param contexts      the graph contexts from which the list is to be fetched
+     * @return all matching lists
+     */
+    public static Collection<List<Value>> getLists(final Collection<Resource> heads,
+                                                   final Graph graphToSearch,
                                                    final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
@@ -161,16 +201,26 @@ public class RdfListUtil {
             RdfListUtil.addPointerToContext(headsMap, nextHead, contexts);
         }
 
-        final Collection<List<Value>> results = RdfListUtil.getListsHelper(headsMap, graphToSearch);
-
-        return results;
+        return RdfListUtil.getListsHelper(headsMap, graphToSearch);
     }
 
-    public static Collection<List<Value>> getListsAtNode(final Resource subject, final URI predicate,
-                                                         final Graph graphToSearch, final Resource... contexts) {
+    /**
+     * Fetches a collection of generalized lists based on the given subject and predicate,
+     * where lists are allowed to branch from head to tail.
+     *
+     * @param subject       the subject of a statement pointing to the list
+     * @param predicate     the predicate of a statement pointing to the list
+     * @param graphToSearch the graph from which the list is to be fetched
+     * @param contexts      the graph contexts from which the list is to be fetched
+     * @return all matching lists
+     */
+    public static Collection<List<Value>> getListsAtNode(final Resource subject,
+                                                         final URI predicate,
+                                                         final Graph graphToSearch,
+                                                         final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
-        Collection<List<Value>> results = new LinkedList<List<Value>>();
+        Collection<List<Value>> results;
 
         final Iterator<Statement> headStatementMatches = graphToSearch.match(subject, predicate, null, contexts);
 
@@ -200,11 +250,12 @@ public class RdfListUtil {
      * Note: You should not need to use this method normally, it is package private to enable unit
      * testing
      *
-     * @param heads
-     * @param graphToSearch
-     * @return
+     * @param heads         all potential heads of lists
+     * @param graphToSearch the graph from which the list is to be fetched
+     * @return all matching lists
      */
-    static Collection<List<Value>> getListsHelper(final Map<Resource, Set<Resource>> heads, final Graph graphToSearch) {
+    static Collection<List<Value>> getListsHelper(final Map<Resource, Set<Resource>> heads,
+                                                  final Graph graphToSearch) {
         final Collection<List<Value>> results = new LinkedList<List<Value>>();
 
         for (final Resource nextHead : heads.keySet()) {
@@ -238,7 +289,7 @@ public class RdfListUtil {
 
                     final Statement headStatement = relevantStatements.next();
 
-                    while (nextPointer != null && !nextPointer.equals(RDF.NIL)) {
+                    while (!nextPointer.equals(RDF.NIL)) {
                         RdfListUtil.addPointerToContext(currentPointers, nextPointer, headStatement.getContext());
 
                         // use the headStatement context to get the next value.
@@ -282,7 +333,8 @@ public class RdfListUtil {
 
     // TODO: is there any way to distinguish between null context (ie, the default graph) and no
     // context (ie, all graphs)
-    private static Resource getNextPointer(final Resource nextPointer, final Graph graphToSearch,
+    private static Resource getNextPointer(final Resource nextPointer,
+                                           final Graph graphToSearch,
                                            final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
@@ -307,7 +359,9 @@ public class RdfListUtil {
 
     // TODO: is there any way to distinguish between null context (ie, the default graph) and no
     // context (ie, all graphs)
-    private static Value getNextValue(final Resource nextPointer, final Graph graphToSearch, final Resource... contexts) {
+    private static Value getNextValue(final Resource nextPointer,
+                                      final Graph graphToSearch,
+                                      final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
         final Iterator<Statement> valueMatch = graphToSearch.match(nextPointer, RDF.FIRST, null, contexts);
@@ -330,7 +384,5 @@ public class RdfListUtil {
      *
      */
     private RdfListUtil() {
-
     }
-
 }
