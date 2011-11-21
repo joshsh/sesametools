@@ -229,7 +229,6 @@ public class RdfListUtil {
         while (headStatementMatches.hasNext()) {
             final Statement nextHeadStatement = headStatementMatches.next();
 
-            // TODO: best to silently fail here if the statement has a literal for its object??
             if (nextHeadStatement.getObject() instanceof Resource) {
                 RdfListUtil.addPointerToContext(headsMap, (Resource) nextHeadStatement.getObject(),
                         nextHeadStatement.getContext());
