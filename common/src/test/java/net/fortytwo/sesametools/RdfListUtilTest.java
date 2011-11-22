@@ -1046,7 +1046,7 @@ public class RdfListUtilTest
     {
         Set<Resource> heads = new HashSet<Resource>(200);
         
-        for(int i = 0; i < 50; i++)
+        for(int i = 0; i < 200; i++)
         {
             BNode nextHeadBNode = vf.createBNode();
             BNode nextRestBNode = nextHeadBNode;
@@ -1072,7 +1072,7 @@ public class RdfListUtilTest
         
         final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
 
-        Assert.assertEquals(50, results.size());
+        Assert.assertEquals(200, results.size());
         
         for(List<Value> nextResultList : results)
         {

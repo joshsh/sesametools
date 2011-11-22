@@ -26,6 +26,8 @@ import java.util.Set;
  * @author Peter Ansell p_ansell@yahoo.com
  */
 public class RdfListUtil {
+    private static boolean CHECK_CYCLES = false;
+
     /**
      * Adds an RDF List with the given elements to a graph.
      *
@@ -216,7 +218,7 @@ public class RdfListUtil {
                         // into outstandingPointerTrails before going through the loop to find the others
                         nextOutstandingPointerTrail = new ArrayList<Resource>(currentPointerTrail);
 
-                        if(nextOutstandingPointerTrail.contains(pointerMatchResult))
+                        if(CHECK_CYCLES && nextOutstandingPointerTrail.contains(pointerMatchResult))
                         {
                             throw new RuntimeException("List structure cannot contain cycles");
                         }
@@ -234,7 +236,7 @@ public class RdfListUtil {
                             if (nextPointerMatch.getObject() instanceof Resource) {
                                 Resource nextOutstandingPointerMatch = (Resource)nextPointerMatch.getObject();
                                 
-                                if(nextOutstandingPointerTrail.contains(nextOutstandingPointerMatch))
+                                if(CHECK_CYCLES && nextOutstandingPointerTrail.contains(nextOutstandingPointerMatch))
                                 {
                                     throw new RuntimeException("List structure cannot contain cycles");
                                 }
@@ -262,7 +264,7 @@ public class RdfListUtil {
                     }
                     else
                     {
-                        if(currentPointerTrail.contains(pointerMatchResult))
+                        if(CHECK_CYCLES && currentPointerTrail.contains(pointerMatchResult))
                         {
                             throw new RuntimeException("List structure cannot contain cycles");
                         }
