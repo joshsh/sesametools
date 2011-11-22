@@ -1050,7 +1050,7 @@ public class RdfListUtilTest
         {
             BNode nextHeadBNode = vf.createBNode();
             BNode nextRestBNode = nextHeadBNode;
-            for(int j = 0; j < 50; j++)
+            for(int j = 0; j < 60; j++)
             {
                 BNode nextTreeBNode = vf.createBNode("i-"+i+"_j-"+j);
                 Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-"+i+"_j-"+j));
@@ -1073,6 +1073,11 @@ public class RdfListUtilTest
         final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
 
         Assert.assertEquals(50, results.size());
+        
+        for(List<Value> nextResultList : results)
+        {
+            Assert.assertEquals(61, nextResultList.size());
+        }
     }
 
     @Test
