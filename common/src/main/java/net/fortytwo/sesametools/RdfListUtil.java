@@ -176,6 +176,8 @@ public class RdfListUtil {
         
         final Collection<List<Value>> results = new ArrayList<List<Value>>(heads.size());
 
+        List<List<Resource>> completedPointerTrails = new ArrayList<List<Resource>>();
+        
         for (final Resource nextHead : heads) {
             
             if(nextHead == null || nextHead.equals(RDF.NIL))
@@ -183,58 +185,102 @@ public class RdfListUtil {
                 throw new RuntimeException("List structure contains nulls or RDF.NIL in a head position");
             }
             
-            Resource nextPointer = nextHead;
+            // keep track of any outstanding pointer trails for this head
+            List<List<Resource>> outstandingPointerTrails = new ArrayList<List<Resource>>();
 
-            final List<Value> nextResult = new ArrayList<Value>();
-
-            while (!nextPointer.equals(RDF.NIL)) {
-                Resource pointerMatchResult = null;
+            List<Resource> currentPointerTrail = new ArrayList<Resource>();
+            // add the first head to the currentPointerTrail
+            currentPointerTrail.add(nextHead);
+            
+            Resource pointerMatchResult = nextHead;
+            
+            while(true)
+            {
+                final Iterator<Statement> pointerMatch = graphToSearch.match(pointerMatchResult, RDF.REST, null, contexts);
                 
-                final Iterator<Statement> pointerMatch = graphToSearch.match(nextPointer, RDF.REST, null, contexts);
+                if(!pointerMatch.hasNext())
+                {
+                    throw new RuntimeException("List structure was not complete");
+                }
                 
-                if (pointerMatch.hasNext()) {
-                    final Statement nextPointerMatch = pointerMatch.next();
-                
+                final Statement nextPointerMatch = pointerMatch.next();
+            
+                if (nextPointerMatch.getObject() instanceof Resource) {
+                    pointerMatchResult = (Resource)nextPointerMatch.getObject();
+                    
+                    currentPointerTrail.add(pointerMatchResult);
+                    
+                    // This indicates a fork
                     if (pointerMatch.hasNext()) {
-                        throw new RuntimeException("List structure cannot contain forks");
+                        // add the current pointerTrail to the outstanding pointerTrails collection and start again with this pointerMatch until it finishes or forks
+                        outstandingPointerTrails.add(currentPointerTrail);
+                        // clone the current list and keep going with the clone
+                        currentPointerTrail = new ArrayList<Resource>(currentPointerTrail);
                     }
-                
-                    if (nextPointerMatch.getObject() instanceof Resource) {
-                        pointerMatchResult = (Resource)nextPointerMatch.getObject();
-                    } else {
-                        throw new RuntimeException("List structure cannot contain Literals as rdf:rest pointers");
+
+                    // Check to see if that was the end of this list
+                    if(pointerMatchResult.equals(RDF.NIL)) {
+                        completedPointerTrails.add(currentPointerTrail);
+                        
+                        // If there are outstanding lists take one now
+                        if(!outstandingPointerTrails.isEmpty())
+                        {
+                            // TODO: Is this efficient for ArrayLists?
+                            currentPointerTrail = outstandingPointerTrails.remove(0);
+                            // reset the current pointerMatchResult to be the last pointer in the outstanding pointer trail
+                            pointerMatchResult = currentPointerTrail.get(currentPointerTrail.size()-1);
+                        }
+                        else
+                        {
+                            currentPointerTrail = null;
+                            break;
+                        }
                     }
+                } else {
+                    throw new RuntimeException("List structure cannot contain Literals as rdf:rest pointers");
                 }
-
-                Value nextValue = null;
-                
-                final Iterator<Statement> valueMatch = graphToSearch.match(nextPointer, RDF.FIRST, null, contexts);
-                
-                if (valueMatch.hasNext()) {
-                    final Statement nextValueMatch = valueMatch.next();
-                
-                    if (valueMatch.hasNext()) {
-                        throw new RuntimeException(
-                                "List structure cannot contain multiple values for rdf:first items for a given subject resource");
-                    }
-                
-                    nextValue = nextValueMatch.getObject();
-                }
-                
-                if (nextValue == null) {
-                    throw new RuntimeException("List structure was not complete");
-                }
-
-                nextResult.add(nextValue);
-                
-                nextPointer = pointerMatchResult;
-
-                if (nextPointer == null) {
-                    throw new RuntimeException("List structure was not complete");
-                }
-                
             }
-
+        }
+        // Go through the pointer trails finding the corresponding RDF.FIRST/Value combinations to generate the result lists
+        for(List<Resource> nextPointerTrail : completedPointerTrails) {
+            final List<Value> nextResult = new ArrayList<Value>();
+            
+            for(int i = 0; i < nextPointerTrail.size(); i++) {
+                Resource nextPointer = nextPointerTrail.get(i);
+                
+                // Check to make sure that the last element is RDF.NIL
+                if(i == (nextPointerTrail.size()-1)) {
+                    if(!nextPointer.equals(RDF.NIL)) {
+                        throw new RuntimeException("Did not find RDF.NIL as the terminating element of a list");
+                    }
+                } else {
+                    if(nextPointer.equals(RDF.NIL)) {
+                        throw new RuntimeException("Found RDF.NIL inside a list trail");
+                    }
+                    
+                    Value nextValue = null;
+                    
+                    final Iterator<Statement> valueMatch = graphToSearch.match(nextPointer, RDF.FIRST, null, contexts);
+                    
+                    if (valueMatch.hasNext()) {
+                        final Statement nextValueMatch = valueMatch.next();
+                    
+                        if (valueMatch.hasNext()) {
+                            throw new RuntimeException(
+                                    "List structure cannot contain multiple values for rdf:first items for a given subject resource");
+                        }
+                    
+                        nextValue = nextValueMatch.getObject();
+                    }
+                    
+                    if (nextValue == null) {
+                        throw new RuntimeException("List structure was not complete");
+                    }
+    
+                    nextResult.add(nextValue);
+                }
+            }
+            
             if (nextResult.size() > 0) {
                 results.add(nextResult);
             }
