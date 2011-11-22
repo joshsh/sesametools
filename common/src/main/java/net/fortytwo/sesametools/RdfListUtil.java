@@ -215,6 +215,12 @@ public class RdfListUtil {
                         // we already fetched pointerMatchResult from the iterator so put it in a new list 
                         // into outstandingPointerTrails before going through the loop to find the others
                         nextOutstandingPointerTrail = new ArrayList<Resource>(currentPointerTrail);
+
+                        if(nextOutstandingPointerTrail.contains(pointerMatchResult))
+                        {
+                            throw new RuntimeException("List structure cannot contain cycles");
+                        }
+                        
                         nextOutstandingPointerTrail.add(pointerMatchResult);
                         outstandingPointerTrails.add(nextOutstandingPointerTrail);
 
@@ -227,6 +233,11 @@ public class RdfListUtil {
                             
                             if (nextPointerMatch.getObject() instanceof Resource) {
                                 Resource nextOutstandingPointerMatch = (Resource)nextPointerMatch.getObject();
+                                
+                                if(nextOutstandingPointerTrail.contains(nextOutstandingPointerMatch))
+                                {
+                                    throw new RuntimeException("List structure cannot contain cycles");
+                                }
                                 
                                 nextOutstandingPointerTrail.add(nextOutstandingPointerMatch);
                                 
@@ -251,6 +262,11 @@ public class RdfListUtil {
                     }
                     else
                     {
+                        if(currentPointerTrail.contains(pointerMatchResult))
+                        {
+                            throw new RuntimeException("List structure cannot contain cycles");
+                        }
+
                         currentPointerTrail.add(pointerMatchResult);
                     }
 
@@ -268,7 +284,9 @@ public class RdfListUtil {
                         }
                         else
                         {
+                            // cleanup temporary variables and break out of the loop
                             currentPointerTrail = null;
+                            pointerMatchResult = null;
                             break;
                         }
                     }
