@@ -1042,6 +1042,40 @@ public class RdfListUtilTest
     }
 
     @Test
+    public void testGetListsForkedValidStress()
+    {
+        Set<Resource> heads = new HashSet<Resource>(200);
+        
+        for(int i = 0; i < 50; i++)
+        {
+            BNode nextHeadBNode = vf.createBNode();
+            BNode nextRestBNode = nextHeadBNode;
+            for(int j = 0; j < 50; j++)
+            {
+                BNode nextTreeBNode = vf.createBNode("i-"+i+"_j-"+j);
+                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-"+i+"_j-"+j));
+                this.testGraph.add(nextTestStatement1);
+                Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode);
+                this.testGraph.add(nextTestStatement2);
+                
+                nextRestBNode = nextTreeBNode;
+            }
+            
+            Statement nextTestNilStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("terminating i-"+i));
+            this.testGraph.add(nextTestNilStatement1);
+            
+            Statement nextTestNilStatement2 = vf.createStatement(nextRestBNode, RDF.REST, RDF.NIL);
+            this.testGraph.add(nextTestNilStatement2);
+            
+            heads.add(nextHeadBNode);
+        }
+        
+        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+
+        Assert.assertEquals(50, results.size());
+    }
+
+    @Test
     public void testGetListForkedValid()
     {
         Statement testStatement1 = vf.createStatement(testListHeadBNode1, RDF.FIRST, testObjectLiteral1);
