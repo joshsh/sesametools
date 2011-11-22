@@ -180,8 +180,6 @@ public class RdfListUtil {
                                                    final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
         
-        final List<List<Value>> results = new ArrayList<List<Value>>(heads.size());
-
         List<List<Resource>> completedPointerTrails = new ArrayList<List<Resource>>(heads.size());
         
         for (final Resource nextHead : heads) {
@@ -191,124 +189,15 @@ public class RdfListUtil {
                 throw new RuntimeException("List structure contains nulls or RDF.NIL in a head position");
             }
             
-            // keep track of any outstanding pointer trails for this head
-            List<List<Resource>> outstandingPointerTrails = new ArrayList<List<Resource>>(heads.size());
-
             List<Resource> currentPointerTrail = new ArrayList<Resource>(heads.size());
             // add the first head to the currentPointerTrail
             currentPointerTrail.add(nextHead);
             
-            Resource pointerMatchResult = nextHead;
-            
-            while(true)
-            {
-                final Iterator<Statement> pointerMatch = graphToSearch.match(pointerMatchResult, RDF.REST, null, contexts);
-                
-                if(!pointerMatch.hasNext())
-                {
-                    throw new RuntimeException("List structure was not complete");
-                }
-                
-                Statement nextPointerMatch = pointerMatch.next();
-            
-                if (nextPointerMatch.getObject() instanceof Resource) {
-                    pointerMatchResult = (Resource)nextPointerMatch.getObject();
-                    
-                    // This indicates a fork, so find all of the pointers and add them to new sublists in outstandingPointerTrails
-                    if (pointerMatch.hasNext()) {
-                        List<Resource> nextOutstandingPointerTrail = currentPointerTrail;
-                        
-                        // we already fetched pointerMatchResult from the iterator so put it in a new list 
-                        // into outstandingPointerTrails before going through the loop to find the others
-                        nextOutstandingPointerTrail = new ArrayList<Resource>(currentPointerTrail);
-
-                        if(CHECK_CYCLES && nextOutstandingPointerTrail.contains(pointerMatchResult))
-                        {
-                            log.info("pointerMatchResult="+pointerMatchResult+" nextHead="+nextHead);
-                            throw new RuntimeException("List structure cannot contain cycles");
-                        }
-                        
-                        nextOutstandingPointerTrail.add(pointerMatchResult);
-                        outstandingPointerTrails.add(nextOutstandingPointerTrail);
-
-                        // take all of the matches and add them to the end of currentPointerTrail clones
-                        while(pointerMatch.hasNext())
-                        {
-                            nextPointerMatch = pointerMatch.next();
-                            // clone the last currentPointerTrail list and keep going with it
-                            nextOutstandingPointerTrail = new ArrayList<Resource>(currentPointerTrail);
-                            
-                            if (nextPointerMatch.getObject() instanceof Resource) {
-                                Resource nextOutstandingPointerMatch = (Resource)nextPointerMatch.getObject();
-                                
-                                if(CHECK_CYCLES && nextOutstandingPointerTrail.contains(nextOutstandingPointerMatch))
-                                {
-                                    throw new RuntimeException("List structure cannot contain cycles");
-                                }
-                                
-                                nextOutstandingPointerTrail.add(nextOutstandingPointerMatch);
-
-                                // if the outstanding pointer match is RDF.NIL add it straight to the completedPointerTrails
-                                if(pointerMatchResult.equals(RDF.NIL)) {
-                                    completedPointerTrails.add(nextOutstandingPointerTrail);
-                                    // revert back to cloning the currentPointerTrail
-                                    nextOutstandingPointerTrail = new ArrayList<Resource>(currentPointerTrail);
-                                    // synchronise pointerMatchResult with the last element of the chosen list
-                                    pointerMatchResult = nextOutstandingPointerTrail.get(nextOutstandingPointerTrail.size()-1);
-                                }
-                                else {
-                                    outstandingPointerTrails.add(nextOutstandingPointerTrail);
-                                }
-                            }
-                            else
-                            {
-                                throw new RuntimeException("List structure was not complete");
-                            }
-                            
-                        }
-                        
-                        
-                        // set currentPointerTrail to be the last "nextOutstandingPointerTrail" which was one of the alternative forks
-                        currentPointerTrail = nextOutstandingPointerTrail;
-                        
-                        // remove the chosen fork from the outstanding list
-                        outstandingPointerTrails.remove(nextOutstandingPointerTrail);
-                        
-                        // synchronise pointerMatchResult with the last element of the chosen list
-                        pointerMatchResult = nextOutstandingPointerTrail.get(nextOutstandingPointerTrail.size()-1);
-                    }
-                    else
-                    {
-                        if(CHECK_CYCLES && currentPointerTrail.contains(pointerMatchResult))
-                        {
-                            throw new RuntimeException("List structure cannot contain cycles");
-                        }
-
-                        currentPointerTrail.add(pointerMatchResult);
-                    }
-
-                    // Check to see if that was the end of this list
-                    if(pointerMatchResult.equals(RDF.NIL)) {
-                        completedPointerTrails.add(currentPointerTrail);
-                        
-                        // If there are outstanding lists take one now
-                        if(!outstandingPointerTrails.isEmpty())
-                        {
-                            // TODO: Is this efficient for ArrayLists?
-                            currentPointerTrail = outstandingPointerTrails.remove(outstandingPointerTrails.size()-1);
-                            // reset the current pointerMatchResult to be the last pointer in the outstanding pointer trail
-                            pointerMatchResult = currentPointerTrail.get(currentPointerTrail.size()-1);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                } else {
-                    throw new RuntimeException("List structure cannot contain Literals as rdf:rest pointers");
-                }
-            }
+            // TODO: Reimplement me from scratch to work with forking
         }
+        
+        final List<List<Value>> results = new ArrayList<List<Value>>(heads.size());
+
         // Go through the pointer trails finding the corresponding RDF.FIRST/Value combinations to generate the result lists
         for(List<Resource> nextPointerTrail : completedPointerTrails) {
             final List<Value> nextResult = new ArrayList<Value>();
