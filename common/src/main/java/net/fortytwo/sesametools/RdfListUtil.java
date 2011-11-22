@@ -203,19 +203,55 @@ public class RdfListUtil {
                     throw new RuntimeException("List structure was not complete");
                 }
                 
-                final Statement nextPointerMatch = pointerMatch.next();
+                Statement nextPointerMatch = pointerMatch.next();
             
                 if (nextPointerMatch.getObject() instanceof Resource) {
                     pointerMatchResult = (Resource)nextPointerMatch.getObject();
                     
-                    currentPointerTrail.add(pointerMatchResult);
-                    
-                    // This indicates a fork
+                    // This indicates a fork, so find all of the pointers and add them to new sublists in outstandingPointerTrails
                     if (pointerMatch.hasNext()) {
-                        // add the current pointerTrail to the outstanding pointerTrails collection and start again with this pointerMatch until it finishes or forks
-                        outstandingPointerTrails.add(currentPointerTrail);
-                        // clone the current list and keep going with the clone
-                        currentPointerTrail = new ArrayList<Resource>(currentPointerTrail);
+                        List<Resource> nextOutstandingPointerTrail = currentPointerTrail;
+                        
+                        // we already fetched pointerMatchResult from the iterator so put it in a new list 
+                        // into outstandingPointerTrails before going through the loop to find the others
+                        nextOutstandingPointerTrail = new ArrayList<Resource>(currentPointerTrail);
+                        nextOutstandingPointerTrail.add(pointerMatchResult);
+                        outstandingPointerTrails.add(nextOutstandingPointerTrail);
+
+                        // take all of the matches and add them to the end of currentPointerTrail clones
+                        while(pointerMatch.hasNext())
+                        {
+                            nextPointerMatch = pointerMatch.next();
+                            // clone the last currentPointerTrail list and keep going with it
+                            nextOutstandingPointerTrail = new ArrayList<Resource>(currentPointerTrail);
+                            
+                            if (nextPointerMatch.getObject() instanceof Resource) {
+                                Resource nextOutstandingPointerMatch = (Resource)nextPointerMatch.getObject();
+                                
+                                nextOutstandingPointerTrail.add(nextOutstandingPointerMatch);
+                                
+                                outstandingPointerTrails.add(nextOutstandingPointerTrail);
+                            }
+                            else
+                            {
+                                throw new RuntimeException("List structure was not complete");
+                            }
+                            
+                        }
+                        
+                        
+                        // set currentPointerTrail to be the last "nextOutstandingPointerTrail" which was one of the alternative forks
+                        currentPointerTrail = nextOutstandingPointerTrail;
+                        
+                        // remove the chosen fork from the outstanding list
+                        outstandingPointerTrails.remove(nextOutstandingPointerTrail);
+                        
+                        // synchronise pointerMatchResult with the last element of the chosen list
+                        pointerMatchResult = nextOutstandingPointerTrail.get(nextOutstandingPointerTrail.size()-1);
+                    }
+                    else
+                    {
+                        currentPointerTrail.add(pointerMatchResult);
                     }
 
                     // Check to see if that was the end of this list

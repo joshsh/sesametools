@@ -65,7 +65,7 @@ public class RdfListUtilTest
         this.testPredicateUri1 = this.vf.createURI("http://more.example.org/testpredicate/1");
         
         this.testListHeadUri1 = this.vf.createURI("http://examples.net/testlisthead/1");
-        this.testListHeadUri1 = this.vf.createURI("http://examples.net/testlisthead/2");
+        this.testListHeadUri2 = this.vf.createURI("http://examples.net/testlisthead/2");
         this.testListHeadBNode1 = this.vf.createBNode();
         this.testListHeadBNode2 = this.vf.createBNode();
         
@@ -89,13 +89,19 @@ public class RdfListUtilTest
     @After
     public void tearDown()
     {
+        this.testGraph = null;
+        this.vf = null;
+        
         this.testSubjectUri1 = null;
         this.testPredicateUri1 = null;
         
         this.testListHeadUri1 = null;
+        this.testListHeadUri2 = null;
         this.testListHeadBNode1 = null;
+        this.testListHeadBNode2 = null;
         
         this.testObjectUri1 = null;
+        this.testObjectUri2 = null;
         this.testObjectBNode1 = null;
         this.testObjectLiteral1 = null;
         
@@ -103,9 +109,6 @@ public class RdfListUtilTest
         this.testValuesSingleUri = null;
         this.testValuesMultipleElements = null;
         
-        this.testGraph = null;
-        
-        this.vf = null;
     }
     
     /**
