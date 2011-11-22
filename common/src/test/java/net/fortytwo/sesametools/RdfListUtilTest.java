@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -827,7 +828,7 @@ public class RdfListUtilTest
         
         Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
         
-        Collection<Resource> heads = new ArrayList<Resource>(1);
+        Set<Resource> heads = new HashSet<Resource>(1);
         heads.add((BNode)matchedStatement.getObject());
         
         final Collection<List<Value>> lists =
@@ -856,7 +857,7 @@ public class RdfListUtilTest
         
         Assert.assertEquals(this.testListHeadBNode1, matchedStatement.getSubject());
         
-        Collection<Resource> heads = new ArrayList<Resource>(1);
+        Set<Resource> heads = new HashSet<Resource>(1);
         heads.add((BNode)matchedStatement.getSubject());
         
         final Collection<List<Value>> lists =
@@ -867,7 +868,7 @@ public class RdfListUtilTest
     }
     
     @Test
-    public void testGetListsHelperSingleNullContext()
+    public void testGetListsSingleNullContext()
     {
         RdfListUtil.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
                 this.testGraph);
@@ -889,15 +890,11 @@ public class RdfListUtilTest
         
         final Resource headNode = (Resource)matchedStatement.getObject();
         
-        final Map<Resource, Set<Resource>> heads = new HashMap<Resource, Set<Resource>>();
+        final Set<Resource> heads = new HashSet<Resource>();
         
-        final Set<Resource> headContexts = new TreeSet<Resource>();
+        heads.add(headNode);
         
-        headContexts.add(null);
-        
-        heads.put(headNode, headContexts);
-        
-        final Collection<List<Value>> lists = RdfListUtil.getListsHelper(heads, this.testGraph);
+        final Collection<List<Value>> lists = RdfListUtil.getLists(heads, this.testGraph);
         
         Assert.assertEquals(1, lists.size());
     }
