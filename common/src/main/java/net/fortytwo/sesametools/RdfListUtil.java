@@ -11,6 +11,8 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.RDF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +28,9 @@ import java.util.Set;
  * @author Peter Ansell p_ansell@yahoo.com
  */
 public class RdfListUtil {
-    private static boolean CHECK_CYCLES = false;
+    private static final Logger log = LoggerFactory.getLogger(RdfListUtil.class);
+
+    private static boolean CHECK_CYCLES = true;
 
     /**
      * Adds an RDF List with the given elements to a graph.
@@ -176,9 +180,9 @@ public class RdfListUtil {
                                                    final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
         
-        final Collection<List<Value>> results = new ArrayList<List<Value>>(heads.size());
+        final List<List<Value>> results = new ArrayList<List<Value>>(heads.size());
 
-        List<List<Resource>> completedPointerTrails = new ArrayList<List<Resource>>();
+        List<List<Resource>> completedPointerTrails = new ArrayList<List<Resource>>(heads.size());
         
         for (final Resource nextHead : heads) {
             
@@ -188,9 +192,9 @@ public class RdfListUtil {
             }
             
             // keep track of any outstanding pointer trails for this head
-            List<List<Resource>> outstandingPointerTrails = new ArrayList<List<Resource>>();
+            List<List<Resource>> outstandingPointerTrails = new ArrayList<List<Resource>>(heads.size());
 
-            List<Resource> currentPointerTrail = new ArrayList<Resource>();
+            List<Resource> currentPointerTrail = new ArrayList<Resource>(heads.size());
             // add the first head to the currentPointerTrail
             currentPointerTrail.add(nextHead);
             
@@ -220,6 +224,7 @@ public class RdfListUtil {
 
                         if(CHECK_CYCLES && nextOutstandingPointerTrail.contains(pointerMatchResult))
                         {
+                            log.info("pointerMatchResult="+pointerMatchResult+" nextHead="+nextHead);
                             throw new RuntimeException("List structure cannot contain cycles");
                         }
                         
@@ -242,8 +247,18 @@ public class RdfListUtil {
                                 }
                                 
                                 nextOutstandingPointerTrail.add(nextOutstandingPointerMatch);
-                                
-                                outstandingPointerTrails.add(nextOutstandingPointerTrail);
+
+                                // if the outstanding pointer match is RDF.NIL add it straight to the completedPointerTrails
+                                if(pointerMatchResult.equals(RDF.NIL)) {
+                                    completedPointerTrails.add(nextOutstandingPointerTrail);
+                                    // revert back to cloning the currentPointerTrail
+                                    nextOutstandingPointerTrail = new ArrayList<Resource>(currentPointerTrail);
+                                    // synchronise pointerMatchResult with the last element of the chosen list
+                                    pointerMatchResult = nextOutstandingPointerTrail.get(nextOutstandingPointerTrail.size()-1);
+                                }
+                                else {
+                                    outstandingPointerTrails.add(nextOutstandingPointerTrail);
+                                }
                             }
                             else
                             {
@@ -280,15 +295,12 @@ public class RdfListUtil {
                         if(!outstandingPointerTrails.isEmpty())
                         {
                             // TODO: Is this efficient for ArrayLists?
-                            currentPointerTrail = outstandingPointerTrails.remove(0);
+                            currentPointerTrail = outstandingPointerTrails.remove(outstandingPointerTrails.size()-1);
                             // reset the current pointerMatchResult to be the last pointer in the outstanding pointer trail
                             pointerMatchResult = currentPointerTrail.get(currentPointerTrail.size()-1);
                         }
                         else
                         {
-                            // cleanup temporary variables and break out of the loop
-                            currentPointerTrail = null;
-                            pointerMatchResult = null;
                             break;
                         }
                     }

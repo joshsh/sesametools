@@ -29,6 +29,8 @@ import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.GraphImpl;
 import org.openrdf.model.vocabulary.RDF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Peter Ansell p_ansell@yahoo.com
@@ -36,6 +38,8 @@ import org.openrdf.model.vocabulary.RDF;
  */
 public class RdfListUtilTest
 {
+    private static final Logger log = LoggerFactory.getLogger(RdfListUtilTest.class);
+
     private Graph testGraph;
     private ValueFactory vf;
     
@@ -1042,11 +1046,11 @@ public class RdfListUtilTest
     }
 
     @Test
-    public void testGetListsForkedValidStress()
+    public void testGetListsNotForkedValidStress()
     {
         Set<Resource> heads = new HashSet<Resource>(200);
         
-        for(int i = 0; i < 200; i++)
+        for(int i = 0; i < 100; i++)
         {
             BNode nextHeadBNode = vf.createBNode();
             BNode nextRestBNode = nextHeadBNode;
@@ -1070,9 +1074,99 @@ public class RdfListUtilTest
             heads.add(nextHeadBNode);
         }
         
+        // 9760 == (80*61*2)
+        // 12200 == (100*61*2)
+        Assert.assertEquals(12200, this.testGraph.size());
+        
+        log.info("start");
         final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        log.info("end");
 
-        Assert.assertEquals(200, results.size());
+        Assert.assertEquals(100, results.size());
+        
+        for(List<Value> nextResultList : results)
+        {
+            Assert.assertEquals(61, nextResultList.size());
+        }
+    }
+
+    @Test
+    public void testGetListsForkedValidStress()
+    {
+        Set<Resource> heads = new HashSet<Resource>(200);
+        
+        int iCount = 1;
+        int jCount = 1;
+        int kCount = 2;
+        
+        for(int i = 0; i < iCount; i++)
+        {
+            BNode nextHeadBNode = vf.createBNode("i-"+i);
+            BNode nextRestBNode = nextHeadBNode;
+            for(int j = 0; j < jCount; j++)
+            {
+                for(int k = 0; k < kCount; k++)
+                {
+                    BNode nextTreeBNode1 = vf.createBNode("i-"+i+"_j-"+j+"_a");
+                    BNode nextTreeBNode2 = vf.createBNode("i-"+i+"_j-"+j+"_b");
+                    
+                    Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-"+i+"_j-"+j+"_k-"+k));
+                    this.testGraph.add(nextTestStatement1);
+                    Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode1);
+                    this.testGraph.add(nextTestStatement2);
+                    Statement nextTestStatement3 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode2);
+                    this.testGraph.add(nextTestStatement3);
+
+                    Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_j-"+j+"_k-"+k));
+                    this.testGraph.add(nextTestNilStatement1);
+                    
+                    Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
+                    this.testGraph.add(nextTestNilStatement2);
+                
+                    // branch others off the first one
+                    nextRestBNode = nextTreeBNode1;
+                }
+
+                Statement nextTestNilStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_j-"+j));
+                this.testGraph.add(nextTestNilStatement1);
+                
+                Statement nextTestNilStatement2 = vf.createStatement(nextRestBNode, RDF.REST, RDF.NIL);
+                this.testGraph.add(nextTestNilStatement2);
+            
+            }
+            
+            
+            heads.add(nextHeadBNode);
+        }
+        
+        // 9760 == (80*61*2)
+        // 12200 == (100*61*2)
+        // 1x1x0 == 2
+        // 1x1x1 == 7
+        // 1x1x2 == 12
+        // 1x1x3 == 17
+        // 1x1x4 == 22
+        // 2x1x1 == 14
+        // 1x2x1 == 14
+        // 2x1x2 == 24
+        // 2x2x1 == 28
+        // 2x3x1 == 42
+        // 2x2x2 == 48
+        // 2x3x2 == 72
+        // i*j*k*5+i*j*2
+        int expectedGraphCount = (
+                (iCount*jCount*kCount*5)+
+                        (iCount*jCount*2)
+                );
+        log.info("expectedGraphCount="+expectedGraphCount);
+        log.info("this.testGraph.size()="+this.testGraph.size());
+        Assert.assertEquals(expectedGraphCount, this.testGraph.size());
+        
+        log.info("start");
+        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        log.info("end");
+
+        Assert.assertEquals(100, results.size());
         
         for(List<Value> nextResultList : results)
         {
