@@ -28,7 +28,6 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.GraphImpl;
-import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.model.vocabulary.RDF;
 
 /**
@@ -37,32 +36,41 @@ import org.openrdf.model.vocabulary.RDF;
  */
 public class RdfListUtilTest
 {
+    private Graph testGraph;
+    private ValueFactory vf;
     
     private Resource testSubjectUri1;
     private URI testPredicateUri1;
-    private List<Value> testValuesEmpty;
-    private Graph testGraph;
-    private List<Value> testValuesSingleUri;
     private URI testObjectUri1;
-    private List<Value> testValuesMultipleElements;
+    private URI testObjectUri2;
     private BNode testObjectBNode1;
     private Literal testObjectLiteral1;
+
+    private List<Value> testValuesEmpty;
+    private List<Value> testValuesSingleUri;
+    private List<Value> testValuesMultipleElements;
+    
     private URI testListHeadUri1;
+    private URI testListHeadUri2;
     private BNode testListHeadBNode1;
-    private ValueFactory vf;
+    private BNode testListHeadBNode2;
     
     @Before
     public void setUp()
     {
-        this.vf = ValueFactoryImpl.getInstance();
+        this.testGraph = new GraphImpl();
+        this.vf = this.testGraph.getValueFactory();
         
         this.testSubjectUri1 = this.vf.createURI("http://examples.net/testsubject/1");
         this.testPredicateUri1 = this.vf.createURI("http://more.example.org/testpredicate/1");
         
         this.testListHeadUri1 = this.vf.createURI("http://examples.net/testlisthead/1");
+        this.testListHeadUri1 = this.vf.createURI("http://examples.net/testlisthead/2");
         this.testListHeadBNode1 = this.vf.createBNode();
+        this.testListHeadBNode2 = this.vf.createBNode();
         
         this.testObjectUri1 = this.vf.createURI("http://example.org/testobject/1");
+        this.testObjectUri2 = this.vf.createURI("http://example.org/testobject/2");
         this.testObjectBNode1 = this.vf.createBNode();
         this.testObjectLiteral1 = this.vf.createLiteral("testobjectliteral1");
         
@@ -76,7 +84,6 @@ public class RdfListUtilTest
         this.testValuesMultipleElements.add(this.testObjectLiteral1);
         this.testValuesMultipleElements.add(this.testObjectUri1);
         
-        this.testGraph = new GraphImpl();
     }
     
     @After
@@ -966,5 +973,142 @@ public class RdfListUtilTest
         {
             Assert.assertEquals("List structure was not complete", rex.getMessage());
         }
+    }
+    
+    @Test
+    public void testGetListsForkedValid()
+    {
+        Statement testStatement1 = vf.createStatement(testListHeadBNode1, RDF.FIRST, testObjectLiteral1);
+        this.testGraph.add(testStatement1);
+
+        Statement testStatement2 = vf.createStatement(testListHeadBNode1, RDF.REST, testListHeadUri1);
+        this.testGraph.add(testStatement2);
+        
+        Statement testStatement3 = vf.createStatement(testListHeadUri1, RDF.FIRST, testObjectUri1);
+        this.testGraph.add(testStatement3);
+        
+        Statement testStatement4 = vf.createStatement(testListHeadUri1, RDF.REST, testListHeadBNode2);
+        this.testGraph.add(testStatement4);
+        
+        Statement testStatement5 = vf.createStatement(testListHeadUri1, RDF.REST, testListHeadUri2);
+        this.testGraph.add(testStatement5);
+        
+        Statement testStatement6 = vf.createStatement(testListHeadBNode2, RDF.FIRST, testObjectBNode1);
+        this.testGraph.add(testStatement6);
+        
+        Statement testStatement7 = vf.createStatement(testListHeadBNode2, RDF.REST, RDF.NIL);
+        this.testGraph.add(testStatement7);
+        
+        Statement testStatement8 = vf.createStatement(testListHeadUri2, RDF.FIRST, testObjectUri2);
+        this.testGraph.add(testStatement8);
+        
+        Statement testStatement9 = vf.createStatement(testListHeadUri2, RDF.REST, RDF.NIL);
+        this.testGraph.add(testStatement9);
+        
+        Set<Resource> heads = new HashSet<Resource>(1);
+        heads.add(this.testListHeadBNode1);
+        
+        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+
+        Assert.assertEquals(2, results.size());
+        
+        boolean foundFirstList = false;
+        boolean foundSecondList = false;
+        
+        // Test that both of the returned lists contain three elements
+        for(List<Value> resultList : results)
+        {
+            Assert.assertEquals(3, resultList.size());
+            
+            Assert.assertTrue(resultList.contains(testObjectLiteral1));
+            
+            Assert.assertTrue(resultList.contains(testObjectUri1));
+            
+            if(resultList.contains(testObjectBNode1))
+            {
+                foundFirstList = true;
+            }
+            else if(resultList.contains(testObjectUri2))
+            {
+                foundSecondList = true;
+            }
+        }
+        
+        Assert.assertTrue("Did not find first list", foundFirstList);
+        Assert.assertTrue("Did not find second list", foundSecondList);
+    }
+
+    @Test
+    public void testGetListForkedValid()
+    {
+        Statement testStatement1 = vf.createStatement(testListHeadBNode1, RDF.FIRST, testObjectLiteral1);
+        this.testGraph.add(testStatement1);
+
+        Statement testStatement2 = vf.createStatement(testListHeadBNode1, RDF.REST, testListHeadUri1);
+        this.testGraph.add(testStatement2);
+        
+        Statement testStatement3 = vf.createStatement(testListHeadUri1, RDF.FIRST, testObjectUri1);
+        this.testGraph.add(testStatement3);
+        
+        Statement testStatement4 = vf.createStatement(testListHeadUri1, RDF.REST, testListHeadBNode2);
+        this.testGraph.add(testStatement4);
+        
+        Statement testStatement5 = vf.createStatement(testListHeadUri1, RDF.REST, testListHeadUri2);
+        this.testGraph.add(testStatement5);
+        
+        Statement testStatement6 = vf.createStatement(testListHeadBNode2, RDF.FIRST, testObjectBNode1);
+        this.testGraph.add(testStatement6);
+        
+        Statement testStatement7 = vf.createStatement(testListHeadBNode2, RDF.REST, RDF.NIL);
+        this.testGraph.add(testStatement7);
+        
+        Statement testStatement8 = vf.createStatement(testListHeadUri2, RDF.FIRST, testObjectUri2);
+        this.testGraph.add(testStatement8);
+        
+        Statement testStatement9 = vf.createStatement(testListHeadUri2, RDF.REST, RDF.NIL);
+        this.testGraph.add(testStatement9);
+        
+        try
+        {
+            @SuppressWarnings("unused")
+            final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph);
+            Assert.fail("Did not find expected exception");
+        }
+        catch(final RuntimeException rex)
+        {
+            Assert.assertEquals("Found more than one list, possibly due to forking", rex.getMessage());
+        }
+        
+    }
+
+    @Test
+    public void testGetListForkedInvalid()
+    {
+        Statement testStatement1 = vf.createStatement(testListHeadBNode1, RDF.FIRST, testObjectLiteral1);
+        this.testGraph.add(testStatement1);
+
+        Statement testStatement2 = vf.createStatement(testListHeadBNode1, RDF.REST, testListHeadUri1);
+        this.testGraph.add(testStatement2);
+        
+        Statement testStatement3 = vf.createStatement(testListHeadUri1, RDF.FIRST, testObjectUri1);
+        this.testGraph.add(testStatement3);
+        
+        Statement testStatement4 = vf.createStatement(testListHeadUri1, RDF.REST, testListHeadBNode2);
+        this.testGraph.add(testStatement4);
+        
+        Statement testStatement5 = vf.createStatement(testListHeadUri1, RDF.REST, testListHeadUri2);
+        this.testGraph.add(testStatement5);
+        
+        try
+        {
+            @SuppressWarnings("unused")
+            final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph);
+            Assert.fail("Did not find expected exception");
+        }
+        catch(final RuntimeException rex)
+        {
+            Assert.assertEquals("List structure was not complete", rex.getMessage());
+        }
+        
     }
 }
