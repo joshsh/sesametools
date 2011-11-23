@@ -374,16 +374,17 @@ public class RdfListUtil {
 		if (nextValue instanceof Resource) {
 			Resource nextResource = (Resource) nextValue;
 
+			if (CHECK_CYCLES && currentPointerTrail.contains(nextResource)) {
+				throw new RuntimeException("List cannot contain cycles");
+			}
+
 			ArrayList<Resource> nextTrail = new ArrayList<Resource>(
 					currentPointerTrail);
+
 			nextTrail.add(nextResource);
 
 			if (nextResource.equals(RDF.NIL)) {
 				// uncompletedPointerTrails.remove(currentPointerTrail);
-
-				if (CHECK_CYCLES && completedPointerTrails.contains(nextTrail)) {
-					throw new RuntimeException("List cannot contain cycles");
-				}
 
 				completedPointerTrails.add(nextTrail);
 			} else {
