@@ -314,6 +314,7 @@ public class RdfListUtil {
             else
             {
                 allDone = false;
+                // TODO what is the best, or different strategies for choosing the next pointer trail
                 currentPointerTrail = uncompletedPointerTrails.remove(uncompletedPointerTrails.size()-1);
                 nextPointer = currentPointerTrail.get(currentPointerTrail.size()-1);
             }
