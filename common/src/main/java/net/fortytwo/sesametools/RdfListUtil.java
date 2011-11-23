@@ -189,15 +189,21 @@ public class RdfListUtil {
                 throw new RuntimeException("List structure contains nulls or RDF.NIL in a head position");
             }
             
-            List<Resource> currentPointerTrail = new ArrayList<Resource>(heads.size());
-            // add the first head to the currentPointerTrail
-            currentPointerTrail.add(nextHead);
-            
-            // TODO: Reimplement me from scratch to work with forking
+            followPointerTrails(nextHead, graphToSearch, completedPointerTrails, contexts);
         }
         
-        final List<List<Value>> results = new ArrayList<List<Value>>(heads.size());
+        
+        
+        final List<List<Value>> results = getValuesForPointerTrails(graphToSearch, completedPointerTrails, contexts);
 
+        return results;
+    }
+
+    private static List<List<Value>> getValuesForPointerTrails(final Graph graphToSearch,
+            List<List<Resource>> completedPointerTrails, final Resource... contexts)
+    {
+        final List<List<Value>> results = new ArrayList<List<Value>>(completedPointerTrails.size());
+        
         // Go through the pointer trails finding the corresponding RDF.FIRST/Value combinations to generate the result lists
         for(List<Resource> nextPointerTrail : completedPointerTrails) {
             final List<Value> nextResult = new ArrayList<Value>();
@@ -222,12 +228,16 @@ public class RdfListUtil {
                     if (valueMatch.hasNext()) {
                         final Statement nextValueMatch = valueMatch.next();
                     
+                        nextValue = nextValueMatch.getObject();
+
                         if (valueMatch.hasNext()) {
+                            Statement errorValueMatch = valueMatch.next();
+                            
+                            log.error("Found multiple rdf:first items nextValueMatch="+nextValueMatch+" errorValueMatch="+errorValueMatch);
+                            
                             throw new RuntimeException(
                                     "List structure cannot contain multiple values for rdf:first items for a given subject resource");
                         }
-                    
-                        nextValue = nextValueMatch.getObject();
                     }
                     
                     if (nextValue == null) {
@@ -242,10 +252,115 @@ public class RdfListUtil {
                 results.add(nextResult);
             }
         }
-
+        
         return results;
     }
+    
+    private static void followPointerTrails(Resource nextHead, Graph graphToSearch, List<List<Resource>> completedPointerTrails, Resource... contexts)
+    {
+        OpenRDFUtil.verifyContextNotNull(contexts);
+        
+        List<Resource> firstPointerTrail = new ArrayList<Resource>();
+        // add the first head to the currentPointerTrail
+        firstPointerTrail.add(nextHead);
 
+        // start off our currentPointerTrail marker list with the contents of the firstPointerTrail
+        List<Resource> currentPointerTrail = new ArrayList<Resource>(firstPointerTrail);
+        
+        List<List<Resource>> uncompletedPointerTrails = new ArrayList<List<Resource>>();
+        
+        Resource nextPointer = nextHead;
+
+        boolean allDone = true;
+        
+        do
+        {
+            // start off thinking all are done, and then set to false as necessary before the end of the loop
+            allDone = true;
+            
+            // match the nextPointer with RDF.REST predicate to find next hops
+            final Iterator<Statement> nextMatch = graphToSearch.match(nextPointer, RDF.REST, null, contexts);
+            
+            // if there are no matches complain and throw a runtime exception
+            if(!nextMatch.hasNext())
+            {
+                throw new RuntimeException("List structure was not complete");
+            }
+
+            allDone =
+                    resolveNextMatch(completedPointerTrails, currentPointerTrail, uncompletedPointerTrails, allDone,
+                            nextMatch);
+
+            if(nextMatch.hasNext())
+            {
+                // start a loop to add all of the matches for each of the forks to uncompleted list
+                while(nextMatch.hasNext())
+                {
+                    if(!resolveNextMatch(completedPointerTrails, currentPointerTrail, uncompletedPointerTrails, allDone,
+                            nextMatch))
+                    {
+                        allDone = false;
+                    }
+                }
+            }
+            
+            // TODO: is allDone needed above or can we rely completely on uncompletedPointerTrails
+            if(uncompletedPointerTrails.isEmpty())
+            {
+                currentPointerTrail = null;
+                nextPointer = null;
+                allDone = true;
+            }
+            else
+            {
+                allDone = false;
+                currentPointerTrail = uncompletedPointerTrails.remove(uncompletedPointerTrails.size()-1);
+                nextPointer = currentPointerTrail.get(currentPointerTrail.size()-1);
+            }
+        }
+        while(!allDone);
+    }
+
+    private static boolean resolveNextMatch(List<List<Resource>> completedPointerTrails,
+            List<Resource> currentPointerTrail, List<List<Resource>> uncompletedPointerTrails, boolean allDone,
+            final Iterator<Statement> nextMatch)
+    {
+        Statement nextMatchStatement = nextMatch.next();
+        
+        Value nextValue = nextMatchStatement.getObject();
+        
+        if(nextValue instanceof Resource)
+        {
+            Resource nextResource = (Resource)nextValue;
+            
+            ArrayList<Resource> nextTrail = new ArrayList<Resource>(currentPointerTrail);
+            nextTrail.add(nextResource);
+            
+            if(nextResource.equals(RDF.NIL))
+            {
+                //uncompletedPointerTrails.remove(currentPointerTrail);
+                
+                if(CHECK_CYCLES && completedPointerTrails.contains(nextTrail))
+                {
+                    throw new RuntimeException("List cannot contain cycles");
+                }
+                
+                completedPointerTrails.add(nextTrail);
+            }
+            else
+            {
+                allDone = false;
+                uncompletedPointerTrails.add(nextTrail);
+            }
+        }
+        else
+        {
+            throw new RuntimeException("List structure not valid");
+        }
+        
+        return allDone;
+    }
+    
     /**
      * Fetches a collection of generalized lists based on the given subject and predicate,
      * where lists are allowed to branch from head to tail.
