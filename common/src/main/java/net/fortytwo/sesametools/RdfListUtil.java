@@ -247,9 +247,9 @@ public class RdfListUtil {
                                    final int i,
                                    final Resource... contexts) {
         if (head.equals(RDF.NIL)) {  // End of list
-            List<Value> finalisedList = new LinkedList<Value>();
+            List<Value> finalisedList = new ArrayList<Value>(i);
             for (int j = 0; j < i; j++) {
-                finalisedList.add(buffer[j]);
+                finalisedList.add(j, buffer[j]);
             }
             matches.add(finalisedList);
         } else if(!(head instanceof Resource)) {
