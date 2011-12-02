@@ -1100,10 +1100,66 @@ public class RdfListUtilTest
     }
 
     @Test
-    public void testGetListsNotForkedValidStress()
+    public void testGetListsNotForkedValidStressBalanced()
     {
         int iCount = 30;
         int jCount = 60;
+
+        Set<Resource> heads = new HashSet<Resource>((int)(iCount*1.5));
+        
+        for(int i = 0; i < iCount; i++)
+        {
+            BNode nextHeadBNode = vf.createBNode();
+            BNode nextRestBNode = nextHeadBNode;
+            for(int j = 0; j < jCount; j++)
+            {
+                BNode nextTreeBNode = vf.createBNode("i-"+i+"_j-"+j);
+                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-"+i+"_j-"+j));
+                this.testGraph.add(nextTestStatement1);
+                Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode);
+                this.testGraph.add(nextTestStatement2);
+                
+                nextRestBNode = nextTreeBNode;
+            }
+            
+            Statement nextTestNilStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("terminating i-"+i));
+            this.testGraph.add(nextTestNilStatement1);
+            
+            Statement nextTestNilStatement2 = vf.createStatement(nextRestBNode, RDF.REST, RDF.NIL);
+            this.testGraph.add(nextTestNilStatement2);
+            
+            heads.add(nextHeadBNode);
+        }
+        
+        int expectedGraphCount = ((iCount*2)+(iCount*jCount*2));
+        
+        log.info("expectedGraphCount="+expectedGraphCount);
+        log.info("this.testGraph.size()="+this.testGraph.size());
+        
+        Assert.assertEquals(expectedGraphCount, this.testGraph.size());
+        
+        log.info("start");
+        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        log.info("end");
+
+        int expectedResultsCount = iCount;
+
+        log.info("expectedResultsCount="+expectedResultsCount);
+        log.info("results.size()="+results.size());
+        
+        Assert.assertEquals(iCount, results.size());
+        
+        for(List<Value> nextResultList : results)
+        {
+            Assert.assertEquals(jCount+1, nextResultList.size());
+        }
+    }
+
+    @Test
+    public void testGetListsNotForkedValidStressDeep()
+    {
+        int iCount = 5;
+        int jCount = 2000;
 
         Set<Resource> heads = new HashSet<Resource>((int)(iCount*1.5));
         

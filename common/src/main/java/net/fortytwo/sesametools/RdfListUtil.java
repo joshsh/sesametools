@@ -276,6 +276,9 @@ public class RdfListUtil {
                     Value r = rest.next().getObject();
 
                     if (r instanceof Resource) {
+                    	if((i+1) >= buffer.length) {
+                    		throw new RuntimeException(String.format("List was too long, maximum is %d elements long", buffer.length));
+                    	}
                         matchLists((Resource) r, graph, matches, prev, buffer, i + 1);
 	                } else {
 	                	throw new RuntimeException("List structure was not complete");
