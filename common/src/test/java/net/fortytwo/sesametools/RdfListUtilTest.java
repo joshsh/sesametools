@@ -59,6 +59,8 @@ public class RdfListUtilTest
     private URI testListHeadUri2;
     private BNode testListHeadBNode1;
     private BNode testListHeadBNode2;
+
+	private Value testObjectLiteral2;
     
     @Before
     public void setUp()
@@ -78,6 +80,7 @@ public class RdfListUtilTest
         this.testObjectUri2 = this.vf.createURI("http://example.org/testobject/2");
         this.testObjectBNode1 = this.vf.createBNode();
         this.testObjectLiteral1 = this.vf.createLiteral("testobjectliteral1");
+        this.testObjectLiteral2 = this.vf.createLiteral("testobjectliteral2");
         
         this.testValuesEmpty = Collections.emptyList();
         
@@ -109,6 +112,7 @@ public class RdfListUtilTest
         this.testObjectUri2 = null;
         this.testObjectBNode1 = null;
         this.testObjectLiteral1 = null;
+        this.testObjectLiteral2 = null;
         
         this.testValuesEmpty = null;
         this.testValuesSingleUri = null;
@@ -703,6 +707,8 @@ public class RdfListUtilTest
             final List<Value> results =
                     RdfListUtil.getListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testGraph,
                             (Resource)null);
+            
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
         }
         catch(final RuntimeException rex)
@@ -764,6 +770,51 @@ public class RdfListUtilTest
         {
             @SuppressWarnings("unused")
             final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph, (Resource)null);
+
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
+            Assert.fail("Did not find expected exception");
+        }
+        catch(final RuntimeException rex)
+        {
+            Assert.assertEquals("List structure was not complete", rex.getMessage());
+        }
+    }
+    
+    /**
+     * Test method for
+     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}
+     * .
+     */
+    @Test
+    public void testGetListBNodeHeadAfterInvalidGraphOperation2()
+    {
+        RdfListUtil.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
+        
+        Assert.assertEquals(6, this.testGraph.size());
+        
+        // Modify the graph in an invalid way to test getList
+        final Iterator<Statement> matches = this.testGraph.match(null, RDF.REST, RDF.NIL);
+        
+        Assert.assertTrue(matches.hasNext());
+        
+        final Statement matchedStatement = matches.next();
+        
+        Assert.assertFalse(matches.hasNext());
+        
+        Assert.assertTrue(this.testGraph.remove(matchedStatement));
+        
+        Assert.assertFalse(this.testGraph.contains(matchedStatement));
+        
+        Statement literalRdfRest = this.vf.createStatement(matchedStatement.getSubject(), RDF.REST, this.vf.createLiteral("InvalidRdfRestLiteral"));
+        
+        this.testGraph.add(literalRdfRest);
+        
+        try
+        {
+            @SuppressWarnings("unused")
+            final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph, (Resource)null);
+
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
         }
         catch(final RuntimeException rex)
@@ -975,6 +1026,8 @@ public class RdfListUtilTest
         {
             @SuppressWarnings("unused")
             final List<Value> results = RdfListUtil.getList(this.testListHeadUri1, this.testGraph, (Resource)null);
+
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
         }
         catch(final RuntimeException rex)
@@ -1222,8 +1275,11 @@ public class RdfListUtilTest
         
     }
 
+    /**
+     * Tests for cases where a forked list does not end in RDF.NIL in any of the forks
+     */
     @Test
-    public void testGetListForkedInvalid()
+    public void testGetListForkedInvalidAll()
     {
         Statement testStatement1 = vf.createStatement(testListHeadBNode1, RDF.FIRST, testObjectLiteral1);
         this.testGraph.add(testStatement1);
@@ -1244,6 +1300,52 @@ public class RdfListUtilTest
         {
             @SuppressWarnings("unused")
             final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph);
+
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
+            Assert.fail("Did not find expected exception");
+        }
+        catch(final RuntimeException rex)
+        {
+            Assert.assertEquals("List structure was not complete", rex.getMessage());
+        }
+        
+    }
+
+    /**
+     * Tests for cases where a forked list ends in RDF.NIL in one fork, but a runtime exception should be thrown due to the incomplete structure on the other fork
+     */
+    @Test
+    public void testGetListForkedInvalidPartial()
+    {
+        Statement testStatement1 = vf.createStatement(testListHeadBNode1, RDF.FIRST, testObjectLiteral1);
+        this.testGraph.add(testStatement1);
+
+        Statement testStatement2 = vf.createStatement(testListHeadBNode1, RDF.REST, testListHeadUri1);
+        this.testGraph.add(testStatement2);
+        
+        Statement testStatement3 = vf.createStatement(testListHeadUri1, RDF.FIRST, testObjectUri1);
+        this.testGraph.add(testStatement3);
+        
+        Statement testStatement4 = vf.createStatement(testListHeadUri1, RDF.REST, testListHeadBNode2);
+        this.testGraph.add(testStatement4);
+        
+        Statement testStatement5 = vf.createStatement(testListHeadUri1, RDF.REST, testListHeadUri2);
+        this.testGraph.add(testStatement5);
+        
+        Statement testStatement6 = vf.createStatement(testListHeadBNode2, RDF.FIRST, testObjectLiteral2);
+        this.testGraph.add(testStatement6);
+        
+        Statement testStatement7 = vf.createStatement(testListHeadBNode2, RDF.REST, RDF.NIL);
+        this.testGraph.add(testStatement7);
+        
+        Assert.assertEquals(7, this.testGraph.size());
+        
+        try
+        {
+            @SuppressWarnings("unused")
+            final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph);
+
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
         }
         catch(final RuntimeException rex)

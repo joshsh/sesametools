@@ -184,7 +184,7 @@ public class RdfListUtil {
      * @return all matching lists. If no matching lists are found, an empty
      *         collection is returned.
      */
-    //*
+    /*
     public static Collection<List<Value>> getLists(final Set<Resource> heads,
                                                    final Graph graphToSearch, final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
@@ -208,9 +208,9 @@ public class RdfListUtil {
 
         return results;
     }
-    //*/
+    */
 
-    /*
+    //*
     public static Collection<List<Value>> getLists(final Set<Resource> heads,
                                                    final Graph graphToSearch,
                                                    final Resource... contexts) {
@@ -247,30 +247,49 @@ public class RdfListUtil {
                                    final int i,
                                    final Resource... contexts) {
         if (head.equals(RDF.NIL)) {  // End of list
-            List<Value> l = new LinkedList<Value>();
+            List<Value> finalisedList = new LinkedList<Value>();
             for (int j = 0; j < i; j++) {
-                l.add(buffer[j]);
+                finalisedList.add(buffer[j]);
             }
-            matches.add(l);
+            matches.add(finalisedList);
+        } else if(!(head instanceof Resource)) {
+        	throw new RuntimeException("List structure was not complete");
         } else if (!prev.contains(head)) {  // List continues, no cycle so far.
             prev.add(head);
 
             Iterator<Statement> first = graph.match(head, RDF.FIRST, null, contexts);
+            
+            if(!first.hasNext()) {
+            	throw new RuntimeException("List structure was not complete");
+            }
+            
             while (first.hasNext()) {
                 buffer[i] = first.next().getObject();
 
                 Iterator<Statement> rest = graph.match(head, RDF.REST, null, contexts);
+
+                if(!rest.hasNext()) {
+                	throw new RuntimeException("List structure was not complete");
+                }
+                
                 while (rest.hasNext()) {
                     Value r = rest.next().getObject();
 
                     if (r instanceof Resource) {
                         matchLists((Resource) r, graph, matches, prev, buffer, i + 1);
-                    }
+	                } else {
+	                	throw new RuntimeException("List structure was not complete");
+	                }
                 }
             }
 
             prev.remove(head);
+        } else if(prev.contains(head) && CHECK_CYCLES) {
+        	throw new RuntimeException("List cannot contain cycles");
+        } else {
+        	throw new RuntimeException("List structure was not complete");
         }
+        
     }
 
     private static List<List<Value>> getValuesForPointerTrails(
