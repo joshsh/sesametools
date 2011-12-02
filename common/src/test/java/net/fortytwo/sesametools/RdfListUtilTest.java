@@ -1159,7 +1159,7 @@ public class RdfListUtilTest
     public void testGetListsNotForkedValidStressDeep()
     {
         int iCount = 5;
-        int jCount = 2000;
+        int jCount = 1000;
 
         Set<Resource> heads = new HashSet<Resource>((int)(iCount*1.5));
         
@@ -1212,10 +1212,234 @@ public class RdfListUtilTest
     }
 
     @Test
-    public void testGetListsForkedValidStress()
+    public void testGetListsForkedValidStressShallow()
     {
         int iCount = 30;
         int kCount = 60;
+        
+        Set<Resource> heads = new HashSet<Resource>((int)(iCount*1.5));
+        
+        for(int i = 0; i < iCount; i++)
+        {
+            BNode nextHeadBNode = vf.createBNode("i-"+i);
+            BNode nextRestBNode = nextHeadBNode;
+            
+            for(int k = 0; k < kCount; k++)
+            {
+                BNode nextTreeBNode1 = vf.createBNode("i-"+i+"_k-"+k+"_a");
+                BNode nextTreeBNode2 = vf.createBNode("i-"+i+"_k-"+k+"_b");
+                
+                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-"+i+"_k-"+k));
+                this.testGraph.add(nextTestStatement1);
+                
+                // Fork the list in two
+                Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode1);
+                this.testGraph.add(nextTestStatement2);
+                Statement nextTestStatement3 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode2);
+                this.testGraph.add(nextTestStatement3);
+
+                // Generate a terminating element for one of the arms
+                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_k-"+k+"_b"));
+                this.testGraph.add(nextTestNilStatement1);
+                
+                Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
+                this.testGraph.add(nextTestNilStatement2);
+            
+                if(k == kCount-1)
+                {
+                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_k-"+k+"_a"));
+                    this.testGraph.add(nextTestNilStatement3);
+                    
+                    Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
+                    this.testGraph.add(nextTestNilStatement4);
+                }
+                else
+                {
+                    // branch others off the first one
+                    nextRestBNode = nextTreeBNode1;
+                }                    
+            }
+            heads.add(nextHeadBNode);
+        }
+        
+        int expectedGraphCount = (
+                // 5 statements for each i for each k
+                (iCount*kCount*5)+
+                // 2 terminating statements for each i
+                        (iCount*2)
+                );
+        log.info("expectedGraphCount="+expectedGraphCount);
+        log.info("this.testGraph.size()="+this.testGraph.size());
+        Assert.assertEquals(expectedGraphCount, this.testGraph.size());
+        
+        log.info("start");
+        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        log.info("end");
+        
+        int expectedResultsCount = (
+                // one variable length branch for each i for each k
+                (iCount*kCount)
+                // one longest branch for each i
+                +iCount);
+        log.info("expectedResultsCount="+expectedResultsCount);
+        log.info("results.size()="+results.size());
+        
+        Assert.assertEquals(expectedResultsCount, results.size());
+        
+    }
+
+    /**
+     * Tests a mix of shallow and deep lists in the same getLists call
+     */
+    @Test
+    public void testGetListsForkedValidStressDeepAndShallow()
+    {
+        Set<Resource> heads = new HashSet<Resource>();
+
+        int iHeadCount = 500;
+        int kDepthCount = 4;
+        
+        int mHeadCount = 4;
+        int nDepthCount = 50;
+        
+        for(int i = 0; i < iHeadCount; i++)
+        {
+            BNode nextHeadBNode = vf.createBNode("i-"+i);
+            BNode nextRestBNode = nextHeadBNode;
+            
+            for(int k = 0; k < kDepthCount; k++)
+            {
+                BNode nextTreeBNode1 = vf.createBNode("i-"+i+"_k-"+k+"_a");
+                BNode nextTreeBNode2 = vf.createBNode("i-"+i+"_k-"+k+"_b");
+                
+                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-"+i+"_k-"+k));
+                this.testGraph.add(nextTestStatement1);
+                
+                // Fork the list in two
+                Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode1);
+                this.testGraph.add(nextTestStatement2);
+                Statement nextTestStatement3 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode2);
+                this.testGraph.add(nextTestStatement3);
+
+                // Generate a terminating element for one of the arms
+                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_k-"+k+"_b"));
+                this.testGraph.add(nextTestNilStatement1);
+                
+                Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
+                this.testGraph.add(nextTestNilStatement2);
+            
+                if(k == kDepthCount-1)
+                {
+                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_k-"+k+"_a"));
+                    this.testGraph.add(nextTestNilStatement3);
+                    
+                    Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
+                    this.testGraph.add(nextTestNilStatement4);
+                }
+                else
+                {
+                    // branch others off the first one
+                    nextRestBNode = nextTreeBNode1;
+                }                    
+            }
+            heads.add(nextHeadBNode);
+        }
+        
+        
+        
+        for(int m = 0; m < mHeadCount; m++)
+        {
+            BNode nextHeadBNode = vf.createBNode("m-"+m);
+            BNode nextRestBNode = nextHeadBNode;
+            
+            for(int n = 0; n < nDepthCount; n++)
+            {
+                BNode nextTreeBNode1 = vf.createBNode("m-"+m+"_n-"+n+"_a");
+                BNode nextTreeBNode2 = vf.createBNode("m-"+m+"_n-"+n+"_b");
+                
+                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: m-"+m+"_n-"+n));
+                this.testGraph.add(nextTestStatement1);
+                
+                // Fork the list in two
+                Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode1);
+                this.testGraph.add(nextTestStatement2);
+                Statement nextTestStatement3 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode2);
+                this.testGraph.add(nextTestStatement3);
+
+                // Generate a terminating element for one of the arms
+                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating m-"+m+"_n-"+n+"_b"));
+                this.testGraph.add(nextTestNilStatement1);
+                
+                Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
+                this.testGraph.add(nextTestNilStatement2);
+            
+                if(n == nDepthCount-1)
+                {
+                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating m-"+m+"_n-"+n+"_a"));
+                    this.testGraph.add(nextTestNilStatement3);
+                    
+                    Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
+                    this.testGraph.add(nextTestNilStatement4);
+                }
+                else
+                {
+                    // branch others off the first one
+                    nextRestBNode = nextTreeBNode1;
+                }                    
+            }
+            heads.add(nextHeadBNode);
+        }
+        
+        int expectedGraphCount = (
+                // 5 statements for each i for each k
+                (iHeadCount*kDepthCount*5)+
+                // 2 terminating statements for each i
+                        (iHeadCount*2)+
+                // 5 statements for each m for each n
+                (mHeadCount*nDepthCount*5)+
+                // 2 terminating statements for each m
+                        (mHeadCount*2)
+                );
+        log.info("expectedGraphCount="+expectedGraphCount);
+        log.info("this.testGraph.size()="+this.testGraph.size());
+        Assert.assertEquals(expectedGraphCount, this.testGraph.size());
+        
+        log.info("start");
+        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        log.info("end");
+        
+        int expectedResultsCount = (
+                // one variable length branch for each i for each k
+                (iHeadCount*kDepthCount)
+                // one longest branch for each i
+                +iHeadCount
+                // one variable length branch for each m for each n
+                + (mHeadCount*nDepthCount)
+                // one longest branch for each m
+                +mHeadCount
+                );
+        log.info("expectedResultsCount="+expectedResultsCount);
+        log.info("results.size()="+results.size());
+        
+        Assert.assertEquals(expectedResultsCount, results.size());
+        
+    }
+
+    /**
+     * WARNING: This test goes past the boundaries of the relatively efficient recursive implementation 
+     * and drops into the iterative implementation that is CPU and memory hungry
+     * 
+     * At 1100 deep, with 5 lists, the recursive method requires 65+ seconds to complete this test. 
+     * The iterative implementation was not able to complete this test in a reasonable amount of time.
+     * 
+     * Only remove the Ignore annotation to test the boundaries.
+     */
+    @Ignore
+    @Test
+    public void testGetListsForkedValidStressDeep()
+    {
+        int iCount = 5;
+        int kCount = 1100;
         
         Set<Resource> heads = new HashSet<Resource>((int)(iCount*1.5));
         
