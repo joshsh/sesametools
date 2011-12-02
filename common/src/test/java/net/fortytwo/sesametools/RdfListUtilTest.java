@@ -1100,7 +1100,7 @@ public class RdfListUtilTest
     }
 
     @Test
-    public void testGetListsNotForkedValidStressBalanced()
+    public void testGetListsNotForkedValidStressShallow()
     {
         int iCount = 30;
         int jCount = 60;

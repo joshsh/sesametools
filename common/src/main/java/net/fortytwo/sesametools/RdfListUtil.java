@@ -184,8 +184,8 @@ public class RdfListUtil {
      * @return all matching lists. If no matching lists are found, an empty
      *         collection is returned.
      */
-    /*
-    public static Collection<List<Value>> getLists(final Set<Resource> heads,
+    //*
+    public static Collection<List<Value>> getListsIterative(final Set<Resource> heads,
                                                    final Graph graphToSearch, final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
@@ -208,7 +208,7 @@ public class RdfListUtil {
 
         return results;
     }
-    */
+    //*/
 
     //*
     public static Collection<List<Value>> getLists(final Set<Resource> heads,
@@ -216,15 +216,30 @@ public class RdfListUtil {
                                                    final Resource... contexts) {
         Collection<List<Value>> matches = new LinkedList<List<Value>>();
 
-        for (Resource h : heads) {
-            matches.addAll(getLists(h, graphToSearch, contexts));
+    	try
+    	{
+    		for (Resource h : heads) {
+        		matches.addAll(getListsRecursive(h, graphToSearch, contexts));
+        	}
         }
+    	catch(RuntimeException rex)
+    	{
+    		if(rex.getMessage().contains("List was too long"))
+    		{
+    			matches.clear();
+    			matches = getListsIterative(heads, graphToSearch, contexts);
+    		}
+    		else
+    		{
+    			throw rex;
+    		}
+    	}
 
         return matches;
     }
     //*/
 
-    public static Collection<List<Value>> getLists(final Resource head,
+    public static Collection<List<Value>> getListsRecursive(final Resource head,
                                                    final Graph graph,
                                                    final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
