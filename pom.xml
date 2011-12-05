@@ -18,7 +18,9 @@
         <module>debug</module>
         <module>decompose</module>
         <module>deduplication</module>
-        <module>jsonld</module>
+		<!-- Remove JSON-LD from reactor until it is stabilised enough for parsing and writing tests to work consistently
+        <module>jsonld</module> 
+        -->
         <module>ldserver</module>
         <module>mappingsail</module>
         <module>nquads</module>
