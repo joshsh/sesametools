@@ -2,9 +2,14 @@
 package net.fortytwo.sesametools.caching;
 
 import info.aduna.iteration.CloseableIteration;
-import junit.framework.TestCase;
 import net.fortytwo.sesametools.debug.DebugSail;
 import net.fortytwo.sesametools.debug.SailCounter;
+
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.repository.Repository;
@@ -21,23 +26,42 @@ import java.io.InputStream;
 /**
  * @author Joshua Shinavier (http://fortytwo.net)
  */
-public class CachingSailTest extends TestCase {
+public class CachingSailTest {
     private static final String NS = "http://example.org/ns/";
     private static final long CAPACITY = 10000000l;
 
     private Sail baseSail;
     private Sail proxySail;
     private SailCounter counter = new SailCounter();
+    private SailConnection sc;
+    private CachingSail cachingSail;
 
+    @Before
+    public void setUp() throws Exception {
+        baseSail = new MemoryStore();
+        proxySail = new DebugSail(baseSail, counter);
+        cachingSail = new CachingSail(proxySail, true, false, false, CAPACITY);
+        cachingSail.initialize();
+
+        Repository repo = new SailRepository(baseSail);
+        RepositoryConnection rc = repo.getConnection();
+        InputStream is = CachingSailTest.class.getResourceAsStream("cachingSailTest.trig");
+        rc.add(is, "", RDFFormat.TRIG);
+        rc.close();
+        
+        sc = cachingSail.getConnection();
+    }
+    
+    @After
+    public void tearDown() throws Exception {
+        sc.close();
+        cachingSail.shutDown();
+    }
+    
+    @Test
     public void testSubjectCaching() throws Exception {
         //Collection<Statement> statementsAdded = new LinkedList<Statement>();
         //Collection<Statement> statementsRemoved = new LinkedList<Statement>();
-
-        createBaseSail();
-        CachingSail cachingSail = new CachingSail(proxySail, true, false, false, CAPACITY);
-        cachingSail.initialize();
-        loadData();
-        SailConnection sc = cachingSail.getConnection();
 
         int count;
 
@@ -62,19 +86,13 @@ public class CachingSailTest extends TestCase {
         assertEquals(1, count);
         assertEquals(1, counter.getMethodCount(SailCounter.Method.GetStatements));
 
-        sc.close();
-        cachingSail.shutDown();
     }
 
+    @Test
     public void testWrite() throws Exception {
-        createBaseSail();
-        CachingSail cachingSail = new CachingSail(proxySail, true, false, false, CAPACITY);
-        cachingSail.initialize();
         int count;
 
-        URI resA = cachingSail.getValueFactory().createURI("http://example.org/ns/resA");
-
-        SailConnection sc = cachingSail.getConnection();
+        URI resA = uri("http://example.org/ns/resA");
 
         sc.addStatement(resA, resA, resA);
         sc.commit();
@@ -93,19 +111,6 @@ public class CachingSailTest extends TestCase {
         sc.commit();
         count = countStatements(sc.getStatements(null, null, resA, false));
         assertEquals(0, count);
-    }
-
-    private void createBaseSail() throws Exception {
-        baseSail = new MemoryStore();
-        proxySail = new DebugSail(baseSail, counter);
-    }
-
-    private void loadData() throws Exception {
-        Repository repo = new SailRepository(baseSail);
-        RepositoryConnection rc = repo.getConnection();
-        InputStream is = CachingSailTest.class.getResourceAsStream("cachingSailTest.trig");
-        rc.add(is, "", RDFFormat.TRIG);
-        rc.close();
     }
 
     private URI uri(final String localName) {
