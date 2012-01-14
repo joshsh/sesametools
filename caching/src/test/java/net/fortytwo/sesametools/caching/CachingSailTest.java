@@ -14,12 +14,15 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 
@@ -27,17 +30,21 @@ import java.io.InputStream;
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class CachingSailTest {
+    
+    private static final Logger LOG = LoggerFactory.getLogger(CachingSailTest.class);
+    
     private static final String NS = "http://example.org/ns/";
     private static final long CAPACITY = 10000000l;
 
     private Sail baseSail;
     private Sail proxySail;
-    private SailCounter counter = new SailCounter();
+    private SailCounter counter;
     private SailConnection sc;
     private CachingSail cachingSail;
 
     @Before
     public void setUp() throws Exception {
+        counter = new SailCounter();
         baseSail = new MemoryStore();
         proxySail = new DebugSail(baseSail, counter);
         cachingSail = new CachingSail(proxySail, true, false, false, CAPACITY);
@@ -53,9 +60,32 @@ public class CachingSailTest {
     }
     
     @After
-    public void tearDown() throws Exception {
-        sc.close();
-        cachingSail.shutDown();
+    public void tearDown() {
+        try
+        {
+            sc.close();
+        }
+        catch(SailException e)
+        {
+            LOG.error("Error closing connection", e);
+        }
+        
+        sc = null;
+        
+        try
+        {
+            cachingSail.shutDown();
+        }
+        catch(SailException e)
+        {
+            LOG.error("Error shutting down repository", e);
+        }
+        
+        cachingSail = null;
+        proxySail = null;
+        baseSail = null;
+        
+        counter = null;
     }
     
     @Test
