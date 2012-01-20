@@ -59,6 +59,8 @@ public class RdfListUtilTest
     private URI testListHeadUri2;
     private BNode testListHeadBNode1;
     private BNode testListHeadBNode2;
+
+	private Value testObjectLiteral2;
     
     @Before
     public void setUp()
@@ -78,6 +80,7 @@ public class RdfListUtilTest
         this.testObjectUri2 = this.vf.createURI("http://example.org/testobject/2");
         this.testObjectBNode1 = this.vf.createBNode();
         this.testObjectLiteral1 = this.vf.createLiteral("testobjectliteral1");
+        this.testObjectLiteral2 = this.vf.createLiteral("testobjectliteral2");
         
         this.testValuesEmpty = Collections.emptyList();
         
@@ -109,6 +112,7 @@ public class RdfListUtilTest
         this.testObjectUri2 = null;
         this.testObjectBNode1 = null;
         this.testObjectLiteral1 = null;
+        this.testObjectLiteral2 = null;
         
         this.testValuesEmpty = null;
         this.testValuesSingleUri = null;
@@ -703,6 +707,8 @@ public class RdfListUtilTest
             final List<Value> results =
                     RdfListUtil.getListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testGraph,
                             (Resource)null);
+            
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
         }
         catch(final RuntimeException rex)
@@ -764,6 +770,51 @@ public class RdfListUtilTest
         {
             @SuppressWarnings("unused")
             final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph, (Resource)null);
+
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
+            Assert.fail("Did not find expected exception");
+        }
+        catch(final RuntimeException rex)
+        {
+            Assert.assertEquals("List structure was not complete", rex.getMessage());
+        }
+    }
+    
+    /**
+     * Test method for
+     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}
+     * .
+     */
+    @Test
+    public void testGetListBNodeHeadAfterInvalidGraphOperation2()
+    {
+        RdfListUtil.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
+        
+        Assert.assertEquals(6, this.testGraph.size());
+        
+        // Modify the graph in an invalid way to test getList
+        final Iterator<Statement> matches = this.testGraph.match(null, RDF.REST, RDF.NIL);
+        
+        Assert.assertTrue(matches.hasNext());
+        
+        final Statement matchedStatement = matches.next();
+        
+        Assert.assertFalse(matches.hasNext());
+        
+        Assert.assertTrue(this.testGraph.remove(matchedStatement));
+        
+        Assert.assertFalse(this.testGraph.contains(matchedStatement));
+        
+        Statement literalRdfRest = this.vf.createStatement(matchedStatement.getSubject(), RDF.REST, this.vf.createLiteral("InvalidRdfRestLiteral"));
+        
+        this.testGraph.add(literalRdfRest);
+        
+        try
+        {
+            @SuppressWarnings("unused")
+            final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph, (Resource)null);
+
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
         }
         catch(final RuntimeException rex)
@@ -975,6 +1026,8 @@ public class RdfListUtilTest
         {
             @SuppressWarnings("unused")
             final List<Value> results = RdfListUtil.getList(this.testListHeadUri1, this.testGraph, (Resource)null);
+
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
         }
         catch(final RuntimeException rex)
@@ -1047,7 +1100,7 @@ public class RdfListUtilTest
     }
 
     @Test
-    public void testGetListsNotForkedValidStress()
+    public void testGetListsNotForkedValidStressShallow()
     {
         int iCount = 30;
         int jCount = 60;
@@ -1103,10 +1156,290 @@ public class RdfListUtilTest
     }
 
     @Test
-    public void testGetListsForkedValidStress()
+    public void testGetListsNotForkedValidStressDeep()
+    {
+        int iCount = 5;
+        int jCount = 1000;
+
+        Set<Resource> heads = new HashSet<Resource>((int)(iCount*1.5));
+        
+        for(int i = 0; i < iCount; i++)
+        {
+            BNode nextHeadBNode = vf.createBNode();
+            BNode nextRestBNode = nextHeadBNode;
+            for(int j = 0; j < jCount; j++)
+            {
+                BNode nextTreeBNode = vf.createBNode("i-"+i+"_j-"+j);
+                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-"+i+"_j-"+j));
+                this.testGraph.add(nextTestStatement1);
+                Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode);
+                this.testGraph.add(nextTestStatement2);
+                
+                nextRestBNode = nextTreeBNode;
+            }
+            
+            Statement nextTestNilStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("terminating i-"+i));
+            this.testGraph.add(nextTestNilStatement1);
+            
+            Statement nextTestNilStatement2 = vf.createStatement(nextRestBNode, RDF.REST, RDF.NIL);
+            this.testGraph.add(nextTestNilStatement2);
+            
+            heads.add(nextHeadBNode);
+        }
+        
+        int expectedGraphCount = ((iCount*2)+(iCount*jCount*2));
+        
+        log.info("expectedGraphCount="+expectedGraphCount);
+        log.info("this.testGraph.size()="+this.testGraph.size());
+        
+        Assert.assertEquals(expectedGraphCount, this.testGraph.size());
+        
+        log.info("start");
+        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        log.info("end");
+
+        int expectedResultsCount = iCount;
+
+        log.info("expectedResultsCount="+expectedResultsCount);
+        log.info("results.size()="+results.size());
+        
+        Assert.assertEquals(iCount, results.size());
+        
+        for(List<Value> nextResultList : results)
+        {
+            Assert.assertEquals(jCount+1, nextResultList.size());
+        }
+    }
+
+    @Test
+    public void testGetListsForkedValidStressShallow()
     {
         int iCount = 30;
         int kCount = 60;
+        
+        Set<Resource> heads = new HashSet<Resource>((int)(iCount*1.5));
+        
+        for(int i = 0; i < iCount; i++)
+        {
+            BNode nextHeadBNode = vf.createBNode("i-"+i);
+            BNode nextRestBNode = nextHeadBNode;
+            
+            for(int k = 0; k < kCount; k++)
+            {
+                BNode nextTreeBNode1 = vf.createBNode("i-"+i+"_k-"+k+"_a");
+                BNode nextTreeBNode2 = vf.createBNode("i-"+i+"_k-"+k+"_b");
+                
+                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-"+i+"_k-"+k));
+                this.testGraph.add(nextTestStatement1);
+                
+                // Fork the list in two
+                Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode1);
+                this.testGraph.add(nextTestStatement2);
+                Statement nextTestStatement3 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode2);
+                this.testGraph.add(nextTestStatement3);
+
+                // Generate a terminating element for one of the arms
+                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_k-"+k+"_b"));
+                this.testGraph.add(nextTestNilStatement1);
+                
+                Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
+                this.testGraph.add(nextTestNilStatement2);
+            
+                if(k == kCount-1)
+                {
+                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_k-"+k+"_a"));
+                    this.testGraph.add(nextTestNilStatement3);
+                    
+                    Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
+                    this.testGraph.add(nextTestNilStatement4);
+                }
+                else
+                {
+                    // branch others off the first one
+                    nextRestBNode = nextTreeBNode1;
+                }                    
+            }
+            heads.add(nextHeadBNode);
+        }
+        
+        int expectedGraphCount = (
+                // 5 statements for each i for each k
+                (iCount*kCount*5)+
+                // 2 terminating statements for each i
+                        (iCount*2)
+                );
+        log.info("expectedGraphCount="+expectedGraphCount);
+        log.info("this.testGraph.size()="+this.testGraph.size());
+        Assert.assertEquals(expectedGraphCount, this.testGraph.size());
+        
+        log.info("start");
+        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        log.info("end");
+        
+        int expectedResultsCount = (
+                // one variable length branch for each i for each k
+                (iCount*kCount)
+                // one longest branch for each i
+                +iCount);
+        log.info("expectedResultsCount="+expectedResultsCount);
+        log.info("results.size()="+results.size());
+        
+        Assert.assertEquals(expectedResultsCount, results.size());
+        
+    }
+
+    /**
+     * Tests a mix of shallow and deep lists in the same getLists call
+     */
+    @Test
+    public void testGetListsForkedValidStressDeepAndShallow()
+    {
+        Set<Resource> heads = new HashSet<Resource>();
+
+        int iHeadCount = 500;
+        int kDepthCount = 4;
+        
+        int mHeadCount = 4;
+        int nDepthCount = 50;
+        
+        for(int i = 0; i < iHeadCount; i++)
+        {
+            BNode nextHeadBNode = vf.createBNode("i-"+i);
+            BNode nextRestBNode = nextHeadBNode;
+            
+            for(int k = 0; k < kDepthCount; k++)
+            {
+                BNode nextTreeBNode1 = vf.createBNode("i-"+i+"_k-"+k+"_a");
+                BNode nextTreeBNode2 = vf.createBNode("i-"+i+"_k-"+k+"_b");
+                
+                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-"+i+"_k-"+k));
+                this.testGraph.add(nextTestStatement1);
+                
+                // Fork the list in two
+                Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode1);
+                this.testGraph.add(nextTestStatement2);
+                Statement nextTestStatement3 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode2);
+                this.testGraph.add(nextTestStatement3);
+
+                // Generate a terminating element for one of the arms
+                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_k-"+k+"_b"));
+                this.testGraph.add(nextTestNilStatement1);
+                
+                Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
+                this.testGraph.add(nextTestNilStatement2);
+            
+                if(k == kDepthCount-1)
+                {
+                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_k-"+k+"_a"));
+                    this.testGraph.add(nextTestNilStatement3);
+                    
+                    Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
+                    this.testGraph.add(nextTestNilStatement4);
+                }
+                else
+                {
+                    // branch others off the first one
+                    nextRestBNode = nextTreeBNode1;
+                }                    
+            }
+            heads.add(nextHeadBNode);
+        }
+        
+        
+        
+        for(int m = 0; m < mHeadCount; m++)
+        {
+            BNode nextHeadBNode = vf.createBNode("m-"+m);
+            BNode nextRestBNode = nextHeadBNode;
+            
+            for(int n = 0; n < nDepthCount; n++)
+            {
+                BNode nextTreeBNode1 = vf.createBNode("m-"+m+"_n-"+n+"_a");
+                BNode nextTreeBNode2 = vf.createBNode("m-"+m+"_n-"+n+"_b");
+                
+                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: m-"+m+"_n-"+n));
+                this.testGraph.add(nextTestStatement1);
+                
+                // Fork the list in two
+                Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode1);
+                this.testGraph.add(nextTestStatement2);
+                Statement nextTestStatement3 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode2);
+                this.testGraph.add(nextTestStatement3);
+
+                // Generate a terminating element for one of the arms
+                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating m-"+m+"_n-"+n+"_b"));
+                this.testGraph.add(nextTestNilStatement1);
+                
+                Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
+                this.testGraph.add(nextTestNilStatement2);
+            
+                if(n == nDepthCount-1)
+                {
+                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating m-"+m+"_n-"+n+"_a"));
+                    this.testGraph.add(nextTestNilStatement3);
+                    
+                    Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
+                    this.testGraph.add(nextTestNilStatement4);
+                }
+                else
+                {
+                    // branch others off the first one
+                    nextRestBNode = nextTreeBNode1;
+                }                    
+            }
+            heads.add(nextHeadBNode);
+        }
+        
+        int expectedGraphCount = (
+                // 5 statements for each i for each k
+                (iHeadCount*kDepthCount*5)+
+                // 2 terminating statements for each i
+                        (iHeadCount*2)+
+                // 5 statements for each m for each n
+                (mHeadCount*nDepthCount*5)+
+                // 2 terminating statements for each m
+                        (mHeadCount*2)
+                );
+        log.info("expectedGraphCount="+expectedGraphCount);
+        log.info("this.testGraph.size()="+this.testGraph.size());
+        Assert.assertEquals(expectedGraphCount, this.testGraph.size());
+        
+        log.info("start");
+        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        log.info("end");
+        
+        int expectedResultsCount = (
+                // one variable length branch for each i for each k
+                (iHeadCount*kDepthCount)
+                // one longest branch for each i
+                +iHeadCount
+                // one variable length branch for each m for each n
+                + (mHeadCount*nDepthCount)
+                // one longest branch for each m
+                +mHeadCount
+                );
+        log.info("expectedResultsCount="+expectedResultsCount);
+        log.info("results.size()="+results.size());
+        
+        Assert.assertEquals(expectedResultsCount, results.size());
+        
+    }
+
+    /**
+     * WARNING: This test goes past the boundaries of the relatively efficient recursive implementation 
+     * and drops into the iterative implementation that is CPU and memory hungry
+     * 
+     * At 1100 deep, with 5 lists, the recursive method requires 65+ seconds to complete this test. 
+     * The iterative implementation was not able to complete this test in a reasonable amount of time.
+     * 
+     * Only remove the Ignore annotation to test the boundaries.
+     */
+    @Ignore
+    @Test
+    public void testGetListsForkedValidStressDeep()
+    {
+        int iCount = 5;
+        int kCount = 1100;
         
         Set<Resource> heads = new HashSet<Resource>((int)(iCount*1.5));
         
@@ -1222,8 +1555,11 @@ public class RdfListUtilTest
         
     }
 
+    /**
+     * Tests for cases where a forked list does not end in RDF.NIL in any of the forks
+     */
     @Test
-    public void testGetListForkedInvalid()
+    public void testGetListForkedInvalidAll()
     {
         Statement testStatement1 = vf.createStatement(testListHeadBNode1, RDF.FIRST, testObjectLiteral1);
         this.testGraph.add(testStatement1);
@@ -1244,6 +1580,52 @@ public class RdfListUtilTest
         {
             @SuppressWarnings("unused")
             final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph);
+
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
+            Assert.fail("Did not find expected exception");
+        }
+        catch(final RuntimeException rex)
+        {
+            Assert.assertEquals("List structure was not complete", rex.getMessage());
+        }
+        
+    }
+
+    /**
+     * Tests for cases where a forked list ends in RDF.NIL in one fork, but a runtime exception should be thrown due to the incomplete structure on the other fork
+     */
+    @Test
+    public void testGetListForkedInvalidPartial()
+    {
+        Statement testStatement1 = vf.createStatement(testListHeadBNode1, RDF.FIRST, testObjectLiteral1);
+        this.testGraph.add(testStatement1);
+
+        Statement testStatement2 = vf.createStatement(testListHeadBNode1, RDF.REST, testListHeadUri1);
+        this.testGraph.add(testStatement2);
+        
+        Statement testStatement3 = vf.createStatement(testListHeadUri1, RDF.FIRST, testObjectUri1);
+        this.testGraph.add(testStatement3);
+        
+        Statement testStatement4 = vf.createStatement(testListHeadUri1, RDF.REST, testListHeadBNode2);
+        this.testGraph.add(testStatement4);
+        
+        Statement testStatement5 = vf.createStatement(testListHeadUri1, RDF.REST, testListHeadUri2);
+        this.testGraph.add(testStatement5);
+        
+        Statement testStatement6 = vf.createStatement(testListHeadBNode2, RDF.FIRST, testObjectLiteral2);
+        this.testGraph.add(testStatement6);
+        
+        Statement testStatement7 = vf.createStatement(testListHeadBNode2, RDF.REST, RDF.NIL);
+        this.testGraph.add(testStatement7);
+        
+        Assert.assertEquals(7, this.testGraph.size());
+        
+        try
+        {
+            @SuppressWarnings("unused")
+            final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph);
+
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
         }
         catch(final RuntimeException rex)
