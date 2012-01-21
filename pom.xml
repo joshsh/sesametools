@@ -18,7 +18,9 @@
         <module>debug</module>
         <module>decompose</module>
         <module>deduplication</module>
-        <module>jsonld</module>
+		<!-- Remove JSON-LD from reactor until it is stabilised enough for parsing and writing tests to work consistently
+        <module>jsonld</module> 
+        -->
         <module>ldserver</module>
         <module>mappingsail</module>
         <module>nquads</module>
@@ -33,9 +35,9 @@
 
     <properties>
         <sesametools.version>1.6</sesametools.version>
-        <sesame.version>2.6.0</sesame.version>
-        <slf4j.version>1.6.2</slf4j.version>
-        <junit.version>4.5</junit.version>
+        <sesame.version>2.6.2</sesame.version>
+        <slf4j.version>1.6.4</slf4j.version>
+        <junit.version>4.10</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>

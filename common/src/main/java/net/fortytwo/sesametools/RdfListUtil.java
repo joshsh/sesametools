@@ -32,7 +32,38 @@ public class RdfListUtil {
     private static final Logger log = LoggerFactory
             .getLogger(RdfListUtil.class);
 
+    /**
+     * If enabled, this causes the getLists method to throw RuntimeExceptions if cyclic lists are found.
+     * 
+     * Disabling this property should not cause infinite loops, as otherwise simple cyclic loops would always cause OutOfMemoryExceptions or StackOverflowExceptions.
+     * 
+     * Disabling this property may result in missing lists from results.
+     * 
+     * NOTE: Tests will fail if you disable this property.
+     */
     private static boolean CHECK_CYCLES = true;
+
+    /**
+     * If enabled, this causes the getLists method to throw RuntimeExceptions when incomplete or invalid lists are found.
+     * 
+     * Some of the cases checked include:
+     * 
+     * <ul>
+     * 	<li>whether RDF.REST predicates all map to Resource Objects</li>
+     *  <li>whether all of the given heads are Resources</li>
+     *  <li>whether RDF.REST predicates map to Resource objects that contain both RDF.FIRST and valid RDF.REST statements</li>
+     * </ul>
+     * 
+     * Disabling this check may cause unexpected results, including incomplete and missing lists.
+     * 
+     * NOTE: Tests will fail if you disable this property.
+     */
+	private static boolean CHECK_INCOMPLETE = true;
+
+	/**
+	 * If enabled, this causes the getLists method to switch from the recursive method to the iterative method when the hardcoded recursion limit is reached for a list.
+	 */
+	private static boolean USE_RECURSIVE_ON_ERROR = true;
 
     /**
      * Adds an RDF List with the given elements to a graph.
@@ -185,10 +216,12 @@ public class RdfListUtil {
      *         collection is returned.
      */
     //*
-    public static Collection<List<Value>> getLists(final Set<Resource> heads,
+    public static Collection<List<Value>> getListsIterative(final Set<Resource> heads,
                                                    final Graph graphToSearch, final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
+        final List<List<Value>> results = new ArrayList<List<Value>>(heads.size());
+        
         List<List<Resource>> completedPointerTrails = new ArrayList<List<Resource>>(
                 heads.size());
 
@@ -201,30 +234,49 @@ public class RdfListUtil {
 
             followPointerTrails(nextHead, graphToSearch,
                     completedPointerTrails, contexts);
+            
+            results.addAll(getValuesForPointerTrails(graphToSearch, completedPointerTrails, contexts));
+            
+            completedPointerTrails.clear();
         }
 
-        final List<List<Value>> results = getValuesForPointerTrails(
-                graphToSearch, completedPointerTrails, contexts);
+//		results = getValuesForPointerTrails(
+//                graphToSearch, completedPointerTrails, contexts);
 
         return results;
     }
     //*/
 
-    /*
+    //*
     public static Collection<List<Value>> getLists(final Set<Resource> heads,
                                                    final Graph graphToSearch,
                                                    final Resource... contexts) {
         Collection<List<Value>> matches = new LinkedList<List<Value>>();
-
-        for (Resource h : heads) {
-            matches.addAll(getLists(h, graphToSearch, contexts));
+        
+    	try
+    	{
+    		for (Resource h : heads) {
+        		matches.addAll(getListsRecursive(h, graphToSearch, contexts));
+        	}
         }
+    	catch(RuntimeException rex)
+    	{
+    		if(USE_RECURSIVE_ON_ERROR && rex.getMessage().contains("List was too long"))
+    		{
+    			matches.clear();
+    			matches = getListsIterative(heads, graphToSearch, contexts);
+    		}
+    		else
+    		{
+    			throw rex;
+    		}
+    	}
 
         return matches;
     }
     //*/
 
-    public static Collection<List<Value>> getLists(final Resource head,
+    public static Collection<List<Value>> getListsRecursive(final Resource head,
                                                    final Graph graph,
                                                    final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
@@ -232,6 +284,11 @@ public class RdfListUtil {
         Collection<List<Value>> matches = new LinkedList<List<Value>>();
         Set<Resource> prev = new HashSet<Resource>();
 
+        // The length of this buffer corresponds to both the longest list and the 
+        // maximum number of iterations that are supported by this implementation
+        // Attempting to process a list longer than this will throw a RuntimeException 
+        // after the maximum number of iterations, as it is not possible to know how 
+        // long the longest list will be in advance
         Value[] buffer = new Value[1000];
 
         matchLists(head, graph, matches, prev, buffer, 0, contexts);
@@ -247,30 +304,52 @@ public class RdfListUtil {
                                    final int i,
                                    final Resource... contexts) {
         if (head.equals(RDF.NIL)) {  // End of list
-            List<Value> l = new LinkedList<Value>();
+            List<Value> finalisedList = new ArrayList<Value>(i);
             for (int j = 0; j < i; j++) {
-                l.add(buffer[j]);
+                finalisedList.add(j, buffer[j]);
             }
-            matches.add(l);
+            matches.add(finalisedList);
+        } else if(CHECK_INCOMPLETE && !(head instanceof Resource)) {
+        	throw new RuntimeException("List structure was not complete");
         } else if (!prev.contains(head)) {  // List continues, no cycle so far.
             prev.add(head);
 
             Iterator<Statement> first = graph.match(head, RDF.FIRST, null, contexts);
+            
+            if(CHECK_INCOMPLETE && !first.hasNext()) {
+            	throw new RuntimeException("List structure was not complete");
+            }
+            
             while (first.hasNext()) {
                 buffer[i] = first.next().getObject();
 
                 Iterator<Statement> rest = graph.match(head, RDF.REST, null, contexts);
+
+                if(CHECK_INCOMPLETE && !rest.hasNext()) {
+                	throw new RuntimeException("List structure was not complete");
+                }
+                
                 while (rest.hasNext()) {
                     Value r = rest.next().getObject();
 
                     if (r instanceof Resource) {
+                    	if((i+1) >= buffer.length) {
+                    		throw new RuntimeException(String.format("List was too long, maximum is %d elements long", buffer.length));
+                    	}
                         matchLists((Resource) r, graph, matches, prev, buffer, i + 1);
-                    }
+	                } else if(CHECK_INCOMPLETE) {
+	                	throw new RuntimeException("List structure was not complete");
+	                }
                 }
             }
 
             prev.remove(head);
+        } else if(prev.contains(head) && CHECK_CYCLES) {
+        	throw new RuntimeException("List cannot contain cycles");
+        } else if(CHECK_INCOMPLETE) {
+        	throw new RuntimeException("List structure was not complete");
         }
+        
     }
 
     private static List<List<Value>> getValuesForPointerTrails(

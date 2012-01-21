@@ -177,6 +177,7 @@ public class CachingSailConnection implements SailConnection {
                                  final Resource... contexts) throws SailException {
         cacheConnection.removeStatements(subj, pred, obj, contexts);
         baseSailConnection.removeStatements(subj, pred, obj, contexts);
+        uncommittedChanges = true;
     }
 
     // No rollback ability for now.
