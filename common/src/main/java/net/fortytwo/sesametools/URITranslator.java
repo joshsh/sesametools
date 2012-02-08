@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class URITranslator
 {
-    private final static Logger log = LoggerFactory.getLogger(URITranslator.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(URITranslator.class);
     
     /**
      * Maps URIs for all triples in the given contexts in the given repository, betwene the input
@@ -81,7 +81,7 @@ public class URITranslator
                     }
                     else
                     {
-                        log.error("Did not recognise (and ignoring) the context: " + nextResource);
+                        LOGGER.error("Did not recognise (and ignoring) the context: " + nextResource);
                     }
                 }
             }
@@ -97,8 +97,6 @@ public class URITranslator
             {
                 final StringBuilder objectConstructBuilder =
                         new StringBuilder(nextObjectMappingPredicates.size() * 120);
-                
-                objectConstructBuilder.append(nextWithClause);
                 
                 for(final URI nextMappingPredicate : nextObjectMappingPredicates)
                 {
@@ -124,11 +122,11 @@ public class URITranslator
                 }
                 
                 final String objectTemplate =
-                        "INSERT { ?subjectUri ?predicateUri ?normalisedObjectUri . "
-                                + objectConstructBuilder.toString() + " } " + deleteObjectTemplate + " WHERE { "
+                        nextWithClause + " " + deleteObjectTemplate + " INSERT { ?subjectUri ?predicateUri ?normalisedObjectUri . "
+                                + objectConstructBuilder.toString() + " } " + " WHERE { "
                                 + objectTemplateWhere + " } ";
                 
-                log.debug("addObjectTemplate=" + objectTemplate);
+                LOGGER.debug("objectTemplate=" + objectTemplate);
                 
                 final List<String> objectQueries = new ArrayList<String>(1);
                 
@@ -137,12 +135,13 @@ public class URITranslator
                 executeSparqlUpdateQueries(repositoryConnection, objectQueries);
             }
             
+            // FIXME: Sesame seems to need this, or the following queries do not work correctly
+            repositoryConnection.commit();
+            
             for(String nextWithClause : withClauses)
             {
                 final StringBuilder subjectConstructBuilder =
                         new StringBuilder(nextSubjectMappingPredicates.size() * 120);
-                
-                subjectConstructBuilder.append(nextWithClause);
                 
                 for(final URI nextMappingPredicate : nextSubjectMappingPredicates)
                 {
@@ -168,8 +167,8 @@ public class URITranslator
                 }
                 
                 final String subjectTemplate =
-                        "INSERT { ?normalisedSubjectUri ?predicateUri ?objectUri . "
-                                + subjectConstructBuilder.toString() + " } " + deleteSubjectTemplate + " WHERE { "
+                        nextWithClause + " " + deleteSubjectTemplate + " INSERT { ?normalisedSubjectUri ?predicateUri ?objectUri . "
+                                + subjectConstructBuilder.toString() + " } " + " WHERE { "
                                 + subjectTemplateWhere + " } ";
                 
                 final List<String> subjectQueries = new ArrayList<String>(1);
@@ -179,12 +178,13 @@ public class URITranslator
                 executeSparqlUpdateQueries(repositoryConnection, subjectQueries);
             }
             
+            // FIXME: Sesame seems to need this, or the following queries do not work correctly
+            repositoryConnection.commit();
+            
             for(String nextWithClause : withClauses)
             {
                 final StringBuilder predicateConstructBuilder =
                         new StringBuilder(nextPredicateMappingPredicates.size() * 120);
-                
-                predicateConstructBuilder.append(nextWithClause);
                 
                 for(final URI nextMappingPredicate : nextPredicateMappingPredicates)
                 {
@@ -210,8 +210,8 @@ public class URITranslator
                 }
                 
                 final String predicateTemplate =
-                        "INSERT { ?subjectUri ?normalisedPredicateUri ?objectUri . "
-                                + predicateConstructBuilder.toString() + " } " + deletePredicateTemplate + " WHERE { "
+                        nextWithClause + deletePredicateTemplate + " INSERT { ?subjectUri ?normalisedPredicateUri ?objectUri . "
+                                + predicateConstructBuilder.toString() + " } " + " WHERE { "
                                 + predicateTemplateWhere + " } ";
                 
                 final List<String> predicateQueries = new ArrayList<String>(1);
@@ -257,7 +257,7 @@ public class URITranslator
                 }
                 catch(RepositoryException rex)
                 {
-                    log.error("Found repository exception while trying to close repository connection", rex);
+                    LOGGER.error("Found repository exception while trying to close repository connection", rex);
                 }
             }
         }
@@ -277,6 +277,8 @@ public class URITranslator
     {
         for(String nextQuery : nextQueries)
         {
+            LOGGER.info("nextQuery="+ nextQuery);
+            
             Update preparedUpdate = repositoryConnection.prepareUpdate(QueryLanguage.SPARQL, nextQuery);
             
             preparedUpdate.execute();
