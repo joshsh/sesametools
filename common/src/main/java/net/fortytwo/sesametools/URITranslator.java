@@ -41,6 +41,7 @@ public class URITranslator
      * @param nextSubjectMappingPredicates
      * @param nextPredicateMappingPredicates
      * @param nextObjectMappingPredicates
+     * @param deleteTranslatedTriples If this is true, then any triples which contained translated URIs will be deleted. Mapping triples will still exist if any mapping predicates were utilised.
      * @param contexts The contexts in the repository that are relevant to the mapping
      * @throws RepositoryException If the repository threw an exception during the course of the method.
      * @throws MalformedQueryException If any of the translation queries could not be executed due to an error in the queries or a lack of understanding of the query by the repository.
@@ -48,7 +49,7 @@ public class URITranslator
      */
     public static void doTranslation(Repository repository, final String inputUriPrefix,
             final String outputUriPrefix, final Collection<URI> nextSubjectMappingPredicates,
-            final Collection<URI> nextPredicateMappingPredicates, final Collection<URI> nextObjectMappingPredicates,
+            final Collection<URI> nextPredicateMappingPredicates, final Collection<URI> nextObjectMappingPredicates, boolean deleteTranslatedTriples,
             Resource... contexts) throws RepositoryException, MalformedQueryException, UpdateExecutionException
     {
         RepositoryConnection repositoryConnection = null;
