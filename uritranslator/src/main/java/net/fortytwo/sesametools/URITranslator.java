@@ -103,8 +103,8 @@ public class URITranslator
             final Collection<URI> nextObjectMappingPredicates, boolean deleteTranslatedTriples, Resource... contexts)
         throws RepositoryException, MalformedQueryException, UpdateExecutionException
     {
-        doTranslation(repository, inputUriPrefix, outputUriPrefix, nextSubjectMappingPredicates, true, true,
-                nextPredicateMappingPredicates, true, true, nextObjectMappingPredicates, true, true, deleteTranslatedTriples,
+        doTranslation(repository, inputUriPrefix, outputUriPrefix, nextSubjectMappingPredicates, true, false,
+                nextPredicateMappingPredicates, true, false, nextObjectMappingPredicates, true, false, deleteTranslatedTriples,
                 contexts);
     }
     
