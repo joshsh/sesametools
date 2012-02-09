@@ -5,6 +5,7 @@ package net.fortytwo.sesametools;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.openrdf.model.Resource;
@@ -34,6 +35,9 @@ public class URITranslator
      * URI prefix and the output URI prefix.
      * 
      * The mapping predicates are used to define extra triples to link the input and output URIs.
+     * 
+     * NOTE: The results for queries with deleteTranslatedTriples set to false may not be consistent
+     * with what you expect.
      * 
      * @param repository
      *            The repository containing the input triples, and which will contain the output
@@ -70,6 +74,7 @@ public class URITranslator
             repositoryConnection.setAutoCommit(false);
             
             final List<String> withClauses = new ArrayList<String>();
+            final List<String> allQueries = new ArrayList<String>();
             
             if(contexts != null)
             {
@@ -122,17 +127,16 @@ public class URITranslator
                 }
                 
                 final String objectTemplate =
-                        nextWithClause + " " + deleteObjectTemplate + " INSERT { ?subjectUri ?predicateUri ?normalisedObjectUri . "
-                                + objectConstructBuilder.toString() + " } " + " WHERE { "
-                                + objectTemplateWhere + " } ";
+                        nextWithClause + " " + deleteObjectTemplate
+                                + " INSERT { ?subjectUri ?predicateUri ?normalisedObjectUri . "
+                                + objectConstructBuilder.toString() + " } " + " WHERE { " + objectTemplateWhere
+                                + " } ; ";
                 
                 LOGGER.debug("objectTemplate=" + objectTemplate);
                 
-                final List<String> objectQueries = new ArrayList<String>(1);
+                // allQueries.add(objectTemplate);
                 
-                objectQueries.add(objectTemplate);
-                
-                executeSparqlUpdateQueries(repositoryConnection, objectQueries);
+                executeSparqlUpdateQueries(repositoryConnection, objectTemplate);
             }
             
             // FIXME: Sesame seems to need this, or the following queries do not work correctly
@@ -167,15 +171,14 @@ public class URITranslator
                 }
                 
                 final String subjectTemplate =
-                        nextWithClause + " " + deleteSubjectTemplate + " INSERT { ?normalisedSubjectUri ?predicateUri ?objectUri . "
-                                + subjectConstructBuilder.toString() + " } " + " WHERE { "
-                                + subjectTemplateWhere + " } ";
+                        nextWithClause + " " + deleteSubjectTemplate
+                                + " INSERT { ?normalisedSubjectUri ?predicateUri ?objectUri . "
+                                + subjectConstructBuilder.toString() + " } " + " WHERE { " + subjectTemplateWhere
+                                + " } ; ";
                 
-                final List<String> subjectQueries = new ArrayList<String>(1);
+                // allQueries.add(subjectTemplate);
                 
-                subjectQueries.add(subjectTemplate);
-                
-                executeSparqlUpdateQueries(repositoryConnection, subjectQueries);
+                executeSparqlUpdateQueries(repositoryConnection, subjectTemplate);
             }
             
             // FIXME: Sesame seems to need this, or the following queries do not work correctly
@@ -210,16 +213,17 @@ public class URITranslator
                 }
                 
                 final String predicateTemplate =
-                        nextWithClause + deletePredicateTemplate + " INSERT { ?subjectUri ?normalisedPredicateUri ?objectUri . "
-                                + predicateConstructBuilder.toString() + " } " + " WHERE { "
-                                + predicateTemplateWhere + " } ";
+                        nextWithClause + deletePredicateTemplate
+                                + " INSERT { ?subjectUri ?normalisedPredicateUri ?objectUri . "
+                                + predicateConstructBuilder.toString() + " } " + " WHERE { " + predicateTemplateWhere
+                                + " } ; ";
                 
-                final List<String> predicateQueries = new ArrayList<String>(1);
+                // allQueries.add(predicateTemplate);
                 
-                predicateQueries.add(predicateTemplate);
-                
-                executeSparqlUpdateQueries(repositoryConnection, predicateQueries);
+                executeSparqlUpdateQueries(repositoryConnection, predicateTemplate);
             }
+            
+            // executeSparqlUpdateQueries(repositoryConnection, allQueries);
             
             repositoryConnection.commit();
         }
@@ -264,6 +268,21 @@ public class URITranslator
     }
     
     /**
+     * Executes the given SPARQL Update query against the given repository.
+     * 
+     * @param repositoryConnection
+     * @param nextQuery
+     * @throws RepositoryException
+     * @throws MalformedQueryException
+     * @throws UpdateExecutionException
+     */
+    private static void executeSparqlUpdateQueries(RepositoryConnection repositoryConnection, String nextQuery)
+        throws RepositoryException, MalformedQueryException, UpdateExecutionException
+    {
+        executeSparqlUpdateQueries(repositoryConnection, Collections.singletonList(nextQuery));
+    }
+    
+    /**
      * Executes the given SPARQL Update queries against the given repository.
      * 
      * @param repositoryConnection
@@ -277,7 +296,7 @@ public class URITranslator
     {
         for(String nextQuery : nextQueries)
         {
-            LOGGER.info("nextQuery="+ nextQuery);
+            LOGGER.info("nextQuery=" + nextQuery);
             
             Update preparedUpdate = repositoryConnection.prepareUpdate(QueryLanguage.SPARQL, nextQuery);
             
