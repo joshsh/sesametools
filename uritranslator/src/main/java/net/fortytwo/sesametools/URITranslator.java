@@ -214,6 +214,8 @@ public class URITranslator
                     }
                     else
                     {
+                        // the following should be more efficient on large queries for exact matching, as it contains constants that can be compiled down to IRIs
+                        // In addition, the branch above will work with exact matching, but is prone to collisions if the IRI is used as the base of a longer IRI
                         objectTemplateWhereBuilder.append("filter(isIRI(?objectUri) && sameTerm(?objectUri, IRI(\""+inputUriPrefix+"\"))). bind(iri(\""+outputUriPrefix+"\") AS ?normalisedObjectUri) . ");
                     }
                     
@@ -275,6 +277,8 @@ public class URITranslator
                     }
                     else
                     {
+                        // the following should be more efficient on large queries for exact matching, as it contains constants that can be compiled down to IRIs
+                        // In addition, the branch above will work with exact matching, but is prone to collisions if the IRI is used as the base of a longer IRI
                         subjectTemplateWhereBuilder.append("filter(isIRI(?subjectUri) && sameTerm(?subjectUri, IRI(\""+inputUriPrefix+"\"))). bind(iri(\""+outputUriPrefix+"\") AS ?normalisedSubjectUri) . ");
                     }
                     
@@ -333,6 +337,8 @@ public class URITranslator
                     }
                     else
                     {
+                        // the following should be more efficient on large queries for exact matching, as it contains constants that can be compiled down to IRIs
+                        // In addition, the branch above will work with exact matching, but is prone to collisions if the IRI is used as the base of a longer IRI
                         predicateTemplateWhereBuilder.append("filter(isIRI(?predicateUri) && sameTerm(?predicateUri, IRI(\""+inputUriPrefix+"\"))). bind(iri(\""+outputUriPrefix+"\") AS ?normalisedPredicateUri) . ");
                     }
                     

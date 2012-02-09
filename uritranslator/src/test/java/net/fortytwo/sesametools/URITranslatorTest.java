@@ -198,8 +198,8 @@ public class URITranslatorTest
         }
         
         URITranslator.doTranslation(testRepository, testInputSubjectUri1.stringValue(), testOutputSubjectUri1.stringValue(),
-                testSubjectMappingPredicatesEmpty, true, false, testPredicateMappingPredicatesEmpty, true, false,
-                testObjectMappingPredicatesEmpty, true, false, testDeleteTranslatedTriplesTrue, testContext1);
+                testSubjectMappingPredicatesEmpty, true, true, testPredicateMappingPredicatesEmpty, true, true,
+                testObjectMappingPredicatesEmpty, true, true, testDeleteTranslatedTriplesTrue, testContext1);
         
         for(Statement nextAfterStatement : testRepositoryConnection
                 .getStatements(null, null, null, false, testContext1).asList())
@@ -235,8 +235,8 @@ public class URITranslatorTest
         }
         
         URITranslator.doTranslation(testRepository, testInputPredicateUri1.stringValue(), testOutputPredicateUri1.stringValue(),
-                testSubjectMappingPredicatesEmpty, true, false, testPredicateMappingPredicatesEmpty, true, false,
-                testObjectMappingPredicatesEmpty, true, false, testDeleteTranslatedTriplesTrue, testContext1);
+                testSubjectMappingPredicatesEmpty, true, true, testPredicateMappingPredicatesEmpty, true, true,
+                testObjectMappingPredicatesEmpty, true, true, testDeleteTranslatedTriplesTrue, testContext1);
         
         for(Statement nextAfterStatement : testRepositoryConnection
                 .getStatements(null, null, null, false, testContext1).asList())
@@ -272,8 +272,8 @@ public class URITranslatorTest
         }
         
         URITranslator.doTranslation(testRepository, testInputObjectUri1.stringValue(), testOutputObjectUri1.stringValue(),
-                testSubjectMappingPredicatesEmpty, true, false, testPredicateMappingPredicatesEmpty, true, false,
-                testObjectMappingPredicatesEmpty, true, false, testDeleteTranslatedTriplesTrue, testContext1);
+                testSubjectMappingPredicatesEmpty, true, true, testPredicateMappingPredicatesEmpty, true, true,
+                testObjectMappingPredicatesEmpty, true, true, testDeleteTranslatedTriplesTrue, testContext1);
         
         for(Statement nextAfterStatement : testRepositoryConnection
                 .getStatements(null, null, null, false, testContext1).asList())
