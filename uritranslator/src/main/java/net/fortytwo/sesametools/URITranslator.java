@@ -31,7 +31,41 @@ public class URITranslator
     private final static Logger LOGGER = LoggerFactory.getLogger(URITranslator.class);
     
     /**
-     * Maps URIs for all triples in the given contexts in the given repository, betwene the input
+     * Maps URIs for all triples in the given contexts in the given repository, between the input
+     * URI prefix and the output URI prefix.
+     * 
+     * @param repository
+     *            The repository containing the input triples, and which will contain the output
+     *            triples
+     * @param inputUriPrefix
+     *            The string defining the start of any URIs to look for.
+     * @param outputUriPrefix
+     *            The string defining the start of the URIs which matched the inputUriPrefix, after
+     *            the translation is complete.
+     * @param contexts
+     *            The contexts in the repository that are relevant to the mapping
+     * @throws RepositoryException
+     *             If the repository threw an exception during the course of the method.
+     * @throws MalformedQueryException
+     *             If any of the translation queries could not be executed due to an error in the
+     *             queries or a lack of understanding of the query by the repository.
+     * @throws UpdateExecutionException
+     *             If the SPARQL Update queries used by this method were not able to be successfully
+     *             executed on the given repository for some reason.
+     */
+    public static void doTranslation(Repository repository, final String inputUriPrefix, final String outputUriPrefix,
+            Resource... contexts) throws RepositoryException, MalformedQueryException, UpdateExecutionException
+    {
+        Collection<URI> subjectMappingPredicates = Collections.emptyList();
+        Collection<URI> predicateMappingPredicates = Collections.emptyList();
+        Collection<URI> objectMappingPredicates = Collections.emptyList();
+        
+        doTranslation(repository, inputUriPrefix, outputUriPrefix, subjectMappingPredicates,
+                predicateMappingPredicates, objectMappingPredicates, true, contexts);
+    }
+    
+    /**
+     * Maps URIs for all triples in the given contexts in the given repository, between the input
      * URI prefix and the output URI prefix.
      * 
      * The mapping predicates are used to define extra triples to link the input and output URIs.
@@ -43,7 +77,10 @@ public class URITranslator
      *            The repository containing the input triples, and which will contain the output
      *            triples
      * @param inputUriPrefix
+     *            The string defining the start of any URIs to look for.
      * @param outputUriPrefix
+     *            The string defining the start of the URIs which matched the inputUriPrefix, after
+     *            the translation is complete.
      * @param nextSubjectMappingPredicates
      * @param nextPredicateMappingPredicates
      * @param nextObjectMappingPredicates
