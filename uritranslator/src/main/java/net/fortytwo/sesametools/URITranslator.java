@@ -103,6 +103,55 @@ public class URITranslator
             final Collection<URI> nextObjectMappingPredicates, boolean deleteTranslatedTriples, Resource... contexts)
         throws RepositoryException, MalformedQueryException, UpdateExecutionException
     {
+        doTranslation(repository, inputUriPrefix, outputUriPrefix, nextSubjectMappingPredicates, true,
+                nextPredicateMappingPredicates, true, nextObjectMappingPredicates, true, deleteTranslatedTriples,
+                contexts);
+    }
+    
+    /**
+     * Maps URIs for all triples in the given contexts in the given repository, between the input
+     * URI prefix and the output URI prefix.
+     * 
+     * The mapping predicates are used to define extra triples to link the input and output URIs.
+     * 
+     * NOTE: The results for queries with deleteTranslatedTriples set to false may not be consistent
+     * with what you expect.
+     * 
+     * @param repository
+     *            The repository containing the input triples, and which will contain the output
+     *            triples
+     * @param inputUriPrefix
+     *            The string defining the start of any URIs to look for.
+     * @param outputUriPrefix
+     *            The string defining the start of the URIs which matched the inputUriPrefix, after
+     *            the translation is complete.
+     * @param nextSubjectMappingPredicates
+     * @param translateSubjectUris
+     * @param nextPredicateMappingPredicates
+     * @param translatePredicateUris
+     * @param nextObjectMappingPredicates
+     * @param translateObjectUris
+     * @param deleteTranslatedTriples
+     *            If this is true, then any triples which contained translated URIs will be deleted.
+     *            Mapping triples will still exist if any mapping predicates were utilised.
+     * @param contexts
+     *            The contexts in the repository that are relevant to the mapping
+     * @throws RepositoryException
+     *             If the repository threw an exception during the course of the method.
+     * @throws MalformedQueryException
+     *             If any of the translation queries could not be executed due to an error in the
+     *             queries or a lack of understanding of the query by the repository.
+     * @throws UpdateExecutionException
+     *             If the SPARQL Update queries used by this method were not able to be successfully
+     *             executed on the given repository for some reason.
+     */
+    public static void doTranslation(Repository repository, final String inputUriPrefix, final String outputUriPrefix,
+            final Collection<URI> nextSubjectMappingPredicates, boolean translateSubjectUris,
+            final Collection<URI> nextPredicateMappingPredicates, boolean translatePredicateUris,
+            final Collection<URI> nextObjectMappingPredicates, boolean translateObjectUris,
+            boolean deleteTranslatedTriples, Resource... contexts) throws RepositoryException, MalformedQueryException,
+        UpdateExecutionException
+    {
         RepositoryConnection repositoryConnection = null;
         
         try
@@ -135,134 +184,144 @@ public class URITranslator
                 withClauses.add("");
             }
             
-            for(String nextWithClause : withClauses)
+            if(translateObjectUris)
             {
-                final StringBuilder objectConstructBuilder =
-                        new StringBuilder(nextObjectMappingPredicates.size() * 120);
-                
-                for(final URI nextMappingPredicate : nextObjectMappingPredicates)
+                for(String nextWithClause : withClauses)
                 {
-                    objectConstructBuilder.append(" ?normalisedObjectUri <" + nextMappingPredicate.stringValue()
-                            + "> ?objectUri . ");
+                    final StringBuilder objectConstructBuilder =
+                            new StringBuilder(nextObjectMappingPredicates.size() * 120);
+                    
+                    for(final URI nextMappingPredicate : nextObjectMappingPredicates)
+                    {
+                        objectConstructBuilder.append(" ?normalisedObjectUri <" + nextMappingPredicate.stringValue()
+                                + "> ?objectUri . ");
+                    }
+                    
+                    final String objectTemplateWhere =
+                            " ?subjectUri ?predicateUri ?objectUri . filter(isIRI(?objectUri) && strStarts(str(?objectUri), \""
+                                    + inputUriPrefix + "\")) . bind(iri(concat(\"" + outputUriPrefix
+                                    + "\", encode_for_uri(substr(str(?objectUri), " + (inputUriPrefix.length() + 1)
+                                    + ")))) AS ?normalisedObjectUri) ";
+                    
+                    String deleteObjectTemplate;
+                    
+                    if(deleteTranslatedTriples)
+                    {
+                        deleteObjectTemplate = " DELETE { ?subjectUri ?predicateUri ?objectUri . } ";
+                    }
+                    else
+                    {
+                        deleteObjectTemplate = "";
+                    }
+                    
+                    final String objectTemplate =
+                            nextWithClause + " " + deleteObjectTemplate
+                                    + " INSERT { ?subjectUri ?predicateUri ?normalisedObjectUri . "
+                                    + objectConstructBuilder.toString() + " } " + " WHERE { " + objectTemplateWhere
+                                    + " } ; ";
+                    
+                    LOGGER.debug("objectTemplate=" + objectTemplate);
+                    
+                    // allQueries.add(objectTemplate);
+                    
+                    executeSparqlUpdateQueries(repositoryConnection, objectTemplate);
                 }
                 
-                final String objectTemplateWhere =
-                        " ?subjectUri ?predicateUri ?objectUri . filter(isIRI(?objectUri) && strStarts(str(?objectUri), \""
-                                + inputUriPrefix + "\")) . bind(iri(concat(\"" + outputUriPrefix
-                                + "\", encode_for_uri(substr(str(?objectUri), " + (inputUriPrefix.length() + 1)
-                                + ")))) AS ?normalisedObjectUri) ";
+                // FIXME: Sesame seems to need this, or the following queries do not work correctly
+                repositoryConnection.commit();
                 
-                String deleteObjectTemplate;
-                
-                if(deleteTranslatedTriples)
-                {
-                    deleteObjectTemplate = " DELETE { ?subjectUri ?predicateUri ?objectUri . } ";
-                }
-                else
-                {
-                    deleteObjectTemplate = "";
-                }
-                
-                final String objectTemplate =
-                        nextWithClause + " " + deleteObjectTemplate
-                                + " INSERT { ?subjectUri ?predicateUri ?normalisedObjectUri . "
-                                + objectConstructBuilder.toString() + " } " + " WHERE { " + objectTemplateWhere
-                                + " } ; ";
-                
-                LOGGER.debug("objectTemplate=" + objectTemplate);
-                
-                // allQueries.add(objectTemplate);
-                
-                executeSparqlUpdateQueries(repositoryConnection, objectTemplate);
             }
             
-            // FIXME: Sesame seems to need this, or the following queries do not work correctly
-            repositoryConnection.commit();
-            
-            for(String nextWithClause : withClauses)
+            if(translateSubjectUris)
             {
-                final StringBuilder subjectConstructBuilder =
-                        new StringBuilder(nextSubjectMappingPredicates.size() * 120);
-                
-                for(final URI nextMappingPredicate : nextSubjectMappingPredicates)
+                for(String nextWithClause : withClauses)
                 {
-                    subjectConstructBuilder.append(" ?normalisedSubjectUri <" + nextMappingPredicate.stringValue()
-                            + "> ?subjectUri . ");
+                    final StringBuilder subjectConstructBuilder =
+                            new StringBuilder(nextSubjectMappingPredicates.size() * 120);
+                    
+                    for(final URI nextMappingPredicate : nextSubjectMappingPredicates)
+                    {
+                        subjectConstructBuilder.append(" ?normalisedSubjectUri <" + nextMappingPredicate.stringValue()
+                                + "> ?subjectUri . ");
+                    }
+                    
+                    final String subjectTemplateWhere =
+                            " ?subjectUri ?predicateUri ?objectUri . filter(isIRI(?subjectUri) && strStarts(str(?subjectUri), \""
+                                    + inputUriPrefix + "\")) . bind(iri(concat(\"" + outputUriPrefix
+                                    + "\", encode_for_uri(substr(str(?subjectUri), " + (inputUriPrefix.length() + 1)
+                                    + ")))) AS ?normalisedSubjectUri) ";
+                    
+                    String deleteSubjectTemplate;
+                    
+                    if(deleteTranslatedTriples)
+                    {
+                        deleteSubjectTemplate = " DELETE { ?subjectUri ?predicateUri ?objectUri . } ";
+                    }
+                    else
+                    {
+                        deleteSubjectTemplate = "";
+                    }
+                    
+                    final String subjectTemplate =
+                            nextWithClause + " " + deleteSubjectTemplate
+                                    + " INSERT { ?normalisedSubjectUri ?predicateUri ?objectUri . "
+                                    + subjectConstructBuilder.toString() + " } " + " WHERE { " + subjectTemplateWhere
+                                    + " } ; ";
+                    
+                    // allQueries.add(subjectTemplate);
+                    
+                    executeSparqlUpdateQueries(repositoryConnection, subjectTemplate);
                 }
                 
-                final String subjectTemplateWhere =
-                        " ?subjectUri ?predicateUri ?objectUri . filter(isIRI(?subjectUri) && strStarts(str(?subjectUri), \""
-                                + inputUriPrefix + "\")) . bind(iri(concat(\"" + outputUriPrefix
-                                + "\", encode_for_uri(substr(str(?subjectUri), " + (inputUriPrefix.length() + 1)
-                                + ")))) AS ?normalisedSubjectUri) ";
-                
-                String deleteSubjectTemplate;
-                
-                if(deleteTranslatedTriples)
-                {
-                    deleteSubjectTemplate = " DELETE { ?subjectUri ?predicateUri ?objectUri . } ";
-                }
-                else
-                {
-                    deleteSubjectTemplate = "";
-                }
-                
-                final String subjectTemplate =
-                        nextWithClause + " " + deleteSubjectTemplate
-                                + " INSERT { ?normalisedSubjectUri ?predicateUri ?objectUri . "
-                                + subjectConstructBuilder.toString() + " } " + " WHERE { " + subjectTemplateWhere
-                                + " } ; ";
-                
-                // allQueries.add(subjectTemplate);
-                
-                executeSparqlUpdateQueries(repositoryConnection, subjectTemplate);
+                // FIXME: Sesame seems to need this, or the following queries do not work correctly
+                repositoryConnection.commit();
             }
             
-            // FIXME: Sesame seems to need this, or the following queries do not work correctly
-            repositoryConnection.commit();
-            
-            for(String nextWithClause : withClauses)
+            if(translatePredicateUris)
             {
-                final StringBuilder predicateConstructBuilder =
-                        new StringBuilder(nextPredicateMappingPredicates.size() * 120);
-                
-                for(final URI nextMappingPredicate : nextPredicateMappingPredicates)
+                for(String nextWithClause : withClauses)
                 {
-                    predicateConstructBuilder.append(" ?normalisedPredicateUri <" + nextMappingPredicate.stringValue()
-                            + "> ?predicateUri . ");
+                    final StringBuilder predicateConstructBuilder =
+                            new StringBuilder(nextPredicateMappingPredicates.size() * 120);
+                    
+                    for(final URI nextMappingPredicate : nextPredicateMappingPredicates)
+                    {
+                        predicateConstructBuilder.append(" ?normalisedPredicateUri <"
+                                + nextMappingPredicate.stringValue() + "> ?predicateUri . ");
+                    }
+                    
+                    final String predicateTemplateWhere =
+                            " ?subjectUri ?predicateUri ?objectUri . filter(isIRI(?predicateUri) && strStarts(str(?predicateUri), \""
+                                    + inputUriPrefix + "\")) . bind(iri(concat(\"" + outputUriPrefix
+                                    + "\", encode_for_uri(substr(str(?predicateUri), " + (inputUriPrefix.length() + 1)
+                                    + ")))) AS ?normalisedPredicateUri) ";
+                    
+                    String deletePredicateTemplate;
+                    
+                    if(deleteTranslatedTriples)
+                    {
+                        deletePredicateTemplate = " DELETE { ?subjectUri ?predicateUri ?objectUri . } ";
+                    }
+                    else
+                    {
+                        deletePredicateTemplate = "";
+                    }
+                    
+                    final String predicateTemplate =
+                            nextWithClause + deletePredicateTemplate
+                                    + " INSERT { ?subjectUri ?normalisedPredicateUri ?objectUri . "
+                                    + predicateConstructBuilder.toString() + " } " + " WHERE { "
+                                    + predicateTemplateWhere + " } ; ";
+                    
+                    // allQueries.add(predicateTemplate);
+                    
+                    executeSparqlUpdateQueries(repositoryConnection, predicateTemplate);
                 }
                 
-                final String predicateTemplateWhere =
-                        " ?subjectUri ?predicateUri ?objectUri . filter(isIRI(?predicateUri) && strStarts(str(?predicateUri), \""
-                                + inputUriPrefix + "\")) . bind(iri(concat(\"" + outputUriPrefix
-                                + "\", encode_for_uri(substr(str(?predicateUri), " + (inputUriPrefix.length() + 1)
-                                + ")))) AS ?normalisedPredicateUri) ";
+                // executeSparqlUpdateQueries(repositoryConnection, allQueries);
                 
-                String deletePredicateTemplate;
-                
-                if(deleteTranslatedTriples)
-                {
-                    deletePredicateTemplate = " DELETE { ?subjectUri ?predicateUri ?objectUri . } ";
-                }
-                else
-                {
-                    deletePredicateTemplate = "";
-                }
-                
-                final String predicateTemplate =
-                        nextWithClause + deletePredicateTemplate
-                                + " INSERT { ?subjectUri ?normalisedPredicateUri ?objectUri . "
-                                + predicateConstructBuilder.toString() + " } " + " WHERE { " + predicateTemplateWhere
-                                + " } ; ";
-                
-                // allQueries.add(predicateTemplate);
-                
-                executeSparqlUpdateQueries(repositoryConnection, predicateTemplate);
+                repositoryConnection.commit();
             }
-            
-            // executeSparqlUpdateQueries(repositoryConnection, allQueries);
-            
-            repositoryConnection.commit();
         }
         catch(RepositoryException rex)
         {
