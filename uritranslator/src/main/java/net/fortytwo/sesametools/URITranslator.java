@@ -103,8 +103,8 @@ public class URITranslator
             final Collection<URI> nextObjectMappingPredicates, boolean deleteTranslatedTriples, Resource... contexts)
         throws RepositoryException, MalformedQueryException, UpdateExecutionException
     {
-        doTranslation(repository, inputUriPrefix, outputUriPrefix, nextSubjectMappingPredicates, true,
-                nextPredicateMappingPredicates, true, nextObjectMappingPredicates, true, deleteTranslatedTriples,
+        doTranslation(repository, inputUriPrefix, outputUriPrefix, nextSubjectMappingPredicates, true, true,
+                nextPredicateMappingPredicates, true, true, nextObjectMappingPredicates, true, true, deleteTranslatedTriples,
                 contexts);
     }
     
@@ -136,6 +136,7 @@ public class URITranslator
      *            Mapping triples will still exist if any mapping predicates were utilised.
      * @param contexts
      *            The contexts in the repository that are relevant to the mapping
+     * @param exactMatchRequired
      * @throws RepositoryException
      *             If the repository threw an exception during the course of the method.
      * @throws MalformedQueryException
@@ -146,9 +147,9 @@ public class URITranslator
      *             executed on the given repository for some reason.
      */
     public static void doTranslation(Repository repository, final String inputUriPrefix, final String outputUriPrefix,
-            final Collection<URI> nextSubjectMappingPredicates, boolean translateSubjectUris,
-            final Collection<URI> nextPredicateMappingPredicates, boolean translatePredicateUris,
-            final Collection<URI> nextObjectMappingPredicates, boolean translateObjectUris,
+            final Collection<URI> nextSubjectMappingPredicates, boolean translateSubjectUris, boolean exactSubjectMatchRequired,
+            final Collection<URI> nextPredicateMappingPredicates, boolean translatePredicateUris, boolean exactPredicateMatchRequired,
+            final Collection<URI> nextObjectMappingPredicates, boolean translateObjectUris, boolean exactObjectMatchRequired,
             boolean deleteTranslatedTriples, Resource... contexts) throws RepositoryException, MalformedQueryException,
         UpdateExecutionException
     {
@@ -197,11 +198,24 @@ public class URITranslator
                                 + "> ?objectUri . ");
                     }
                     
-                    final String objectTemplateWhere =
-                            " ?subjectUri ?predicateUri ?objectUri . filter(isIRI(?objectUri) && strStarts(str(?objectUri), \""
-                                    + inputUriPrefix + "\")) . bind(iri(concat(\"" + outputUriPrefix
-                                    + "\", encode_for_uri(substr(str(?objectUri), " + (inputUriPrefix.length() + 1)
-                                    + ")))) AS ?normalisedObjectUri) ";
+                    final StringBuilder objectTemplateWhereBuilder = new StringBuilder();
+                    
+                    objectTemplateWhereBuilder.append(" ?subjectUri ?predicateUri ?objectUri . ");
+                    
+                    if(!exactObjectMatchRequired)
+                    {
+                        objectTemplateWhereBuilder.append("filter(isIRI(?objectUri) && strStarts(str(?objectUri), \"" + inputUriPrefix + "\")");
+                        objectTemplateWhereBuilder.append(") . ");
+                        objectTemplateWhereBuilder.append("bind(iri(concat(\"");
+                        objectTemplateWhereBuilder.append(outputUriPrefix);
+                        objectTemplateWhereBuilder.append("\", encode_for_uri(substr(str(?objectUri), ");
+                        objectTemplateWhereBuilder.append((inputUriPrefix.length() + 1));
+                        objectTemplateWhereBuilder.append(")))) AS ?normalisedObjectUri) ");
+                    }
+                    else
+                    {
+                        objectTemplateWhereBuilder.append("filter(isIRI(?objectUri) && sameTerm(?objectUri, IRI(\""+inputUriPrefix+"\"))). bind(iri(\""+outputUriPrefix+"\") AS ?normalisedObjectUri) . ");
+                    }
                     
                     String deleteObjectTemplate;
                     
@@ -217,7 +231,7 @@ public class URITranslator
                     final String objectTemplate =
                             nextWithClause + " " + deleteObjectTemplate
                                     + " INSERT { ?subjectUri ?predicateUri ?normalisedObjectUri . "
-                                    + objectConstructBuilder.toString() + " } " + " WHERE { " + objectTemplateWhere
+                                    + objectConstructBuilder.toString() + " } " + " WHERE { " + objectTemplateWhereBuilder.toString()
                                     + " } ; ";
                     
                     LOGGER.debug("objectTemplate=" + objectTemplate);
@@ -245,11 +259,24 @@ public class URITranslator
                                 + "> ?subjectUri . ");
                     }
                     
-                    final String subjectTemplateWhere =
-                            " ?subjectUri ?predicateUri ?objectUri . filter(isIRI(?subjectUri) && strStarts(str(?subjectUri), \""
-                                    + inputUriPrefix + "\")) . bind(iri(concat(\"" + outputUriPrefix
-                                    + "\", encode_for_uri(substr(str(?subjectUri), " + (inputUriPrefix.length() + 1)
-                                    + ")))) AS ?normalisedSubjectUri) ";
+                    final StringBuilder subjectTemplateWhereBuilder = new StringBuilder();
+                    
+                    subjectTemplateWhereBuilder.append(" ?subjectUri ?predicateUri ?objectUri . ");
+                    
+                    if(!exactObjectMatchRequired)
+                    {
+                        subjectTemplateWhereBuilder.append("filter(isIRI(?subjectUri) && strStarts(str(?subjectUri), \"" + inputUriPrefix + "\")");
+                        subjectTemplateWhereBuilder.append(") . ");
+                        subjectTemplateWhereBuilder.append("bind(iri(concat(\"");
+                        subjectTemplateWhereBuilder.append(outputUriPrefix);
+                        subjectTemplateWhereBuilder.append("\", encode_for_uri(substr(str(?subjectUri), ");
+                        subjectTemplateWhereBuilder.append((inputUriPrefix.length() + 1));
+                        subjectTemplateWhereBuilder.append(")))) AS ?normalisedSubjectUri) ");
+                    }
+                    else
+                    {
+                        subjectTemplateWhereBuilder.append("filter(isIRI(?subjectUri) && sameTerm(?subjectUri, IRI(\""+inputUriPrefix+"\"))). bind(iri(\""+outputUriPrefix+"\") AS ?normalisedSubjectUri) . ");
+                    }
                     
                     String deleteSubjectTemplate;
                     
@@ -265,7 +292,7 @@ public class URITranslator
                     final String subjectTemplate =
                             nextWithClause + " " + deleteSubjectTemplate
                                     + " INSERT { ?normalisedSubjectUri ?predicateUri ?objectUri . "
-                                    + subjectConstructBuilder.toString() + " } " + " WHERE { " + subjectTemplateWhere
+                                    + subjectConstructBuilder.toString() + " } " + " WHERE { " + subjectTemplateWhereBuilder.toString()
                                     + " } ; ";
                     
                     // allQueries.add(subjectTemplate);
@@ -290,11 +317,24 @@ public class URITranslator
                                 + nextMappingPredicate.stringValue() + "> ?predicateUri . ");
                     }
                     
-                    final String predicateTemplateWhere =
-                            " ?subjectUri ?predicateUri ?objectUri . filter(isIRI(?predicateUri) && strStarts(str(?predicateUri), \""
-                                    + inputUriPrefix + "\")) . bind(iri(concat(\"" + outputUriPrefix
-                                    + "\", encode_for_uri(substr(str(?predicateUri), " + (inputUriPrefix.length() + 1)
-                                    + ")))) AS ?normalisedPredicateUri) ";
+                    final StringBuilder predicateTemplateWhereBuilder = new StringBuilder();
+                    
+                    predicateTemplateWhereBuilder.append(" ?subjectUri ?predicateUri ?objectUri . ");
+                    
+                    if(!exactObjectMatchRequired)
+                    {
+                        predicateTemplateWhereBuilder.append("filter(isIRI(?predicateUri) && strStarts(str(?predicateUri), \"" + inputUriPrefix + "\")");
+                        predicateTemplateWhereBuilder.append(") . ");
+                        predicateTemplateWhereBuilder.append("bind(iri(concat(\"");
+                        predicateTemplateWhereBuilder.append(outputUriPrefix);
+                        predicateTemplateWhereBuilder.append("\", encode_for_uri(substr(str(?predicateUri), ");
+                        predicateTemplateWhereBuilder.append((inputUriPrefix.length() + 1));
+                        predicateTemplateWhereBuilder.append(")))) AS ?normalisedPredicateUri) ");
+                    }
+                    else
+                    {
+                        predicateTemplateWhereBuilder.append("filter(isIRI(?predicateUri) && sameTerm(?predicateUri, IRI(\""+inputUriPrefix+"\"))). bind(iri(\""+outputUriPrefix+"\") AS ?normalisedPredicateUri) . ");
+                    }
                     
                     String deletePredicateTemplate;
                     
@@ -311,7 +351,7 @@ public class URITranslator
                             nextWithClause + deletePredicateTemplate
                                     + " INSERT { ?subjectUri ?normalisedPredicateUri ?objectUri . "
                                     + predicateConstructBuilder.toString() + " } " + " WHERE { "
-                                    + predicateTemplateWhere + " } ; ";
+                                    + predicateTemplateWhereBuilder.toString() + " } ; ";
                     
                     // allQueries.add(predicateTemplate);
                     

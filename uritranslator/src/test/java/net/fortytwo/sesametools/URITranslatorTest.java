@@ -50,6 +50,10 @@ public class URITranslatorTest
     private boolean testDeleteTranslatedTriplesTrue;
     
     private Resource testContext1;
+
+    private URI testOutputSubjectUri1;
+    private URI testOutputPredicateUri1;
+    private URI testOutputObjectUri1;
     
     /**
      * @throws java.lang.Exception
@@ -70,8 +74,13 @@ public class URITranslatorTest
         testOutputUriPrefix1 = "http://test.example.org/after/translation/";
         
         testInputSubjectUri1 = testValueFactory.createURI("urn:temp:testInputSubjectUri1");
+        testOutputSubjectUri1 = testValueFactory.createURI("http://test.example.org/after/translation/testInputSubjectUri1");
+        
         testInputPredicateUri1 = testValueFactory.createURI("urn:temp:testInputPredicateUri1");
+        testOutputPredicateUri1 = testValueFactory.createURI("http://test.example.org/after/translation/testInputPredicateUri1");
+        
         testInputObjectUri1 = testValueFactory.createURI("urn:temp:testInputObjectUri1");
+        testOutputObjectUri1 = testValueFactory.createURI("http://test.example.org/after/translation/testInputObjectUri1");
         
         testSubjectMappingPredicatesEmpty = Collections.emptyList();
         testPredicateMappingPredicatesEmpty = Collections.emptyList();
@@ -117,8 +126,11 @@ public class URITranslatorTest
         testOutputUriPrefix1 = null;
         
         testInputSubjectUri1 = null;
+        testOutputSubjectUri1 = null;
         testInputPredicateUri1 = null;
+        testOutputPredicateUri1 = null;
         testInputObjectUri1 = null;
+        testOutputObjectUri1 = null;
         
         testSubjectMappingPredicatesEmpty = null;
         testPredicateMappingPredicatesEmpty = null;
@@ -128,16 +140,13 @@ public class URITranslatorTest
     }
     
     /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.URITranslator#doTranslation(org.openrdf.repository.Repository, java.lang.String, java.lang.String, java.util.Collection, java.util.Collection, java.util.Collection, boolean, org.openrdf.model.Resource[])}
-     * .
      * 
      * @throws UpdateExecutionException
      * @throws MalformedQueryException
      * @throws RepositoryException
      */
     @Test
-    public void testDoTranslationNoMappingOneContext() throws RepositoryException, MalformedQueryException,
+    public void testDoTranslationNoMappingNoExactOneContext() throws RepositoryException, MalformedQueryException,
         UpdateExecutionException
     {
         testRepositoryConnection.add(testInputSubjectUri1, testInputPredicateUri1, testInputObjectUri1, testContext1);
@@ -152,8 +161,8 @@ public class URITranslatorTest
         }
         
         URITranslator.doTranslation(testRepository, testInputUriPrefix1, testOutputUriPrefix1,
-                testSubjectMappingPredicatesEmpty, testPredicateMappingPredicatesEmpty,
-                testObjectMappingPredicatesEmpty, testDeleteTranslatedTriplesTrue, testContext1);
+                testSubjectMappingPredicatesEmpty, true, false, testPredicateMappingPredicatesEmpty, true, false,
+                testObjectMappingPredicatesEmpty, true, false, testDeleteTranslatedTriplesTrue, testContext1);
         
         for(Statement nextAfterStatement : testRepositoryConnection
                 .getStatements(null, null, null, false, testContext1).asList())
@@ -163,6 +172,118 @@ public class URITranslatorTest
         
         Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
         Assert.assertEquals(1, testRepositoryConnection.size());
+
+        Assert.assertTrue(testRepositoryConnection.hasStatement(testOutputSubjectUri1, testOutputPredicateUri1, testOutputObjectUri1, false, testContext1));
     }
     
+    /**
+     * 
+     * @throws UpdateExecutionException
+     * @throws MalformedQueryException
+     * @throws RepositoryException
+     */
+    @Test
+    public void testDoTranslationNoMappingExactSubjectOnlyOneContext() throws RepositoryException, MalformedQueryException,
+        UpdateExecutionException
+    {
+        testRepositoryConnection.add(testInputSubjectUri1, testInputPredicateUri1, testInputObjectUri1, testContext1);
+        
+        Assert.assertEquals(1, testRepositoryConnection.size());
+        Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
+        
+        for(Statement nextBeforeStatement : testRepositoryConnection.getStatements(null, null, null, false,
+                testContext1).asList())
+        {
+            LOGGER.info("nextBeforeStatement: " + nextBeforeStatement.toString());
+        }
+        
+        URITranslator.doTranslation(testRepository, testInputSubjectUri1.stringValue(), testOutputSubjectUri1.stringValue(),
+                testSubjectMappingPredicatesEmpty, true, false, testPredicateMappingPredicatesEmpty, true, false,
+                testObjectMappingPredicatesEmpty, true, false, testDeleteTranslatedTriplesTrue, testContext1);
+        
+        for(Statement nextAfterStatement : testRepositoryConnection
+                .getStatements(null, null, null, false, testContext1).asList())
+        {
+            LOGGER.info("nextAfterStatement: " + nextAfterStatement.toString());
+        }
+        
+        Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
+        Assert.assertEquals(1, testRepositoryConnection.size());
+
+        Assert.assertTrue(testRepositoryConnection.hasStatement(testOutputSubjectUri1, testInputPredicateUri1, testInputObjectUri1, false, testContext1));
+    }
+
+    /**
+     * 
+     * @throws UpdateExecutionException
+     * @throws MalformedQueryException
+     * @throws RepositoryException
+     */
+    @Test
+    public void testDoTranslationNoMappingExactPredicateOnlyOneContext() throws RepositoryException, MalformedQueryException,
+        UpdateExecutionException
+    {
+        testRepositoryConnection.add(testInputSubjectUri1, testInputPredicateUri1, testInputObjectUri1, testContext1);
+        
+        Assert.assertEquals(1, testRepositoryConnection.size());
+        Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
+        
+        for(Statement nextBeforeStatement : testRepositoryConnection.getStatements(null, null, null, false,
+                testContext1).asList())
+        {
+            LOGGER.info("nextBeforeStatement: " + nextBeforeStatement.toString());
+        }
+        
+        URITranslator.doTranslation(testRepository, testInputPredicateUri1.stringValue(), testOutputPredicateUri1.stringValue(),
+                testSubjectMappingPredicatesEmpty, true, false, testPredicateMappingPredicatesEmpty, true, false,
+                testObjectMappingPredicatesEmpty, true, false, testDeleteTranslatedTriplesTrue, testContext1);
+        
+        for(Statement nextAfterStatement : testRepositoryConnection
+                .getStatements(null, null, null, false, testContext1).asList())
+        {
+            LOGGER.info("nextAfterStatement: " + nextAfterStatement.toString());
+        }
+        
+        Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
+        Assert.assertEquals(1, testRepositoryConnection.size());
+
+        Assert.assertTrue(testRepositoryConnection.hasStatement(testInputSubjectUri1, testOutputPredicateUri1, testInputObjectUri1, false, testContext1));
+    }
+
+    /**
+     * 
+     * @throws UpdateExecutionException
+     * @throws MalformedQueryException
+     * @throws RepositoryException
+     */
+    @Test
+    public void testDoTranslationNoMappingExactObjectOnlyOneContext() throws RepositoryException, MalformedQueryException,
+        UpdateExecutionException
+    {
+        testRepositoryConnection.add(testInputSubjectUri1, testInputPredicateUri1, testInputObjectUri1, testContext1);
+        
+        Assert.assertEquals(1, testRepositoryConnection.size());
+        Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
+        
+        for(Statement nextBeforeStatement : testRepositoryConnection.getStatements(null, null, null, false,
+                testContext1).asList())
+        {
+            LOGGER.info("nextBeforeStatement: " + nextBeforeStatement.toString());
+        }
+        
+        URITranslator.doTranslation(testRepository, testInputObjectUri1.stringValue(), testOutputObjectUri1.stringValue(),
+                testSubjectMappingPredicatesEmpty, true, false, testPredicateMappingPredicatesEmpty, true, false,
+                testObjectMappingPredicatesEmpty, true, false, testDeleteTranslatedTriplesTrue, testContext1);
+        
+        for(Statement nextAfterStatement : testRepositoryConnection
+                .getStatements(null, null, null, false, testContext1).asList())
+        {
+            LOGGER.info("nextAfterStatement: " + nextAfterStatement.toString());
+        }
+        
+        Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
+        Assert.assertEquals(1, testRepositoryConnection.size());
+        
+        Assert.assertTrue(testRepositoryConnection.hasStatement(testInputSubjectUri1, testInputPredicateUri1, testOutputObjectUri1, false, testContext1));
+    }
 }
