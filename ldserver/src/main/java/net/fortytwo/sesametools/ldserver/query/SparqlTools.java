@@ -14,7 +14,7 @@ import org.openrdf.query.resultio.sparqlxml.SPARQLResultsXMLWriter;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.restlet.data.MediaType;
-import org.restlet.resource.Variant;
+import org.restlet.representation.Variant;
 
 import java.io.OutputStream;
 import java.util.LinkedList;
@@ -72,15 +72,8 @@ public class SparqlTools {
     }
 
     public static synchronized CloseableIteration<? extends BindingSet, QueryEvaluationException>
-    evaluateQuery(final String queryStr,
+    evaluateQuery(final ParsedQuery query,
                   final SailConnection sc) throws QueryException {
-        ParsedQuery query;
-        try {
-            query = parseQuery(queryStr);
-        } catch (MalformedQueryException e) {
-            throw new QueryException(e);
-        }
-
         MapBindingSet bindings = new MapBindingSet();
         boolean includeInferred = false;
         try {
@@ -107,7 +100,17 @@ public class SparqlTools {
             default:
                 throw new QueryException(new Throwable("bad query result format: " + format));
         }
+
+        ParsedQuery query;
+
+        try {
+            query = parseQuery(queryStr);
+        } catch (MalformedQueryException e) {
+            throw new QueryException(e);
+        }
+
         List<String> columnHeaders = new LinkedList<String>();
+        columnHeaders.addAll(query.getTupleExpr().getBindingNames());
         // FIXME: *do* specify the column headers
         //columnHeaders.add("post");
         //columnHeaders.add("content");
@@ -119,7 +122,7 @@ public class SparqlTools {
         }
 
         CloseableIteration<? extends BindingSet, QueryEvaluationException> iter
-                = evaluateQuery(queryStr, sc);
+                = evaluateQuery(query, sc);
         int count = 0;
         try {
             try {

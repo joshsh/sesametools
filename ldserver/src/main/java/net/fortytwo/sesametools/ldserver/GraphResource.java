@@ -8,13 +8,10 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
-import org.restlet.Context;
 import org.restlet.data.MediaType;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
-import org.restlet.resource.Representation;
-import org.restlet.resource.Resource;
-import org.restlet.resource.Variant;
+import org.restlet.representation.Representation;
+import org.restlet.resource.Get;
+import org.restlet.resource.ServerResource;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -30,19 +27,16 @@ import java.util.logging.Logger;
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
-public class GraphResource extends Resource {
+public class GraphResource extends ServerResource {
     private static final Logger LOGGER = Logger.getLogger(GraphResource.class.getName());
 
     protected final String selfURI;
 
     protected Sail sail;
 
-    public GraphResource(final Context context,
-                         final Request request,
-                         final Response response) throws Exception {
-        super(context, request, response);
+    public GraphResource() throws Exception {
 
-        selfURI = request.getResourceRef().toString();
+        selfURI = this.getRequest().getResourceRef().toString();
 
         /*
         System.out.println("selfURI = " + selfURI);
@@ -55,32 +49,12 @@ public class GraphResource extends Resource {
 
         getVariants().addAll(RDFMediaTypes.getRDFVariants());
 
-        sail = LinkedDataServer.getServer(context).getSail();
+        sail = LinkedDataServer.getInstance().getSail();
     }
 
-    public boolean allowDelete() {
-        return false;
-    }
-
-    public boolean allowGet() {
-        return true;
-    }
-
-    public boolean allowPost() {
-        return false;
-    }
-
-    public boolean allowPut() {
-        return false;
-    }
-
-    @Override
-    public Representation represent(final Variant variant) {
-        return representInformationResource(variant);
-    }
-
-    private Representation representInformationResource(final Variant variant) {
-        MediaType type = variant.getMediaType();
+    @Get
+    private Representation representInformationResource(final Representation entity) {
+        MediaType type = entity.getMediaType();
         RDFFormat format = RDFMediaTypes.findRdfFormat(type);
 
         try {

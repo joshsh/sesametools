@@ -121,24 +121,19 @@
 
         <!-- Restlet -->
         <dependency>
-            <groupId>org.restlet</groupId>
+            <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet</artifactId>
-            <version>1.1.10</version>
+            <version>2.1-M3</version>
         </dependency>
         <dependency>
-            <groupId>com.noelios.restlet</groupId>
-            <artifactId>com.noelios.restlet</artifactId>
-            <version>1.1.10</version>
+            <groupId>org.restlet.jse</groupId>
+            <artifactId>org.restlet.ext.simple</artifactId>
+            <version>2.1-M3</version>
         </dependency>
         <dependency>
-            <groupId>com.noelios.restlet</groupId>
-            <artifactId>com.noelios.restlet.ext.simple</artifactId>
-            <version>1.1.10</version>
-        </dependency>
-        <dependency>
-            <groupId>com.noelios.restlet</groupId>
-            <artifactId>com.noelios.restlet.ext.httpclient</artifactId>
-            <version>1.1.10</version>
+            <groupId>org.restlet.jse</groupId>
+            <artifactId>org.restlet.ext.httpclient</artifactId>
+            <version>2.1-M3</version>
         </dependency>
 
         <!-- test dependencies -->

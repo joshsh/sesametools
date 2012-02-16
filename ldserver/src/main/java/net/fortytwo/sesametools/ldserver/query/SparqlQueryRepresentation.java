@@ -3,7 +3,7 @@ package net.fortytwo.sesametools.ldserver.query;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.restlet.data.MediaType;
-import org.restlet.resource.OutputRepresentation;
+import org.restlet.representation.OutputRepresentation;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

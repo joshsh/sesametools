@@ -1,14 +1,12 @@
 package net.fortytwo.sesametools.ldserver.query;
 
 import org.openrdf.sail.SailException;
-import org.restlet.Context;
+import org.restlet.Request;
+import org.restlet.Response;
+import org.restlet.data.MediaType;
 import org.restlet.data.Method;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
 import org.restlet.data.Status;
-import org.restlet.resource.Representation;
 import org.restlet.resource.ResourceException;
-import org.restlet.resource.Variant;
 
 import java.util.Map;
 
@@ -28,24 +26,30 @@ wget "http://localhost:8182/sparql?query=SELECT%20%3Fs%20%3Fp%20%3Fo%20%20WHERE%
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class SparqlResource extends QueryResource {
-    private String query;
 
-    public SparqlResource(final Context context,
-                          final Request request,
-                          final Response response) throws Exception {
-        super(context, request, response);
+    public SparqlResource() throws Exception {
+    }
+
+    @Override
+    public void handle(final Request request,
+                       final Response response) {
+        MediaType mt;
+        String query = null;
+        Map<String, String> arguments;
 
         try {
+            arguments = getArguments(request);
+
             if (request.getMethod() == Method.POST) {
                 System.out.println("it's a POST");
                 String type = request.getEntity().getMediaType().toString();
-                String entity = request.getEntity().getText();
-                System.out.println("\t" + entity);
+                String ent = request.getEntity().getText();
+                System.out.println("\t" + ent);
 
                 if (type.equals("application/x-www-form-urlencoded")) {
-                    arguments = parseParams(entity);
+                    arguments = parseParams(ent);
                 } else if (type.equals("application/sparql-query")) {
-                    query = entity;
+                    query = ent;
                 } else {
                     throw new IllegalArgumentException("POST entity has unsupported media type for SPARQL");
                 }
@@ -69,31 +73,26 @@ public class SparqlResource extends QueryResource {
             // If an "output" argument is provided, use it.
             if (null != output) {
                 if (output.equals("json")) {
-                    getVariants().add(new Variant(SparqlTools.SparqlResultFormat.JSON.getMediaType()));
+                    mt = SparqlTools.SparqlResultFormat.JSON.getMediaType();
                 } else if (output.equals("xml")) {
-                    getVariants().add(new Variant(SparqlTools.SparqlResultFormat.XML.getMediaType()));
+                    mt = SparqlTools.SparqlResultFormat.XML.getMediaType();
                 } else {
                     throw new IllegalArgumentException("bad value for 'output' parameter: " + output);
                 }
             } else {
-                getVariants().addAll(SparqlTools.SparqlResultFormat.getVariants());
+                mt = SparqlTools.SparqlResultFormat.getVariants().get(0).getMediaType();
             }
             System.out.println("A");
             System.out.flush();
         } catch (Throwable t) {
-            // TODO: use logging instead
             t.printStackTrace(System.err);
-            System.err.flush();
-            throw new Exception(t);
+            throw new ResourceException(t);
         }
-    }
 
-    @Override
-    public Representation represent(final Variant variant) throws ResourceException {
         try {
-            System.out.println("a");
+            System.out.println("entity = " + request.getEntity());
             System.out.flush();
-            return new SparqlQueryRepresentation(query, sail, readLimit(), variant.getMediaType());
+            response.setEntity(new SparqlQueryRepresentation(query, sail, readLimit(arguments), mt));
         } catch (QueryException e) {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
         } catch (SailException e) {

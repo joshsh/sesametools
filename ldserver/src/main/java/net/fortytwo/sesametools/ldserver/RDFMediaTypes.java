@@ -2,7 +2,7 @@ package net.fortytwo.sesametools.ldserver;
 
 import org.openrdf.rio.RDFFormat;
 import org.restlet.data.MediaType;
-import org.restlet.resource.Variant;
+import org.restlet.representation.Variant;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

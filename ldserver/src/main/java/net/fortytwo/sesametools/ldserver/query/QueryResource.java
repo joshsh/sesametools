@@ -2,10 +2,9 @@ package net.fortytwo.sesametools.ldserver.query;
 
 import net.fortytwo.sesametools.ldserver.LinkedDataServer;
 import org.openrdf.sail.Sail;
-import org.restlet.Context;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
-import org.restlet.resource.Resource;
+import org.restlet.Request;
+import org.restlet.Restlet;
+import org.restlet.resource.ResourceException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -16,7 +15,7 @@ import java.util.logging.Logger;
 /**
  * @author Joshua Shinavier (http://fortytwo.net)
  */
-public abstract class QueryResource extends Resource {
+public abstract class QueryResource extends Restlet {
     private static final Logger LOGGER = Logger.getLogger(QueryResource.class.getName());
 
     private static final String UTF_8 = "UTF-8";
@@ -27,17 +26,16 @@ public abstract class QueryResource extends Resource {
 
     private static final String LIMIT_PARAM = "limit";
 
-    protected final String selfURI;
-    protected Map<String, String> arguments;
+    protected String selfURI;
 
-    protected final Sail sail;
+    protected Sail sail;
     //private final String query;
 
-    public QueryResource(final Context context,
-                         final Request request,
-                         final Response response) throws Exception {
-        super(context, request, response);
+    public QueryResource() throws Exception {
+    }
 
+    protected Map<String, String> getArguments(final Request request) throws ResourceException {
+         Map<String, String> arguments;
         selfURI = request.getResourceRef().toString();
 
         /*
@@ -49,7 +47,7 @@ public abstract class QueryResource extends Resource {
         System.out.println("host ref = " + request.getHostRef().toString());
         //*/
 
-        sail = LinkedDataServer.getServer(context).getSail();
+        sail = LinkedDataServer.getInstance().getSail();
 
         //getVariants().add(new Variant(MediaType.APPLICATION_JSON));
 
@@ -58,7 +56,11 @@ public abstract class QueryResource extends Resource {
         if (0 < i) {
             String args = selfURI.substring(i + 1);
             if (0 < args.length()) {
-                arguments = parseParams(args);
+                try {
+                    arguments = parseParams(args);
+                } catch (UnsupportedEncodingException e) {
+                    throw new ResourceException(e);
+                }
             }
         }
         /*
@@ -66,6 +68,8 @@ public abstract class QueryResource extends Resource {
             System.out.println("argument: " + name + " = " + arguments.get(name));
         }
         //*/
+
+        return arguments;
     }
 
     protected Map<String, String> parseParams(final String s) throws UnsupportedEncodingException {
@@ -80,7 +84,7 @@ public abstract class QueryResource extends Resource {
         return map;
     }
 
-    protected int readLimit() {
+    protected int readLimit(final Map<String, String> arguments) {
         String l = arguments.get(LIMIT_PARAM);
         int limit;
         if (null == l) {
@@ -105,21 +109,5 @@ public abstract class QueryResource extends Resource {
 
     protected String urlDecode(final String encoded) throws UnsupportedEncodingException {
         return URLDecoder.decode(encoded, UTF_8);
-    }
-
-    public boolean allowDelete() {
-        return false;
-    }
-
-    public boolean allowGet() {
-        return true;
-    }
-
-    public boolean allowPost() {
-        return true;
-    }
-
-    public boolean allowPut() {
-        return false;
     }
 }

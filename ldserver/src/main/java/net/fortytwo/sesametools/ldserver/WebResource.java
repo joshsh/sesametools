@@ -11,13 +11,10 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
-import org.restlet.Context;
 import org.restlet.data.MediaType;
-import org.restlet.data.Request;
-import org.restlet.data.Response;
-import org.restlet.resource.Representation;
-import org.restlet.resource.Resource;
-import org.restlet.resource.Variant;
+import org.restlet.representation.Representation;
+import org.restlet.resource.Get;
+import org.restlet.resource.ServerResource;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -37,7 +34,7 @@ import java.util.logging.Logger;
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
-public class WebResource extends Resource {
+public class WebResource extends ServerResource {
     private static final Logger LOGGER = Logger.getLogger(WebResource.class.getName());
 
     enum WebResourceCategory {
@@ -55,12 +52,8 @@ public class WebResource extends Resource {
     private RDFFormat format = null;
     private URI datasetURI;
 
-    public WebResource(final Context context,
-                       final Request request,
-                       final Response response) throws Exception {
-        super(context, request, response);
-
-        selfURI = request.getResourceRef().toString();
+    public WebResource() throws Exception {
+        selfURI = this.getRequest().getResourceRef().toString();
 
         /*
         System.out.println("selfURI = " + selfURI);
@@ -84,38 +77,22 @@ public class WebResource extends Resource {
             webResourceCategory = WebResourceCategory.InformationResource;
             getVariants().add(RDFMediaTypes.findVariant(format));
 
-            hostIdentifier = request.getResourceRef().getHostIdentifier();
-            baseRef = request.getResourceRef().getBaseRef().toString();
+            hostIdentifier = this.getRequest().getResourceRef().getHostIdentifier();
+            baseRef = this.getRequest().getResourceRef().getBaseRef().toString();
             subjectResourceURI = selfURI.substring(0, i);
             typeSpecificId = subjectResourceURI.substring(baseRef.length());
-            datasetURI = LinkedDataServer.getServer(context).getDatasetURI();
-            sail = LinkedDataServer.getServer(context).getSail();
+            datasetURI = LinkedDataServer.getInstance().getDatasetURI();
+            sail = LinkedDataServer.getInstance().getSail();
         }
     }
 
-    public boolean allowDelete() {
-        return false;
-    }
-
-    public boolean allowGet() {
-        return true;
-    }
-
-    public boolean allowPost() {
-        return false;
-    }
-
-    public boolean allowPut() {
-        return false;
-    }
-
-    @Override
-    public Representation represent(final Variant variant) {
+    @Get
+    public Representation represent(final Representation entity) {
         switch (webResourceCategory) {
             case InformationResource:
                 return representInformationResource();
             case NonInformationResource:
-                return representNonInformationResource(variant);
+                return representNonInformationResource(entity);
             default:
                 throw new IllegalStateException("no such resource type: " + webResourceCategory);
         }
@@ -131,8 +108,8 @@ public class WebResource extends Resource {
         }
     }
 
-    private Representation representNonInformationResource(final Variant variant) {
-        MediaType type = variant.getMediaType();
+    private Representation representNonInformationResource(final Representation entity) {
+        MediaType type = entity.getMediaType();
         RDFFormat format = RDFMediaTypes.findRdfFormat(type);
         String suffix = RDFMediaTypes.findSuffix(format);
 
