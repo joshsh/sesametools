@@ -28,7 +28,7 @@ public abstract class QueryResource extends Resource {
     private static final String LIMIT_PARAM = "limit";
 
     protected final String selfURI;
-    protected final Map<String, String> arguments;
+    protected Map<String, String> arguments;
 
     protected final Sail sail;
     //private final String query;
@@ -58,15 +58,7 @@ public abstract class QueryResource extends Resource {
         if (0 < i) {
             String args = selfURI.substring(i + 1);
             if (0 < args.length()) {
-                String[] pairs = args.split("&");
-                for (String p : pairs) {
-                    int j = p.indexOf("=");
-                    if (0 < j) {
-                        String name = p.substring(0, j);
-                        String value = urlDecode(p.substring(j + 1));
-                        arguments.put(name, value);
-                    }
-                }
+                arguments = parseParams(args);
             }
         }
         /*
@@ -74,6 +66,18 @@ public abstract class QueryResource extends Resource {
             System.out.println("argument: " + name + " = " + arguments.get(name));
         }
         //*/
+    }
+
+    protected Map<String, String> parseParams(final String s) throws UnsupportedEncodingException {
+        Map<String, String> map = new HashMap<String, String>();
+
+        String[] a = s.split("&");
+        for (String p : a) {
+            String[] b = p.split("=");
+            map.put(urlDecode(b[0]), urlDecode(b[1]));
+        }
+
+        return map;
     }
 
     protected int readLimit() {
@@ -99,7 +103,7 @@ public abstract class QueryResource extends Resource {
         return limit;
     }
 
-    private String urlDecode(final String encoded) throws UnsupportedEncodingException {
+    protected String urlDecode(final String encoded) throws UnsupportedEncodingException {
         return URLDecoder.decode(encoded, UTF_8);
     }
 
@@ -112,7 +116,7 @@ public abstract class QueryResource extends Resource {
     }
 
     public boolean allowPost() {
-        return false;
+        return true;
     }
 
     public boolean allowPut() {

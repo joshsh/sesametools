@@ -12,6 +12,7 @@ import org.restlet.Context;
 import org.restlet.Restlet;
 import org.restlet.Router;
 import org.restlet.data.Protocol;
+import org.restlet.service.LogService;
 
 /**
  * A RESTful web service which publishes the contents of a Sail data store as Linked Data.
@@ -116,6 +117,8 @@ public class LinkedDataServer {
         component.getContext().getAttributes().put(SERVER_ATTR, this);
 
         router = new Router(component.getContext());
+
+        component.setLogService(new LogService(false));
     }
 
     public Router getRouter() {
