@@ -4,9 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>readonly</artifactId>
-    <version>1.6</version>
     <packaging>jar</packaging>
     <name>ReadOnlySail</name>
     <description>A read-only Sail implementation</description>
@@ -27,15 +25,12 @@
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-sail-api</artifactId>
-            <version>${sesame.version}</version>
-            <type>jar</type>
         </dependency>
 
         <!-- test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -4,9 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>rdftransaction</artifactId>
-    <version>1.6</version>
     <packaging>jar</packaging>
     <name>RDFTransactionSail</name>
     <description>A write-only Sail which generates RDF transactions instead of performing per-call updates</description>
@@ -27,20 +25,16 @@
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-sail-api</artifactId>
-            <version>${sesame.version}</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-http-protocol</artifactId>
-            <version>${sesame.version}</version>
         </dependency>
 
         <!-- test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

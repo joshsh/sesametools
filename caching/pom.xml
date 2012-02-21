@@ -4,9 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>caching</artifactId>
-    <version>1.6</version>
     <packaging>jar</packaging>
     <name>CachingSail</name>
     <description>An in-memory cache for Sail data</description>
@@ -27,8 +25,6 @@
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-sail-memory</artifactId>
-            <version>${sesame.version}</version>
-            <type>jar</type>
         </dependency>
 
         <!-- test dependencies -->
@@ -41,34 +37,26 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-trig</artifactId>
-            <version>${sesame.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-repository-sail</artifactId>
-            <version>${sesame.version}</version>
-            <type>jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-            <type>jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
-            <type>jar</type>
             <scope>test</scope>
         </dependency>
     </dependencies>
