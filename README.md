@@ -40,4 +40,4 @@ For projects which use Maven, SesameTools snapshots and release packages can be 
 
 The latest Maven packages can be browsed [here](http://fortytwo.net/maven2/net/fortytwo/sesametools).
 
-**Credits**: SesameTools is written and maintained by [Joshua Shinavier](https://github.com/joshsh).  Patches have been contributed by [Peter Ansell](https://github.com/ansell) and [fkleedorfer](https://github.com/fkleedorfer).  The RDF/JSON parser and writer contain code by [Hannes Ebner](http://www.csc.kth.se/~hebner/).
+**Credits**: SesameTools is written and maintained by [Joshua Shinavier](https://github.com/joshsh) and [Peter Ansell](https://github.com/ansell). Patches have been contributed by [fkleedorfer](https://github.com/fkleedorfer), and the RDF/JSON parser and writer contain code by [Hannes Ebner](http://www.csc.kth.se/~hebner/).
