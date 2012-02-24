@@ -65,23 +65,28 @@ class Args {
     public RDFFormat getRDFFormat(final RDFFormat defaultValue,
                                   final String... alternatives) {
         String s = getOption(null, alternatives);
-        return null == s ? defaultValue : Sesamize.findRDFFormat(s);
+        
+        // If they specified an option, try to find it out of the non-standard list of descriptors in Sesamize.rdfFormatByName
+        if(null != s) { 
+            return Sesamize.findRDFFormat(s);
+        } else { // otherwise return the default value
+            return defaultValue;
+        }
     }
 
     public RDFFormat getRDFFormat(final File file,
                                   final RDFFormat defaultValue,
                                   final String... alternatives) {
         String s = getOption(null, alternatives);
-        RDFFormat f = null == s ? RDFFormat.forFileName(file.getName(), defaultValue) : Sesamize.findRDFFormat(s);
-        if (null == f) {
-            String n = file.getName();
-            if (n.endsWith(".nq")
-                    || (n.endsWith(".nquad"))
-                    || (n.endsWith(".nquads"))) {
-                f = NQuadsFormat.NQUADS;
-            }
+        RDFFormat f = null;
+                
+        // If they specified an option, try to find it out of the non-standard list of descriptors in Sesamize.rdfFormatByName
+        if(null != s) {
+            f = Sesamize.findRDFFormat(s);
+        } else { // otherwise try to find the format based on the file name extension, using the specified default value as a fallback
+            f = RDFFormat.forFileName(file.getName(), defaultValue);
         }
-
+        
         return f;
     }
 
