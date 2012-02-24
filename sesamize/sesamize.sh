@@ -1,8 +1,4 @@
 #!/bin/bash
-
-# Path to JAR
-JAR=`dirname $0`/target/sesamize-*-full.jar
-
 # Find Java
 if [ "$JAVA_HOME" = "" ] ; then
         JAVA="java"
@@ -16,7 +12,7 @@ if [ "$JAVA_OPTIONS" = "" ] ; then
 fi
 
 # Launch the application
-$JAVA $JAVA_OPTIONS -cp $JAR net.fortytwo.sesametools.sesamize.Sesamize $*
+$JAVA $JAVA_OPTIONS -cp target/classes:"target/dependency/*" net.fortytwo.sesametools.sesamize.Sesamize $*
 
 # Return the program's exit code
 exit $?

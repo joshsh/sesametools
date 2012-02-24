@@ -1,6 +1,5 @@
 package net.fortytwo.sesametools.sesamize;
 
-import net.fortytwo.sesametools.nquads.NQuadsFormat;
 import org.openrdf.rio.RDFFormat;
 
 import java.io.File;
@@ -14,12 +13,12 @@ import java.util.Set;
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-class Args {
+class SesamizeArgs {
     public final Set<String> flags;
     public final Map<String, String> pairs;
     public final List<String> nonOptions;
 
-    public Args(final String[] args) {
+    public SesamizeArgs(final String[] args) {
         flags = new HashSet<String>();
         pairs = new HashMap<String, String>();
         nonOptions = new LinkedList<String>();
@@ -65,10 +64,10 @@ class Args {
     public RDFFormat getRDFFormat(final RDFFormat defaultValue,
                                   final String... alternatives) {
         String s = getOption(null, alternatives);
-        
+
         // If they specified an option, try to find it out of the non-standard list of descriptors in Sesamize.rdfFormatByName
-        if(null != s) { 
-            return Sesamize.findRDFFormat(s);
+        if (null != s) {
+            return findRDFFormat(s);
         } else { // otherwise return the default value
             return defaultValue;
         }
@@ -79,14 +78,30 @@ class Args {
                                   final String... alternatives) {
         String s = getOption(null, alternatives);
         RDFFormat f = null;
-                
+
         // If they specified an option, try to find it out of the non-standard list of descriptors in Sesamize.rdfFormatByName
-        if(null != s) {
-            f = Sesamize.findRDFFormat(s);
+        if (null != s) {
+            f = findRDFFormat(s);
         } else { // otherwise try to find the format based on the file name extension, using the specified default value as a fallback
             f = RDFFormat.forFileName(file.getName(), defaultValue);
         }
+
+        return f;
+    }
+
+    private RDFFormat findRDFFormat(final String s) {
+        RDFFormat f;
+
+        f = RDFFormat.forMIMEType(s);
+
+        if (null == f) {
+            f = RDFFormat.forFileName("example." + s);
+        }
         
+        if (null == f) {
+            throw new IllegalArgumentException("no matching RDF format for '" + s + "'");
+        }
+
         return f;
     }
 

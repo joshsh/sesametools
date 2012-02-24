@@ -41,10 +41,9 @@ public class SparqlResource extends QueryResource {
             arguments = getArguments(request);
 
             if (request.getMethod() == Method.POST) {
-                System.out.println("it's a POST");
                 String type = request.getEntity().getMediaType().toString();
                 String ent = request.getEntity().getText();
-                System.out.println("\t" + ent);
+                //System.out.println("POST: " + ent);
 
                 if (type.equals("application/x-www-form-urlencoded")) {
                     arguments = parseParams(ent);

@@ -21,7 +21,6 @@ public class SparqlQueryRepresentation extends OutputRepresentation {
                                      final int limit,
                                      final MediaType mediaType) throws Exception {
         super(mediaType);
-        System.out.println("1"); System.out.flush();
 
         try {
             data = new ByteArrayOutputStream();
@@ -37,7 +36,6 @@ public class SparqlQueryRepresentation extends OutputRepresentation {
         } catch (Throwable e) {
             // TODO: use logging instead
             e.printStackTrace(System.err);
-            System.err.flush();
             throw new Exception(e);
         }
     }
