@@ -149,10 +149,7 @@ public class RdfListUtil {
                                       final Graph graphToSearch, final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
-        final Set<Resource> heads = new HashSet<Resource>(1);
-        heads.add(head);
-
-        final Collection<List<Value>> results = RdfListUtil.getLists(heads,
+        final Collection<List<Value>> results = RdfListUtil.getLists(Collections.singleton(head),
                 graphToSearch, contexts);
 
         if (results.size() > 1) {
