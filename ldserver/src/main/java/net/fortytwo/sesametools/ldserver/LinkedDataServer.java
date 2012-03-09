@@ -18,7 +18,6 @@ import org.restlet.routing.VirtualHost;
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class LinkedDataServer {
-    public static final String SERVER_ATTR = "linked-data-server";
 
     private final Sail sail;
     private final Component component;
@@ -27,14 +26,13 @@ public class LinkedDataServer {
     private final Context context;
     private final VirtualHost host;
 
-    private static LinkedDataServer singleton;
+    private static LinkedDataServer singleton = null;
 
     /**
      * @param baseSail        the data store published by this server
      * @param internalBaseURI the base URI of resources within the data store
      * @param externalBaseURI the base URI of resources as they are to be seen in the Linked Data
      * @param serverPort      the TCP port through which to make the data accessible
-     * @throws ServerException if the server cannot be instantiated
      */
     public LinkedDataServer(final Sail baseSail,
                             final String internalBaseURI,
@@ -50,13 +48,16 @@ public class LinkedDataServer {
      * @param serverPort      the TCP port through which to make the data accessible
      * @param dataset         the URI of the data set to be published.
      *                        This allows resource descriptions to be associated with metadata about the data set which contains them.
-     * @throws ServerException if the server cannot be instantiated
      */
     public LinkedDataServer(final Sail baseSail,
                             final String internalBaseURI,
                             final String externalBaseURI,
                             final int serverPort,
                             final String dataset) {
+        if (null != singleton) {
+            throw new IllegalStateException("only one LinkedDataServer may be instantiated in the same JVM");
+        }
+
         singleton = this;
 
         final ValueFactory vf = baseSail.getValueFactory();

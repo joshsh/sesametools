@@ -27,9 +27,6 @@ wget "http://localhost:8182/sparql?query=SELECT%20%3Fs%20%3Fp%20%3Fo%20%20WHERE%
  */
 public class SparqlResource extends QueryResource {
 
-    public SparqlResource() throws Exception {
-    }
-
     @Override
     public void handle(final Request request,
                        final Response response) {
@@ -43,7 +40,6 @@ public class SparqlResource extends QueryResource {
             if (request.getMethod() == Method.POST) {
                 String type = request.getEntity().getMediaType().toString();
                 String ent = request.getEntity().getText();
-                //System.out.println("POST: " + ent);
 
                 if (type.equals("application/x-www-form-urlencoded")) {
                     arguments = parseParams(ent);
@@ -54,9 +50,9 @@ public class SparqlResource extends QueryResource {
                 }
             }
 
-            for (Map.Entry<String, String> e : arguments.entrySet()) {
-                System.out.println("\t" + e.getKey() + ": " + e.getValue());
-            }
+            //for (Map.Entry<String, String> e : arguments.entrySet()) {
+            //    System.out.println("\t" + e.getKey() + ": " + e.getValue());
+            //}
 
             if (null == query) {
                 query = arguments.get("query");
@@ -65,7 +61,6 @@ public class SparqlResource extends QueryResource {
             if (null == query) {
                 throw new IllegalArgumentException("no query argument specified");
             }
-            //System.out.println("query = " + query);
 
             String output = arguments.get("output");
 
@@ -81,16 +76,12 @@ public class SparqlResource extends QueryResource {
             } else {
                 mt = SparqlTools.SparqlResultFormat.getVariants().get(0).getMediaType();
             }
-            System.out.println("A");
-            System.out.flush();
         } catch (Throwable t) {
             t.printStackTrace(System.err);
             throw new ResourceException(t);
         }
 
         try {
-            System.out.println("entity = " + request.getEntity());
-            System.out.flush();
             response.setEntity(new SparqlQueryRepresentation(query, sail, readLimit(arguments), mt));
         } catch (QueryException e) {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
