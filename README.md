@@ -1,3 +1,8 @@
+<!-- This README can be viewed at https://github.com/joshsh/sesametools/wiki -->
+
+![SesameTools logo|width=322px|height=60px](https://github.com/joshsh/sesametools/wiki/graphics/SesameTools-logo.png)
+
+Welcome to the SesameTools wiki!
 SesameTools is a collection of useful components for use with the [Sesame](http://openrdf.org) RDF framework.  It includes:
 
 * **CachingSail** -- an in-memory cache for Sail data
