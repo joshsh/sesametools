@@ -31,9 +31,6 @@ public abstract class QueryResource extends Restlet {
     protected Sail sail;
     //private final String query;
 
-    public QueryResource() throws Exception {
-    }
-
     protected Map<String, String> getArguments(final Request request) throws ResourceException {
          Map<String, String> arguments;
         selfURI = request.getResourceRef().toString();

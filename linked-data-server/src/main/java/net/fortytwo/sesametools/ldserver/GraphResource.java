@@ -34,7 +34,7 @@ public class GraphResource extends ServerResource {
 
     protected Sail sail;
 
-    public GraphResource() throws Exception {
+    public GraphResource() {
 
         selfURI = this.getRequest().getResourceRef().toString();
 
