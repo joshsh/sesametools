@@ -3,10 +3,10 @@
 ![SesameTools logo|width=322px|height=60px](https://github.com/joshsh/sesametools/wiki/graphics/SesameTools-logo.png)
 
 Welcome to the SesameTools wiki!
-SesameTools is a collection of useful components for use with the [Sesame](http://openrdf.org) RDF framework.  It includes:
+SesameTools is a collection of general-purpose components for use with the [Sesame](http://openrdf.org) RDF framework.  It includes:
 
-* **CachingSail** -- an in-memory cache for Sail data
 * **Sesametools common utilities** -- miscellaneous useful classes
+* **CachingSail** -- an in-memory cache for RDF data
 * **ConstrainedSail** -- a Sail implementation which interacts only with given named graphs.  Useful for simple access control.
 * **DebugSail** -- a verbose Sail implementation, for debugging purposes
 * **DecomposeSail** -- a Sail implementation which decomposes tuple queries into individual getStatements calls
@@ -21,7 +21,7 @@ SesameTools is a collection of useful components for use with the [Sesame](http:
 * **ReplaySail** -- a pair of Sail implementations which allow Sail operations to be first recorded to a log file, then reproduced from the log file
 * **RepoSail** -- a Sail implementation which wraps a Repository object.  This is essentially the inverse of Sesame's [SailRepository](http://www.openrdf.org/doc/sesame2/api/org/openrdf/repository/sail/SailRepository.html)
 * **Sesamize** -- command-line tools for Sesame
-* **UriTranslator** - a utility which runs SPARQL-1.1 Update queries against a Repository to convert URIs between different prefixes
+* **URI Translator** - a utility which runs SPARQL-1.1 Update queries against a Repository to convert URIs between different prefixes
 * **WriteOnlySail** -- a write-only Sail implementation
 
 See also the [Sesametools API](http://fortytwo.net/projects/sesametools/api/).
@@ -32,7 +32,7 @@ For projects which use Maven, SesameTools snapshots and release packages can be 
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>rdfjson</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
         </dependency>
 
         ...

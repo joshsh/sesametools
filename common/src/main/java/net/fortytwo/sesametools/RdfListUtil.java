@@ -129,7 +129,8 @@ public class RdfListUtil {
      *                     (null) context.
      */
     public void addList(final Resource head,
-                               final List<Value> nextValues, final Graph graphToAddTo,
+                               final List<Value> nextValues,
+                               final Graph graphToAddTo,
                                final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
@@ -234,7 +235,8 @@ public class RdfListUtil {
      * @throws RuntimeException if the list structure was not complete, or it had cycles
      */
     public List<Value> getListAtNode(final Resource subject,
-                                            final URI predicate, final Graph graphToSearch,
+                                            final URI predicate,
+                                            final Graph graphToSearch,
                                             final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
@@ -266,7 +268,8 @@ public class RdfListUtil {
      */
     //*
     public Collection<List<Value>> getListsIterative(final Set<Resource> heads,
-                                                   final Graph graphToSearch, final Resource... contexts) {
+                                                   final Graph graphToSearch,
+                                                   final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
         final List<List<Value>> results = new ArrayList<List<Value>>(heads.size());
