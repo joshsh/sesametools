@@ -211,4 +211,8 @@ public class CachingSailConnection implements SailConnection {
 
         cacheConnection.commit();
     }
+
+    public SailConnection getBaseConnection() {
+        return baseSailConnection;
+    }
 }

@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>sesametools-all</artifactId>
 		<groupId>net.fortytwo.sesametools</groupId>
-		<version>1.6</version>
+		<version>1.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>uritranslator</artifactId>
 	<name>URI Translator</name>

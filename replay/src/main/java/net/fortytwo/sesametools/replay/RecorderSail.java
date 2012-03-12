@@ -21,14 +21,24 @@ public class RecorderSail implements StackableSail {
     private final ReplayConfiguration config;
     private final Handler<SailConnectionCall, SailException> queryHandler;
 
-    public RecorderSail(final Sail baseSail, final OutputStream out) {
+    public RecorderSail(final Sail baseSail,
+                        final Handler<SailConnectionCall, SailException> queryHandler) {
         this.baseSail = baseSail;
         config = new ReplayConfiguration();
+
+        this.queryHandler = queryHandler;
+    }
+    
+    public RecorderSail(final Sail baseSail, final OutputStream out) {
+        this(baseSail, createDefaultHandler(out));
+    }
+    
+    private static Handler<SailConnectionCall, SailException> createDefaultHandler(final OutputStream out) {
         final PrintStream ps = (out instanceof PrintStream)
                 ? (PrintStream) out
                 : new PrintStream(out);
 
-        this.queryHandler = new Handler<SailConnectionCall, SailException>() {
+        return new Handler<SailConnectionCall, SailException>() {
             public void handle(final SailConnectionCall sailQuery) throws SailException {
                 ps.println(sailQuery.toString());
             }
