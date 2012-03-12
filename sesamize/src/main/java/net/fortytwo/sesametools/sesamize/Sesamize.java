@@ -2,12 +2,9 @@ package net.fortytwo.sesametools.sesamize;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
-import net.fortytwo.sesametools.rdfjson.RDFJSONFormat;
-import net.fortytwo.sesametools.rdfjson.RDFJSONParser;
-import net.fortytwo.sesametools.rdfjson.RDFJSONWriter;
 import net.fortytwo.sesametools.nquads.NQuadsFormat;
-import net.fortytwo.sesametools.nquads.NQuadsParser;
-import net.fortytwo.sesametools.nquads.NQuadsWriter;
+import org.apache.commons.io.IOUtils;
+import org.openrdf.model.Resource;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
@@ -33,33 +30,35 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.sail.nativerdf.NativeStore;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
+ * A collection of command-line tools for Sesame.
+ *
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Sesamize {
     private static final String
             NAME = "Sesamize",
-            VERSION = "0.1";
+            VERSION = "0.6";
     private static final String
             DEFAULT_BASEURI = "http://example.org/baseURI#";
 
     private static boolean quiet;
 
+    static {
+        RDFFormat.register(NQuadsFormat.NQUADS);
+    }
+    
     private enum Command {
         CONSTRUCT("construct"),
         DUMP("dump"),
@@ -84,30 +83,6 @@ public class Sesamize {
         }
     }
 
-    private static final Map<String, RDFFormat> rdfFormatByName;
-
-    static {
-        rdfFormatByName = new HashMap<String, RDFFormat>();
-        rdfFormatByName.put("rdfxml", RDFFormat.RDFXML);
-        rdfFormatByName.put("rdf/xml", RDFFormat.RDFXML);
-        rdfFormatByName.put("rdf", RDFFormat.RDFXML);
-        rdfFormatByName.put("xml", RDFFormat.RDFXML);
-        rdfFormatByName.put("trig", RDFFormat.TRIG);
-        rdfFormatByName.put("turtle", RDFFormat.TURTLE);
-        rdfFormatByName.put("trix", RDFFormat.TRIX);
-        rdfFormatByName.put("ntriples", RDFFormat.NTRIPLES);
-        rdfFormatByName.put("ntriple", RDFFormat.NTRIPLES);
-        rdfFormatByName.put("nquad", NQuadsFormat.NQUADS);
-        rdfFormatByName.put("nquads", NQuadsFormat.NQUADS);
-        rdfFormatByName.put("rdfjson", RDFJSONFormat.RDFJSON);
-        rdfFormatByName.put("rdf/json", RDFJSONFormat.RDFJSON);
-        rdfFormatByName.put("rdf-json", RDFJSONFormat.RDFJSON);
-    }
-
-    public static RDFFormat findRDFFormat(final String name) {
-        return rdfFormatByName.get(name);
-    }
-
     private static void printUsage() {
         System.out.println("Usage:  sesamize [options] command [arguments]");
         System.out.println("Options:\n"
@@ -117,7 +92,7 @@ public class Sesamize {
         System.out.println("E.g.");
         System.out.println("  sesamize translate -i trig -o nquads mydata.trig > mydata.nquads");
         System.out.println("For more information, please see:\n"
-                + "  <URL:http://github.com/joshsh/laboratory/tree/master/sesamize>.");
+                + "  <URL:http://github.com/joshsh/sesametools/tree/master/sesamize>.");
     }
 
     private static void badUsage() {
@@ -130,7 +105,7 @@ public class Sesamize {
     }
 
     public static void main(final String[] args) {
-        Args a = new Args(Arrays.copyOfRange(args, 1, args.length));
+        SesamizeArgs a = new SesamizeArgs(Arrays.copyOfRange(args, 1, args.length));
         //Args a = new Args(args);
         //System.out.println("command = " + args[0]);
         Command c = Command.lookup(args[0]);
@@ -240,9 +215,7 @@ public class Sesamize {
 
         try {
             execute(System.in, System.out, System.err);
-        }
-
-        catch (Throwable t) {
+        } catch (Throwable t) {
             System.out.println("Exited with error: " + t);
             t.printStackTrace();
             System.exit(1);
@@ -258,11 +231,11 @@ public class Sesamize {
 
     }
 
-    private static String getBaseURI(final Args args) {
+    private static String getBaseURI(final SesamizeArgs args) {
         return args.getOption(DEFAULT_BASEURI, "b", "baseuri");
     }
 
-    private static void doTranslate(final Args args) throws Exception {
+    private static void doTranslate(final SesamizeArgs args) throws Exception {
         File inputFile = new File(args.nonOptions.get(0));
 
         RDFFormat inputFormat = args.getRDFFormat(inputFile, RDFFormat.RDFXML, "i", "inputFormat");
@@ -271,7 +244,7 @@ public class Sesamize {
         translateRDFDocument(inputFile, System.out, inputFormat, outputFormat, getBaseURI(args));
     }
 
-    private static void doImport(final Args args) throws Exception {
+    private static void doImport(final SesamizeArgs args) throws Exception {
         File dir = new File(args.nonOptions.get(0));
         File file = new File(args.nonOptions.get(1));
 
@@ -280,7 +253,7 @@ public class Sesamize {
         importRDFDocumentIntoNativeStore(dir, file, inputFormat);
     }
 
-    private static void doDump(final Args args) throws Exception {
+    private static void doDump(final SesamizeArgs args) throws Exception {
         File dir = new File(args.nonOptions.get(0));
         File file = new File(args.nonOptions.get(1));
 
@@ -289,37 +262,54 @@ public class Sesamize {
         dumpNativeStoreToRDFDocument(dir, file, outputFormat);
     }
 
-    private static void doConstruct(final Args args) throws Exception {
+    private static void doConstruct(final SesamizeArgs args) throws Exception {
         File inputFile = new File(args.nonOptions.get(0));
 
         RDFFormat inputFormat = args.getRDFFormat(inputFile, RDFFormat.RDFXML, "i", "inputFormat");
         RDFFormat outputFormat = args.getRDFFormat(RDFFormat.RDFXML, "o", "outputFormat");
 
         String qFile = args.getOption(null, "query");
-        String query = readFileAsString(qFile);
+        InputStream fileInput = null;
 
-        translateRDFDocumentUseingConstructQuery(query, inputFile, System.out, inputFormat, outputFormat, getBaseURI(args));
+        try {
+            fileInput = new FileInputStream(qFile);
+            String query = IOUtils.toString(fileInput, "UTF-8");
+
+            translateRDFDocumentUseingConstructQuery(query, inputFile, System.out, inputFormat, outputFormat, getBaseURI(args));
+        } finally {
+            if (fileInput != null) {
+                fileInput.close();
+            }
+        }
     }
 
-    private static void doSelect(final Args args) throws Exception {
+    private static void doSelect(final SesamizeArgs args) throws Exception {
         File inputFile = new File(args.nonOptions.get(0));
 
         RDFFormat inputFormat = args.getRDFFormat(inputFile, RDFFormat.RDFXML, "i", "inputFormat");
         SparqlResultFormat outputFormat = args.getSparqlResultFormat(SparqlResultFormat.XML, "o", "outputFormat");
 
         String qFile = args.getOption(null, "query");
-        String query = readFileAsString(qFile);
+        InputStream fileInput = null;
 
-        executeSparqlSelectQuery(query, inputFile, System.out, inputFormat, outputFormat, getBaseURI(args));
+        try {
+            fileInput = new FileInputStream(qFile);
+            String query = IOUtils.toString(fileInput, "UTF-8");
+
+            executeSparqlSelectQuery(query, inputFile, System.out, inputFormat, outputFormat, getBaseURI(args));
+        } finally {
+            if (fileInput != null) {
+                fileInput.close();
+            }
+        }
     }
 
-    /*
     public static void executeSparqlSelectQuery(final String query,
                                                 final File inputFile,
                                                 final OutputStream out,
                                                 final RDFFormat inFormat,
                                                 final SparqlResultFormat outFormat,
-                                                final String baseURI) throws Exception, IOException, RDFHandlerException, RDFParseException, RepositoryException, MalformedQueryException, QueryEvaluationException {
+                                                final String baseURI) throws Exception {
         TupleQueryResultWriter w;
 
         switch (outFormat) {
@@ -333,103 +323,8 @@ public class Sesamize {
                 w = new SPARQLResultsTabWriter(out);
                 break;
             default:
-                throw new Exception(new Throwable("bad query result format: " + outFormat));
+                throw new IllegalArgumentException("bad query result format: " + outFormat);
         }
-
-        List<String> columnHeaders = new LinkedList<String>();
-        // FIXME: *do* specify the column headers
-        //columnHeaders.add("post");
-        //columnHeaders.add("content");
-        //columnHeaders.add("screen_name");
-
-        Sail sail = new MemoryStore();
-        sail.initialize();
-
-        try {
-            Repository repo = new SailRepository(sail);
-            RepositoryConnection rc = repo.getConnection();
-            try {
-                rc.add(inputFile, baseURI, inFormat);
-                rc.commit();
-            } finally {
-                rc.close();
-            }
-
-            SailConnection sc = sail.getConnection();
-            try {
-
-
-                w.startQueryResult(columnHeaders);
-
-                TupleQuery tq = rc.prepareTupleQuery(QueryLanguage.SPARQL, query);
-
-                // Evaluate the first query to get all names
-                TupleQueryResult result = tq.evaluate();
-                try {
-                    // Loop over all names, and retrieve the corresponding e-mail address.
-                    while (result.hasNext()) {
-                        BindingSet b = result.next();
-
-                        w.handleSolution(b);
-                    }
-                } finally {
-                    result.close();
-                }
-
-                w.endQueryResult();
-
-
-                w.startQueryResult(columnHeaders);
-
-                CloseableIteration<? extends BindingSet, QueryEvaluationException> iter
-                        = evaluateQuery(query, sc);
-                try {
-                    while (iter.hasNext()) {
-                        w.handleSolution(iter.next());
-                    }
-                } finally {
-                    iter.close();
-                }
-
-                w.endQueryResult();
-
-
-            } finally {
-                sc.close();
-            }
-        } finally {
-            sail.shutDown();
-        }
-    }*/
-
-
-    public static void executeSparqlSelectQuery(final String query,
-                                                final File inputFile,
-                                                final OutputStream out,
-                                                final RDFFormat inFormat,
-                                                final SparqlResultFormat outFormat,
-                                                final String baseURI) throws Exception, IOException, RDFHandlerException, RDFParseException, RepositoryException, MalformedQueryException, QueryEvaluationException {
-        TupleQueryResultWriter w;
-
-        switch (outFormat) {
-            case JSON:
-                w = new SPARQLResultsJSONWriter(out);
-                break;
-            case XML:
-                w = new SPARQLResultsXMLWriter(out);
-                break;
-            case TAB:
-                w = new SPARQLResultsTabWriter(out);
-                break;
-            default:
-                throw new Exception(new Throwable("bad query result format: " + outFormat));
-        }
-
-        List<String> columnHeaders = new LinkedList<String>();
-        // FIXME: *do* specify the column headers
-        //columnHeaders.add("post");
-        //columnHeaders.add("content");
-        //columnHeaders.add("screen_name");
 
         Sail sail = new MemoryStore();
         sail.initialize();
@@ -441,9 +336,11 @@ public class Sesamize {
                 rc.add(inputFile, baseURI, inFormat);
                 rc.commit();
 
-                w.startQueryResult(columnHeaders);
-
                 TupleQuery tq = rc.prepareTupleQuery(QueryLanguage.SPARQL, query);
+                List<String> columnHeaders = new LinkedList<String>();
+                columnHeaders.addAll(tq.getBindings().getBindingNames());
+
+                w.startQueryResult(columnHeaders);
 
                 // Evaluate the first query to get all names
                 TupleQueryResult result = tq.evaluate();
@@ -465,24 +362,6 @@ public class Sesamize {
         } finally {
             sail.shutDown();
         }
-    }
-    //*/
-
-    private static RDFWriter createWriter(final RDFFormat format,
-                                             final OutputStream out) {
-        return NQuadsFormat.NQUADS == format
-                ? new NQuadsWriter(out)
-                : RDFJSONFormat.RDFJSON == format
-                ? new RDFJSONWriter(out)
-                : Rio.createWriter(format, out);
-    }
-
-    private static RDFParser createParser(final RDFFormat format) {
-        return NQuadsFormat.NQUADS == format
-                ? new NQuadsParser()
-                : RDFJSONFormat.RDFJSON == format
-                ? new RDFJSONParser()
-                : Rio.createParser(format);
     }
 
     public static void translateRDFDocumentUseingConstructQuery(final String query,
@@ -501,7 +380,7 @@ public class Sesamize {
                 rc.add(inputFile, baseURI, inFormat);
                 rc.commit();
 
-                RDFWriter w = createWriter(outFormat, out);
+                RDFWriter w = Rio.createWriter(outFormat, out);
 
                 rc.prepareGraphQuery(QueryLanguage.SPARQL, query).evaluate(w);
             } finally {
@@ -517,22 +396,35 @@ public class Sesamize {
                                             final RDFFormat inFormat,
                                             final RDFFormat outFormat,
                                             final String baseURI) throws SailException, IOException, RDFHandlerException, RDFParseException {
-        RDFParser p = createParser(inFormat);
-        RDFWriter w = createWriter(outFormat, out);
+        InputStream in = null;
+        try {
+            in = new FileInputStream(inputFile);
+            translateRDFDocument(in, out, inFormat, outFormat, baseURI);
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+        }
+    }
+
+    public static void translateRDFDocument(final InputStream in,
+                                            final OutputStream out,
+                                            final RDFFormat inFormat,
+                                            final RDFFormat outFormat,
+                                            final String baseURI) throws SailException, IOException, RDFHandlerException, RDFParseException {
+
+        RDFParser p = Rio.createParser(inFormat);
+        RDFWriter w = Rio.createWriter(outFormat, out);
 
         p.setRDFHandler(w);
 
-        InputStream in = new FileInputStream(inputFile);
-        try {
-            p.parse(in, baseURI);
-        } finally {
-            in.close();
-        }
+        p.parse(in, baseURI);
     }
 
     public static void dumpNativeStoreToRDFDocument(final File nativeStoreDirectory,
                                                     final File dumpFile,
-                                                    final RDFFormat format) throws SailException, RepositoryException, IOException, RDFHandlerException {
+                                                    final RDFFormat format,
+                                                    final Resource... contexts) throws SailException, RepositoryException, IOException, RDFHandlerException {
         System.out.println("dumping store at " + nativeStoreDirectory + " to file " + dumpFile);
 
         Sail sail = new NativeStore(nativeStoreDirectory);
@@ -545,8 +437,8 @@ public class Sesamize {
             try {
                 OutputStream out = new FileOutputStream(dumpFile);
                 try {
-                    RDFHandler h = createWriter(format, out);
-                    rc.export(h);
+                    RDFHandler h = Rio.createWriter(format, out);
+                    rc.export(h, contexts);
                 } finally {
                     out.close();
                 }
@@ -560,7 +452,8 @@ public class Sesamize {
 
     public static void importRDFDocumentIntoNativeStore(final File nativeStoreDirectory,
                                                         final File dumpFile,
-                                                        final RDFFormat format) throws SailException, RepositoryException, IOException, RDFParseException {
+                                                        final RDFFormat format,
+                                                        final Resource... contexts) throws SailException, RepositoryException, IOException, RDFParseException {
         System.out.println("importing file " + dumpFile + " into store at " + nativeStoreDirectory);
         Sail sail = new NativeStore(nativeStoreDirectory);
         sail.initialize();
@@ -570,7 +463,7 @@ public class Sesamize {
 
             RepositoryConnection rc = repo.getConnection();
             try {
-                rc.add(dumpFile, DEFAULT_BASEURI, format);
+                rc.add(dumpFile, DEFAULT_BASEURI, format, contexts);
                 rc.commit();
             } finally {
                 rc.close();
@@ -579,45 +472,4 @@ public class Sesamize {
             sail.shutDown();
         }
     }
-
-    private static String readFileAsString(final String filePath) throws IOException {
-        StringBuffer fileData = new StringBuffer(1000);
-        BufferedReader reader = new BufferedReader(
-                new FileReader(filePath));
-        char[] buf = new char[1024];
-        int numRead = 0;
-        while ((numRead = reader.read(buf)) != -1) {
-            String readData = String.valueOf(buf, 0, numRead);
-            fileData.append(readData);
-            buf = new char[1024];
-        }
-        reader.close();
-        return fileData.toString();
-    }
-
-    /*
-    private static ParsedQuery parseQuery(final String query) throws MalformedQueryException {
-        SPARQLParser parser = new SPARQLParser();
-        return parser.parseQuery(query, BASE_URI);
-    }
-
-    private static synchronized CloseableIteration<? extends BindingSet, QueryEvaluationException>
-    evaluateQuery(final String queryStr,
-                  final SailConnection sc) throws QueryException {
-        ParsedQuery query = null;
-        try {
-            query = parseQuery(queryStr);
-        } catch (MalformedQueryException e) {
-            throw new QueryException(e);
-        }
-
-        MapBindingSet bindings = new MapBindingSet();
-        boolean includeInferred = false;
-        try {
-            return sc.evaluate(query.getTupleExpr(), query.getDataset(), bindings, includeInferred);
-        } catch (SailException e) {
-            throw new QueryException(e);
-        }
-    }*/
-
 }
