@@ -21,6 +21,7 @@ SesameTools is a collection of useful components for use with the [Sesame](http:
 * **ReplaySail** -- a pair of Sail implementations which allow Sail operations to be first recorded to a log file, then reproduced from the log file
 * **RepoSail** -- a Sail implementation which wraps a Repository object.  This is essentially the inverse of Sesame's [SailRepository](http://www.openrdf.org/doc/sesame2/api/org/openrdf/repository/sail/SailRepository.html)
 * **Sesamize** -- command-line tools for Sesame
+* **UriTranslator** - a utility which runs SPARQL-1.1 Update queries against a Repository to convert URIs between different prefixes
 * **WriteOnlySail** -- a write-only Sail implementation
 
 See also the [Sesametools API](http://fortytwo.net/projects/sesametools/api/).
