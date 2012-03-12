@@ -41,6 +41,10 @@ public class RdfListUtilTest
 {
     private static final Logger log = LoggerFactory.getLogger(RdfListUtilTest.class);
 
+    private RdfListUtil testRdfListUtilDefaults;
+    private RdfListUtil testRdfListUtilNoChecks;
+    private RdfListUtil testRdfListUtilNoChecksOrRecursion;
+    
     private Graph testGraph;
     private ValueFactory vf;
     
@@ -61,10 +65,14 @@ public class RdfListUtilTest
     private BNode testListHeadBNode2;
 
 	private Value testObjectLiteral2;
-    
+
     @Before
     public void setUp()
     {
+        this.testRdfListUtilDefaults = new RdfListUtil();
+        this.testRdfListUtilNoChecks = new RdfListUtil(false, false, true);
+        this.testRdfListUtilNoChecksOrRecursion = new RdfListUtil(false, false, false);
+        
         this.testGraph = new GraphImpl();
         this.vf = this.testGraph.getValueFactory();
         
@@ -97,6 +105,10 @@ public class RdfListUtilTest
     @After
     public void tearDown()
     {
+        this.testRdfListUtilDefaults = null;
+        this.testRdfListUtilNoChecks = null;
+        this.testRdfListUtilNoChecksOrRecursion = null;
+        
         this.testGraph = null;
         this.vf = null;
         
@@ -128,7 +140,7 @@ public class RdfListUtilTest
     @Test
     public void testAddListAtNodeEmptyNoContext()
     {
-        RdfListUtil.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesEmpty, this.testGraph);
+        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesEmpty, this.testGraph);
         
         Assert.assertEquals(0, this.testGraph.size());
     }
@@ -141,7 +153,7 @@ public class RdfListUtilTest
     @Test
     public void testAddListAtNodeMultipleElementsNoContext()
     {
-        RdfListUtil.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
+        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
                 this.testGraph);
         
         Assert.assertEquals(7, this.testGraph.size());
@@ -261,7 +273,7 @@ public class RdfListUtilTest
     @Test
     public void testAddListAtNodeSingleElementNoContext()
     {
-        RdfListUtil.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri,
+        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri,
                 this.testGraph);
         
         Assert.assertEquals(3, this.testGraph.size());
@@ -321,7 +333,7 @@ public class RdfListUtilTest
     @Test
     public void testAddListBNodeHeadEmptyNoContext()
     {
-        RdfListUtil.addList(this.testListHeadBNode1, this.testValuesEmpty, this.testGraph);
+        this.testRdfListUtilDefaults.addList(this.testListHeadBNode1, this.testValuesEmpty, this.testGraph);
         
         Assert.assertEquals(0, this.testGraph.size());
     }
@@ -334,7 +346,7 @@ public class RdfListUtilTest
     @Test
     public void testAddListBNodeHeadMultipleElementsNoContext()
     {
-        RdfListUtil.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
+        this.testRdfListUtilDefaults.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
         
         Assert.assertEquals(6, this.testGraph.size());
         
@@ -439,7 +451,7 @@ public class RdfListUtilTest
     @Test
     public void testAddListBNodeHeadSingleElementNoContext()
     {
-        RdfListUtil.addList(this.testListHeadBNode1, this.testValuesSingleUri, this.testGraph);
+        this.testRdfListUtilDefaults.addList(this.testListHeadBNode1, this.testValuesSingleUri, this.testGraph);
         
         Assert.assertEquals(2, this.testGraph.size());
         
@@ -483,7 +495,7 @@ public class RdfListUtilTest
     @Test
     public void testAddListUriHeadEmptyNoContext()
     {
-        RdfListUtil.addList(this.testListHeadUri1, this.testValuesEmpty, this.testGraph);
+        this.testRdfListUtilDefaults.addList(this.testListHeadUri1, this.testValuesEmpty, this.testGraph);
         
         Assert.assertEquals(0, this.testGraph.size());
     }
@@ -496,7 +508,7 @@ public class RdfListUtilTest
     @Test
     public void testAddListURIHeadMultipleElementsNoContext()
     {
-        RdfListUtil.addList(this.testListHeadUri1, this.testValuesMultipleElements, this.testGraph);
+        this.testRdfListUtilDefaults.addList(this.testListHeadUri1, this.testValuesMultipleElements, this.testGraph);
         
         Assert.assertEquals(6, this.testGraph.size());
         
@@ -601,7 +613,7 @@ public class RdfListUtilTest
     @Test
     public void testAddListURIHeadSingleElementNoContext()
     {
-        RdfListUtil.addList(this.testListHeadUri1, this.testValuesSingleUri, this.testGraph);
+        this.testRdfListUtilDefaults.addList(this.testListHeadUri1, this.testValuesSingleUri, this.testGraph);
         
         Assert.assertEquals(2, this.testGraph.size());
         
@@ -645,7 +657,7 @@ public class RdfListUtilTest
     @Test
     public void testGetListAfterAddListAtNodeMultipleElementsNullContext()
     {
-        RdfListUtil.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
+        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
                 this.testGraph);
         
         Assert.assertEquals(7, this.testGraph.size());
@@ -665,7 +677,7 @@ public class RdfListUtilTest
         Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
         
         final List<Value> results =
-                RdfListUtil.getList((BNode)matchedStatement.getObject(), this.testGraph, (Resource)null);
+                this.testRdfListUtilDefaults.getList((BNode)matchedStatement.getObject(), this.testGraph, (Resource)null);
         
         Assert.assertEquals(3, results.size());
         
@@ -683,7 +695,7 @@ public class RdfListUtilTest
     @Test
     public void testGetListAtNodeAfterInvalidGraphOperation()
     {
-        RdfListUtil.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
+        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
                 this.testGraph);
         
         Assert.assertEquals(7, this.testGraph.size());
@@ -705,7 +717,7 @@ public class RdfListUtilTest
         {
             @SuppressWarnings("unused")
             final List<Value> results =
-                    RdfListUtil.getListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testGraph,
+                    this.testRdfListUtilDefaults.getListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testGraph,
                             (Resource)null);
             
             Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
@@ -725,13 +737,13 @@ public class RdfListUtilTest
     @Test
     public void testGetListAtNodeMultipleElementsNullContext()
     {
-        RdfListUtil.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
+        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
                 this.testGraph);
         
         Assert.assertEquals(7, this.testGraph.size());
         
         final List<Value> results =
-                RdfListUtil.getListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testGraph, (Resource)null);
+                this.testRdfListUtilDefaults.getListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testGraph, (Resource)null);
         
         Assert.assertEquals(3, results.size());
         
@@ -749,7 +761,7 @@ public class RdfListUtilTest
     @Test
     public void testGetListBNodeHeadAfterInvalidGraphOperation()
     {
-        RdfListUtil.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
+        this.testRdfListUtilDefaults.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
         
         Assert.assertEquals(6, this.testGraph.size());
         
@@ -769,7 +781,7 @@ public class RdfListUtilTest
         try
         {
             @SuppressWarnings("unused")
-            final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph, (Resource)null);
+            final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph, (Resource)null);
 
             Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
@@ -788,7 +800,7 @@ public class RdfListUtilTest
     @Test
     public void testGetListBNodeHeadAfterInvalidGraphOperation2()
     {
-        RdfListUtil.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
+        this.testRdfListUtilDefaults.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
         
         Assert.assertEquals(6, this.testGraph.size());
         
@@ -812,7 +824,7 @@ public class RdfListUtilTest
         try
         {
             @SuppressWarnings("unused")
-            final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph, (Resource)null);
+            final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph, (Resource)null);
 
             Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
@@ -831,11 +843,11 @@ public class RdfListUtilTest
     @Test
     public void testGetListBNodeHeadMultipleElementsNullContext()
     {
-        RdfListUtil.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
+        this.testRdfListUtilDefaults.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
         
         Assert.assertEquals(6, this.testGraph.size());
         
-        final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph, (Resource)null);
+        final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph, (Resource)null);
         
         Assert.assertEquals(3, results.size());
         
@@ -848,7 +860,7 @@ public class RdfListUtilTest
     @Test
     public void testGetListsAtNodeSingleNullContext()
     {
-        RdfListUtil.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri,
+        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri,
                 this.testGraph);
         
         Assert.assertEquals(3, this.testGraph.size());
@@ -867,7 +879,7 @@ public class RdfListUtilTest
         Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
         
         final Collection<List<Value>> lists =
-                RdfListUtil
+                this.testRdfListUtilDefaults
                         .getListsAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testGraph, (Resource)null);
         
         Assert.assertEquals(1, lists.size());
@@ -884,7 +896,7 @@ public class RdfListUtilTest
     @Test
     public void testGetListsAfterAddListAtNodeSingleNullContext()
     {
-        RdfListUtil.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri,
+        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri,
                 this.testGraph);
         
         Assert.assertEquals(3, this.testGraph.size());
@@ -906,7 +918,7 @@ public class RdfListUtilTest
         heads.add((BNode)matchedStatement.getObject());
         
         final Collection<List<Value>> lists =
-                RdfListUtil
+                this.testRdfListUtilDefaults
                         .getLists(heads, this.testGraph, (Resource)null);
         
         Assert.assertEquals(1, lists.size());
@@ -923,7 +935,7 @@ public class RdfListUtilTest
     @Test
     public void testGetListsAfterAddListBNodeHeadSingleNullContext()
     {
-        RdfListUtil.addList(this.testListHeadBNode1, this.testValuesSingleUri,
+        this.testRdfListUtilDefaults.addList(this.testListHeadBNode1, this.testValuesSingleUri,
                 this.testGraph);
         
         Assert.assertEquals(2, this.testGraph.size());
@@ -943,7 +955,7 @@ public class RdfListUtilTest
         heads.add((BNode)matchedStatement.getSubject());
         
         final Collection<List<Value>> lists =
-                RdfListUtil
+                this.testRdfListUtilDefaults
                         .getLists(heads, this.testGraph);
         
         Assert.assertEquals(1, lists.size());
@@ -960,7 +972,7 @@ public class RdfListUtilTest
     @Test
     public void testGetListsSingleNullContext()
     {
-        RdfListUtil.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri,
+        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri,
                 this.testGraph);
         
         Assert.assertEquals(3, this.testGraph.size());
@@ -984,7 +996,7 @@ public class RdfListUtilTest
         
         heads.add(headNode);
         
-        final Collection<List<Value>> lists = RdfListUtil.getLists(heads, this.testGraph);
+        final Collection<List<Value>> lists = this.testRdfListUtilDefaults.getLists(heads, this.testGraph);
         
         Assert.assertEquals(1, lists.size());
         
@@ -1005,7 +1017,7 @@ public class RdfListUtilTest
     @Test
     public void testGetListURIHeadAfterInvalidGraphOperation()
     {
-        RdfListUtil.addList(this.testListHeadUri1, this.testValuesMultipleElements, this.testGraph);
+        this.testRdfListUtilDefaults.addList(this.testListHeadUri1, this.testValuesMultipleElements, this.testGraph);
         
         Assert.assertEquals(6, this.testGraph.size());
         
@@ -1025,7 +1037,7 @@ public class RdfListUtilTest
         try
         {
             @SuppressWarnings("unused")
-            final List<Value> results = RdfListUtil.getList(this.testListHeadUri1, this.testGraph, (Resource)null);
+            final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadUri1, this.testGraph, (Resource)null);
 
             Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
@@ -1069,7 +1081,7 @@ public class RdfListUtilTest
         Set<Resource> heads = new HashSet<Resource>(1);
         heads.add(this.testListHeadBNode1);
         
-        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        final Collection<List<Value>> results = this.testRdfListUtilDefaults.getLists(heads, this.testGraph);
 
         Assert.assertEquals(2, results.size());
         
@@ -1139,7 +1151,7 @@ public class RdfListUtilTest
         Assert.assertEquals(expectedGraphCount, this.testGraph.size());
         
         log.info("start");
-        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        final Collection<List<Value>> results = this.testRdfListUtilDefaults.getLists(heads, this.testGraph);
         log.info("end");
 
         int expectedResultsCount = iCount;
@@ -1195,7 +1207,7 @@ public class RdfListUtilTest
         Assert.assertEquals(expectedGraphCount, this.testGraph.size());
         
         log.info("start");
-        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        final Collection<List<Value>> results = this.testRdfListUtilDefaults.getLists(heads, this.testGraph);
         log.info("end");
 
         int expectedResultsCount = iCount;
@@ -1273,7 +1285,7 @@ public class RdfListUtilTest
         Assert.assertEquals(expectedGraphCount, this.testGraph.size());
         
         log.info("start");
-        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        final Collection<List<Value>> results = this.testRdfListUtilDefaults.getLists(heads, this.testGraph);
         log.info("end");
         
         int expectedResultsCount = (
@@ -1405,7 +1417,144 @@ public class RdfListUtilTest
         Assert.assertEquals(expectedGraphCount, this.testGraph.size());
         
         log.info("start");
-        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        final Collection<List<Value>> results = this.testRdfListUtilDefaults.getLists(heads, this.testGraph);
+        log.info("end");
+        
+        int expectedResultsCount = (
+                // one variable length branch for each i for each k
+                (iHeadCount*kDepthCount)
+                // one longest branch for each i
+                +iHeadCount
+                // one variable length branch for each m for each n
+                + (mHeadCount*nDepthCount)
+                // one longest branch for each m
+                +mHeadCount
+                );
+        log.info("expectedResultsCount="+expectedResultsCount);
+        log.info("results.size()="+results.size());
+        
+        Assert.assertEquals(expectedResultsCount, results.size());
+        
+    }
+
+    /**
+     * Tests a mix of shallow and deep lists in the same getLists call without checking for errors
+     */
+    @Test
+    public void testGetListsForkedValidStressDeepAndShallowNoErrorChecking()
+    {
+        Set<Resource> heads = new HashSet<Resource>();
+
+        int iHeadCount = 500;
+        int kDepthCount = 4;
+        
+        int mHeadCount = 4;
+        int nDepthCount = 50;
+        
+        for(int i = 0; i < iHeadCount; i++)
+        {
+            BNode nextHeadBNode = vf.createBNode("i-"+i);
+            BNode nextRestBNode = nextHeadBNode;
+            
+            for(int k = 0; k < kDepthCount; k++)
+            {
+                BNode nextTreeBNode1 = vf.createBNode("i-"+i+"_k-"+k+"_a");
+                BNode nextTreeBNode2 = vf.createBNode("i-"+i+"_k-"+k+"_b");
+                
+                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-"+i+"_k-"+k));
+                this.testGraph.add(nextTestStatement1);
+                
+                // Fork the list in two
+                Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode1);
+                this.testGraph.add(nextTestStatement2);
+                Statement nextTestStatement3 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode2);
+                this.testGraph.add(nextTestStatement3);
+
+                // Generate a terminating element for one of the arms
+                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_k-"+k+"_b"));
+                this.testGraph.add(nextTestNilStatement1);
+                
+                Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
+                this.testGraph.add(nextTestNilStatement2);
+            
+                if(k == kDepthCount-1)
+                {
+                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_k-"+k+"_a"));
+                    this.testGraph.add(nextTestNilStatement3);
+                    
+                    Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
+                    this.testGraph.add(nextTestNilStatement4);
+                }
+                else
+                {
+                    // branch others off the first one
+                    nextRestBNode = nextTreeBNode1;
+                }                    
+            }
+            heads.add(nextHeadBNode);
+        }
+        
+        
+        
+        for(int m = 0; m < mHeadCount; m++)
+        {
+            BNode nextHeadBNode = vf.createBNode("m-"+m);
+            BNode nextRestBNode = nextHeadBNode;
+            
+            for(int n = 0; n < nDepthCount; n++)
+            {
+                BNode nextTreeBNode1 = vf.createBNode("m-"+m+"_n-"+n+"_a");
+                BNode nextTreeBNode2 = vf.createBNode("m-"+m+"_n-"+n+"_b");
+                
+                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: m-"+m+"_n-"+n));
+                this.testGraph.add(nextTestStatement1);
+                
+                // Fork the list in two
+                Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode1);
+                this.testGraph.add(nextTestStatement2);
+                Statement nextTestStatement3 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode2);
+                this.testGraph.add(nextTestStatement3);
+
+                // Generate a terminating element for one of the arms
+                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating m-"+m+"_n-"+n+"_b"));
+                this.testGraph.add(nextTestNilStatement1);
+                
+                Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
+                this.testGraph.add(nextTestNilStatement2);
+            
+                if(n == nDepthCount-1)
+                {
+                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating m-"+m+"_n-"+n+"_a"));
+                    this.testGraph.add(nextTestNilStatement3);
+                    
+                    Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
+                    this.testGraph.add(nextTestNilStatement4);
+                }
+                else
+                {
+                    // branch others off the first one
+                    nextRestBNode = nextTreeBNode1;
+                }                    
+            }
+            heads.add(nextHeadBNode);
+        }
+        
+        int expectedGraphCount = (
+                // 5 statements for each i for each k
+                (iHeadCount*kDepthCount*5)+
+                // 2 terminating statements for each i
+                        (iHeadCount*2)+
+                // 5 statements for each m for each n
+                (mHeadCount*nDepthCount*5)+
+                // 2 terminating statements for each m
+                        (mHeadCount*2)
+                );
+        log.info("expectedGraphCount="+expectedGraphCount);
+        log.info("this.testGraph.size()="+this.testGraph.size());
+        Assert.assertEquals(expectedGraphCount, this.testGraph.size());
+        
+        log.info("start");
+        final Collection<List<Value>> results = this.testRdfListUtilNoChecks.getLists(heads, this.testGraph);
         log.info("end");
         
         int expectedResultsCount = (
@@ -1497,7 +1646,7 @@ public class RdfListUtilTest
         Assert.assertEquals(expectedGraphCount, this.testGraph.size());
         
         log.info("start");
-        final Collection<List<Value>> results = RdfListUtil.getLists(heads, this.testGraph);
+        final Collection<List<Value>> results = this.testRdfListUtilDefaults.getLists(heads, this.testGraph);
         log.info("end");
         
         int expectedResultsCount = (
@@ -1510,6 +1659,88 @@ public class RdfListUtilTest
         
         Assert.assertEquals(expectedResultsCount, results.size());
         
+    }
+
+    /**
+     * This test goes past the default 1000 stack frame boundary for the 
+     * recursive implementation and then fails as we have told the utility in 
+     * this case not to use the iterative implementation as a backup.
+     */
+    @Test
+    public void testGetListsForkedValidStressDeepNoIterative()
+    {
+        int iCount = 5;
+        int kCount = 1100;
+        
+        Set<Resource> heads = new HashSet<Resource>((int)(iCount*1.5));
+        
+        for(int i = 0; i < iCount; i++)
+        {
+            BNode nextHeadBNode = vf.createBNode("i-"+i);
+            BNode nextRestBNode = nextHeadBNode;
+            
+            for(int k = 0; k < kCount; k++)
+            {
+                BNode nextTreeBNode1 = vf.createBNode("i-"+i+"_k-"+k+"_a");
+                BNode nextTreeBNode2 = vf.createBNode("i-"+i+"_k-"+k+"_b");
+                
+                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-"+i+"_k-"+k));
+                this.testGraph.add(nextTestStatement1);
+                
+                // Fork the list in two
+                Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode1);
+                this.testGraph.add(nextTestStatement2);
+                Statement nextTestStatement3 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode2);
+                this.testGraph.add(nextTestStatement3);
+
+                // Generate a terminating element for one of the arms
+                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_k-"+k+"_b"));
+                this.testGraph.add(nextTestNilStatement1);
+                
+                Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
+                this.testGraph.add(nextTestNilStatement2);
+            
+                if(k == kCount-1)
+                {
+                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-"+i+"_k-"+k+"_a"));
+                    this.testGraph.add(nextTestNilStatement3);
+                    
+                    Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
+                    this.testGraph.add(nextTestNilStatement4);
+                }
+                else
+                {
+                    // branch others off the first one
+                    nextRestBNode = nextTreeBNode1;
+                }                    
+            }
+            heads.add(nextHeadBNode);
+        }
+        
+        int expectedGraphCount = (
+                // 5 statements for each i for each k
+                (iCount*kCount*5)+
+                // 2 terminating statements for each i
+                        (iCount*2)
+                );
+        log.info("expectedGraphCount="+expectedGraphCount);
+        log.info("this.testGraph.size()="+this.testGraph.size());
+        Assert.assertEquals(expectedGraphCount, this.testGraph.size());
+        
+        log.info("start");
+        try
+        {
+            final Collection<List<Value>> results = this.testRdfListUtilNoChecksOrRecursion.getLists(heads, this.testGraph);
+            Assert.fail("Expected exception not found");
+        }
+        catch(Exception ex)
+        {
+            Assert.assertTrue(ex.getMessage().contains("List was too long, maximum is"));
+        }
+        finally
+        {
+            log.info("end");
+        }
     }
 
     @Test
@@ -1545,7 +1776,7 @@ public class RdfListUtilTest
         try
         {
             @SuppressWarnings("unused")
-            final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph);
+            final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph);
             Assert.fail("Did not find expected exception");
         }
         catch(final RuntimeException rex)
@@ -1579,7 +1810,7 @@ public class RdfListUtilTest
         try
         {
             @SuppressWarnings("unused")
-            final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph);
+            final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph);
 
             Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
@@ -1623,7 +1854,7 @@ public class RdfListUtilTest
         try
         {
             @SuppressWarnings("unused")
-            final List<Value> results = RdfListUtil.getList(this.testListHeadBNode1, this.testGraph);
+            final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph);
 
             Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
