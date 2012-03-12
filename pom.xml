@@ -14,7 +14,6 @@
 		<module>caching</module>
 		<module>common</module>
 		<module>constrained</module>
-		<module>decompose</module>
 		<module>deduplication</module>
 		<!-- Remove JSON-LD from reactor until it is stabilised enough for parsing 
 			and writing tests to work consistently <module>jsonld</module> -->

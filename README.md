@@ -8,8 +8,6 @@ SesameTools is a collection of general-purpose components for use with the [Sesa
 * **Sesametools common utilities** -- miscellaneous useful classes
 * **CachingSail** -- an in-memory cache for RDF data
 * **ConstrainedSail** -- a Sail implementation which interacts only with given named graphs.  Useful for simple access control.
-* **DebugSail** -- a verbose Sail implementation, for debugging purposes
-* **DecomposeSail** -- a Sail implementation which decomposes tuple queries into individual getStatements calls
 * **DeduplicationSail** -- a Sail implementation which avoids duplicate statements.  For use with triple stores such as AllegroGraph which otherwise allow duplicates.
 * **JSON-LD utilities** -- including a parser and writer for the [JSON-LD](http://json-ld.org/) RDF format.
 * [LinkedDataServer](https://github.com/joshsh/sesametools/wiki/LinkedDataServer) -- a RESTful web service to publish a Sesame data store as Linked Data
