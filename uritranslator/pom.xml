@@ -10,7 +10,7 @@
 	</parent>
 	<artifactId>uritranslator</artifactId>
 	<name>URI Translator</name>
-	<url>http://fortytwo.net/sesametools</url>
+	<url>http://fortytwo.net/projects/sesametools</url>
 
 	<dependencies>
 		<dependency>

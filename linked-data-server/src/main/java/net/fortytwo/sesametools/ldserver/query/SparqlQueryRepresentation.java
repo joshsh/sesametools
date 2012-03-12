@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * A SPARQL query result as an HTTP entity.
+ *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class SparqlQueryRepresentation extends OutputRepresentation {

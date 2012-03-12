@@ -23,6 +23,8 @@ wget "http://localhost:8182/sparql?query=SELECT%20%3Fs%20%3Fp%20%3Fo%20%20WHERE%
  */
 
 /**
+ * A RESTful resource serving as a SPARQL endpoint.
+ *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class SparqlResource extends QueryResource {

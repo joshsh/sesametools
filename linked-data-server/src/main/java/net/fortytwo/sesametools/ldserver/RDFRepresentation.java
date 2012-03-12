@@ -14,6 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * An RDF document as an HTTP entity.
+ *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class RDFRepresentation extends OutputRepresentation {

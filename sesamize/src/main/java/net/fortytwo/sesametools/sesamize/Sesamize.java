@@ -42,12 +42,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * A collection of command-line tools for Sesame.
+ *
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Sesamize {
     private static final String
             NAME = "Sesamize",
-            VERSION = "0.1";
+            VERSION = "0.6";
     private static final String
             DEFAULT_BASEURI = "http://example.org/baseURI#";
 
