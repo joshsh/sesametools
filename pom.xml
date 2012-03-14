@@ -32,7 +32,7 @@
 
 	<properties>
 		<sesametools.version>1.7-SNAPSHOT</sesametools.version>
-		<sesame.version>2.6.3</sesame.version>
+		<sesame.version>2.6.4</sesame.version>
 		<slf4j.version>1.6.4</slf4j.version>
 		<junit.version>4.10</junit.version>
 		<restlet.version>2.1-RC3</restlet.version>
