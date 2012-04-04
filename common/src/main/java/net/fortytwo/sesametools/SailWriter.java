@@ -6,6 +6,8 @@ import org.openrdf.model.Statement;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Author: josh
@@ -13,6 +15,9 @@ import org.openrdf.sail.SailException;
  * Time: 11:34:28 AM
  */
 public class SailWriter implements RDFHandler {
+    
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    
     public enum Action {
         ADD, REMOVE
     }
@@ -32,6 +37,8 @@ public class SailWriter implements RDFHandler {
         if (null != sailConnection) {
             sailConnection.close();
         }
+        
+        sailConnection = null;
     }
 
     public void startRDF() throws RDFHandlerException {
@@ -45,10 +52,17 @@ public class SailWriter implements RDFHandler {
     public void endRDF() throws RDFHandlerException {
         try {
             sailConnection.commit();
-            sailConnection.close();
-            sailConnection = null;
         } catch (SailException e) {
             throw new RDFHandlerException(e);
+        } finally {
+            if(null != sailConnection) {
+                try {
+                    sailConnection.close();
+                } catch(SailException e) {
+                    log.error("Found SailException while trying to close Sail connection in SailWriter", e);
+                }
+            }
+            sailConnection = null;
         }
     }
 
