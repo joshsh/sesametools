@@ -1,6 +1,5 @@
 package net.fortytwo.sesametools.rdftransaction;
 
-import org.openrdf.http.protocol.transaction.TransactionWriter;
 import org.openrdf.http.protocol.transaction.operations.AddStatementOperation;
 import org.openrdf.http.protocol.transaction.operations.ClearOperation;
 import org.openrdf.http.protocol.transaction.operations.RemoveNamespaceOperation;
@@ -19,8 +18,6 @@ import org.openrdf.sail.helpers.SailConnectionWrapper;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
@@ -28,7 +25,6 @@ import java.io.IOException;
 public class RDFTransactionSailConnection extends SailConnectionWrapper {
     private final List<TransactionOperation> operations;
     private final List<TransactionOperation> buffer;
-    private final TransactionWriter writer;
     private final RDFTransactionSail sail;
     private final int commitsPerUpload;
     private int commits = 0;
@@ -47,7 +43,6 @@ public class RDFTransactionSailConnection extends SailConnectionWrapper {
         this.sail = sail;
         this.operations = new LinkedList<TransactionOperation>();
         this.buffer = new LinkedList<TransactionOperation>();
-        this.writer = new TransactionWriter();
         this.commitsPerUpload = commitsPerUpload;
     }
 
@@ -66,15 +61,8 @@ public class RDFTransactionSailConnection extends SailConnectionWrapper {
     }
 
     private void commitAll() throws SailException {
-        try {
-            if (0 < buffer.size()) {
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                writer.serialize(buffer, bos);
-                sail.uploadTransactionEntity(bos.toByteArray());
-                bos.close();
-            }
-        } catch (IOException e) {
-            throw new SailException(e);
+        if (0 < buffer.size()) {
+            sail.handleTransaction(buffer);
         }
 
         buffer.clear();

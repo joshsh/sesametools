@@ -1,9 +1,15 @@
 package net.fortytwo.sesametools.rdftransaction;
 
+import org.openrdf.http.protocol.transaction.TransactionWriter;
+import org.openrdf.http.protocol.transaction.operations.TransactionOperation;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.helpers.SailWrapper;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * A Sail which uploads committed transactions in the application/x-rdftransaction format
@@ -11,12 +17,13 @@ import org.openrdf.sail.helpers.SailWrapper;
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public abstract class RDFTransactionSail extends SailWrapper {
-    private final int commitsPerUpload;
+    private final int commitsPerTransaction;
+    private final TransactionWriter writer = new TransactionWriter();
 
     public RDFTransactionSail(final Sail baseSail,
-                              final int commitsPerUpload) {
+                              final int commitsPerTransaction) {
         super(baseSail);
-        this.commitsPerUpload = commitsPerUpload;
+        this.commitsPerTransaction = commitsPerTransaction;
     }
 
     public RDFTransactionSail(final Sail baseSail) {
@@ -27,8 +34,22 @@ public abstract class RDFTransactionSail extends SailWrapper {
     public SailConnection getConnection() throws SailException {
         SailConnection b = this.getBaseSail().getConnection();
 
-        return new RDFTransactionSailConnection(b, this, commitsPerUpload);
+        return new RDFTransactionSailConnection(b, this, commitsPerTransaction);
     }
 
-    public abstract void uploadTransactionEntity(final byte[] entity) throws SailException;
+    protected byte[] createTransactionEntity(final List<TransactionOperation> operations) throws SailException {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            try {
+                writer.serialize(operations, bos);
+                return bos.toByteArray();
+            } finally {
+                bos.close();
+            }
+        } catch (IOException e) {
+            throw new SailException(e);
+        }
+    }
+
+    public abstract void handleTransaction(final List<TransactionOperation> operations) throws SailException;
 }
