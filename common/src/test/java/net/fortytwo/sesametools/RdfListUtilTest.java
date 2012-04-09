@@ -6,13 +6,10 @@ package net.fortytwo.sesametools;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import junit.framework.Assert;
 
@@ -715,7 +712,6 @@ public class RdfListUtilTest
         
         try
         {
-            @SuppressWarnings("unused")
             final List<Value> results =
                     this.testRdfListUtilDefaults.getListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testGraph,
                             (Resource)null);
@@ -780,7 +776,6 @@ public class RdfListUtilTest
         
         try
         {
-            @SuppressWarnings("unused")
             final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph, (Resource)null);
 
             Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
@@ -823,7 +818,6 @@ public class RdfListUtilTest
         
         try
         {
-            @SuppressWarnings("unused")
             final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph, (Resource)null);
 
             Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
@@ -1036,7 +1030,6 @@ public class RdfListUtilTest
         
         try
         {
-            @SuppressWarnings("unused")
             final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadUri1, this.testGraph, (Resource)null);
 
             Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
@@ -1731,6 +1724,8 @@ public class RdfListUtilTest
         try
         {
             final Collection<List<Value>> results = this.testRdfListUtilNoChecksOrRecursion.getLists(heads, this.testGraph);
+
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Expected exception not found");
         }
         catch(Exception ex)
@@ -1775,8 +1770,9 @@ public class RdfListUtilTest
         
         try
         {
-            @SuppressWarnings("unused")
             final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph);
+
+            Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
         }
         catch(final RuntimeException rex)
@@ -1809,7 +1805,6 @@ public class RdfListUtilTest
         
         try
         {
-            @SuppressWarnings("unused")
             final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph);
 
             Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
@@ -1853,7 +1848,6 @@ public class RdfListUtilTest
         
         try
         {
-            @SuppressWarnings("unused")
             final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph);
 
             Assert.assertEquals("Returned results from an invalid list structure", 0, results.size());
