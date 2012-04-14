@@ -35,7 +35,7 @@
 		<sesame.version>2.6.5</sesame.version>
 		<slf4j.version>1.6.4</slf4j.version>
 		<junit.version>4.10</junit.version>
-		<restlet.version>2.1-RC3</restlet.version>
+		<restlet.version>2.1-RC4</restlet.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
