@@ -307,6 +307,9 @@
 		</profile>
 		<profile>
 			<id>metadatanet-deploy</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
 			<distributionManagement>
 				<repository>
 					<id>maenad-releases</id>
