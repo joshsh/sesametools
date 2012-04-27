@@ -1,5 +1,6 @@
 package net.fortytwo.sesametools.ldserver;
 
+import net.fortytwo.sesametools.ldserver.query.SparqlResource;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.sail.SailRepository;
@@ -26,16 +27,20 @@ public class DemoApp {
         LinkedDataServer server = new LinkedDataServer(
                 sail,
                 "http://example.org",
-                "http://localhost:8182",
-                8182);
+                "http://localhost:8001",
+                8001);
 
         server.getRouter().attach("/person", WebResource.class);
         server.getRouter().attach("/graph", GraphResource.class);
+        server.getHost().attach("/sparql", new SparqlResource());
+
         server.start();
 
         /* Now try:
-           wget --header="Accept: application/x-trig" http://localhost:8182/person/arthur
-           wget --header="Accept: application/x-trig" http://localhost:8182/graph/demoGraph
+           wget --header="Accept: application/x-trig" http://localhost:8001/person/arthur
+           wget --header="Accept: application/x-trig" http://localhost:8001/graph/demoGraph
+
+           wget "http://localhost:8001/sparql?query=SELECT%20%3Fs%20%3Fp%20%3Fo%20WHERE%20%7B%20%3Fs%20%3Fp%20%3Fo%20%7D%20LIMIT%2010"
          */
     }
 }

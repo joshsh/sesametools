@@ -1,22 +1,23 @@
-
 package net.fortytwo.sesametools.reposail;
 
 import info.aduna.iteration.CloseableIteration;
-
+import net.fortytwo.sesametools.SailConnectionTripleSource;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
 import org.openrdf.query.algebra.UpdateExpr;
+import org.openrdf.query.algebra.evaluation.TripleSource;
+import org.openrdf.query.algebra.evaluation.impl.EvaluationStrategyImpl;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
 
 /**
@@ -25,15 +26,14 @@ import org.openrdf.sail.SailException;
 public class RepositorySailConnection implements SailConnection {
     private RepositoryConnection repoConnection;
     private final boolean inferenceDisabled;
+    private final ValueFactory valueFactory;
 
     public RepositorySailConnection(final RepositoryConnection repoConnection,
-                                    final boolean inferenceDisabled) {
+                                    final boolean inferenceDisabled,
+                                    final ValueFactory valueFactory) {
         this.repoConnection = repoConnection;
         this.inferenceDisabled = inferenceDisabled;
-    }
-
-    public void addConnectionListener(SailConnectionListener arg0) {
-        // TODO Auto-generated method stub
+        this.valueFactory = valueFactory;
     }
 
     public void addStatement(Resource subj, URI pred, Value obj,
@@ -79,17 +79,23 @@ public class RepositorySailConnection implements SailConnection {
     }
 
     public CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluate(
-            TupleExpr arg0, Dataset arg1, BindingSet arg2, boolean arg3)
+            TupleExpr query, Dataset dataset, BindingSet bindings, boolean includeInferred)
             throws SailException {
-        throw new UnsupportedOperationException();
+        try {
+            TripleSource tripleSource = new SailConnectionTripleSource(this, valueFactory, includeInferred);
+            EvaluationStrategyImpl strategy = new EvaluationStrategyImpl(tripleSource, dataset);
+            return strategy.evaluate(query, bindings);
+        } catch (QueryEvaluationException e) {
+            throw new SailException(e);
+        }
     }
 
     public void executeUpdate(final UpdateExpr updateExpr,
                               final Dataset dataset,
                               final BindingSet bindingSet,
                               final boolean b) throws SailException {
-    	throw new UnsupportedOperationException("Sail to Repository updates not implemented yet");
-	}
+        throw new UnsupportedOperationException("Sail to Repository updates not implemented yet");
+    }
 
 
     public CloseableIteration<? extends Resource, SailException> getContextIDs()
@@ -136,10 +142,6 @@ public class RepositorySailConnection implements SailConnection {
         } catch (RepositoryException e) {
             throw new SailException(e);
         }
-    }
-
-    public void removeConnectionListener(SailConnectionListener arg0) {
-        // TODO Auto-generated method stub
     }
 
     public void removeNamespace(String prefix) throws SailException {

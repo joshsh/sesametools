@@ -56,7 +56,7 @@ public class RepositorySail implements Sail {
             throw new SailException(e);
         }
 
-        return new RepositorySailConnection(rc, inferenceDisabled);
+        return new RepositorySailConnection(rc, inferenceDisabled, this.getValueFactory());
     }
 
     public File getDataDir() {
