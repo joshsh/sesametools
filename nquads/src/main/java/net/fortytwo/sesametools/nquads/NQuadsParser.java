@@ -56,7 +56,7 @@ public class NQuadsParser extends ModifiedNTriplesParser {
 
     @Override
     public RDFFormat getRDFFormat() {
-        return NQuadsFormat.NQUADS;
+        return RDFFormat.NQUADS;
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.io.Writer;
  */
 public class NQuadsWriterFactory implements RDFWriterFactory {
     public RDFFormat getRDFFormat() {
-        return NQuadsFormat.NQUADS;
+        return RDFFormat.NQUADS;
     }
 
     public RDFWriter getWriter(OutputStream out) {

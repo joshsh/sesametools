@@ -280,9 +280,26 @@
 			<url>http://fortytwo.net/maven2</url>
 		</repository>
 		<repository>
-			<id>aduna-repo</id>
+			<id>aduna-opensource.releases</id>
 			<name>Aduna repository</name>
 			<url>http://repo.aduna-software.org/maven2/releases</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>aduna-opensource.snapshots</id>
+			<name>Aduna snapshot repository</name>
+			<url>http://repo.aduna-software.org/maven2/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>maven-restlet</id>
