@@ -32,10 +32,10 @@
 
 	<properties>
 		<sesametools.version>1.7-SNAPSHOT</sesametools.version>
-		<sesame.version>2.6.4</sesame.version>
+		<sesame.version>2.6.6</sesame.version>
 		<slf4j.version>1.6.4</slf4j.version>
 		<junit.version>4.10</junit.version>
-		<restlet.version>2.1-RC3</restlet.version>
+		<restlet.version>2.1-RC5</restlet.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -280,9 +280,26 @@
 			<url>http://fortytwo.net/maven2</url>
 		</repository>
 		<repository>
-			<id>aduna-repo</id>
+			<id>aduna-opensource.releases</id>
 			<name>Aduna repository</name>
 			<url>http://repo.aduna-software.org/maven2/releases</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>aduna-opensource.snapshots</id>
+			<name>Aduna snapshot repository</name>
+			<url>http://repo.aduna-software.org/maven2/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>maven-restlet</id>
@@ -307,6 +324,9 @@
 		</profile>
 		<profile>
 			<id>metadatanet-deploy</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
 			<distributionManagement>
 				<repository>
 					<id>maenad-releases</id>

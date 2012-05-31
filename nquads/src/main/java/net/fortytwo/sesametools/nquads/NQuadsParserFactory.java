@@ -9,7 +9,7 @@ import org.openrdf.rio.RDFParser;
  */
 public class NQuadsParserFactory implements RDFParserFactory {
     public RDFFormat getRDFFormat() {
-        return NQuadsFormat.NQUADS;
+        return RDFFormat.NQUADS;
     }
 
     public RDFParser getParser() {

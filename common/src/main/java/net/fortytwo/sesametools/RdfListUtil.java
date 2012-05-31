@@ -303,6 +303,8 @@ public class RdfListUtil {
     public Collection<List<Value>> getLists(final Set<Resource> heads,
                                                    final Graph graphToSearch,
                                                    final Resource... contexts) {
+        OpenRDFUtil.verifyContextNotNull(contexts);
+        
         Collection<List<Value>> matches = new LinkedList<List<Value>>();
         
     	try
