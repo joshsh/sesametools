@@ -2,7 +2,6 @@ package net.fortytwo.sesametools.sesamize;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
-import net.fortytwo.sesametools.nquads.NQuadsFormat;
 import org.apache.commons.io.IOUtils;
 import org.openrdf.model.Resource;
 import org.openrdf.query.BindingSet;
@@ -56,7 +55,8 @@ public class Sesamize {
     private static boolean quiet;
 
     static {
-        RDFFormat.register(NQuadsFormat.NQUADS);
+        // Note: this may no longer be necessary
+        RDFFormat.register(RDFFormat.NQUADS);
     }
     
     private enum Subcommand {
