@@ -175,6 +175,14 @@ public class ModifiedNTriplesParser extends RDFParserBase {
         return c;
     }
 
+    protected boolean lineContinues(int c) throws IOException {
+        c = reader.read();
+
+        c = skipWhitespace(c);
+
+        return c != -1 && c != '\r' && c != '\n';
+    }
+
     /**
      * Reads characters from reader until the first EOL has been read. The first
      * character after the EOL is returned. In case the end of the character

@@ -141,6 +141,10 @@ public class NQuadsParser extends ModifiedNTriplesParser {
             reportFatalError("Expected '.', found: " + (char) c);
         }
 
+        if (lineContinues(c)) {
+            reportFatalError("content after '.' is not allowed");
+        }
+
         c = skipLine(c);
 
         Statement st = createStatement(subject, predicate, object, context);

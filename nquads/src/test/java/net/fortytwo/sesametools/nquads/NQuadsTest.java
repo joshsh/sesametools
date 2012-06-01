@@ -2,10 +2,8 @@ package net.fortytwo.sesametools.nquads;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.StatementCollector;
 
 import java.io.Reader;
@@ -78,7 +76,8 @@ public class NQuadsTest {
     public void testAll() throws Exception {
         NQuadsParser p = new NQuadsParser();
 
-        RDFWriter w = new NQuadsWriter(System.out);
+        //RDFWriter w = new NQuadsWriter(System.out);
+        RDFHandler w = new StatementCollector();
         p.setRDFHandler(w);
 
         Reader in = new StringReader(DOC1);
@@ -89,12 +88,13 @@ public class NQuadsTest {
         }
     }
 
-        // "Manual" test
+    // "Manual" test
     @Test
     public void testToOtherFormat() throws Exception {
         NQuadsParser p = new NQuadsParser();
 
-        RDFWriter w = Rio.createWriter(RDFFormat.TRIG, System.out);
+        //RDFWriter w = Rio.createWriter(RDFFormat.TRIG, System.out);
+        RDFHandler w = new StatementCollector();
         p.setRDFHandler(w);
 
         Reader in = new StringReader(DOC2);
@@ -104,29 +104,28 @@ public class NQuadsTest {
             in.close();
         }
     }
-    
+
     @Test
     public void testInvalid() throws Exception {
         NQuadsParser p = new NQuadsParser();
-        
+
         StatementCollector h = new StatementCollector();
-        
+
         p.setRDFHandler(h);
-        
+
         // this line is invalid
         Reader testInput = new StringReader("<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>");
-        
-        try
-        {
+
+        try {
             p.parse(testInput, "");
             Assert.fail("Did not receive expected parse exception");
-        }
-        catch(RDFParseException rdfpe)
-        {
+        } catch (RDFParseException rdfpe) {
             Assert.assertEquals(1, rdfpe.getLineNumber());
         }
-        
+
         // verify that no statements were given to the RDFHandler
         Assert.assertEquals(0, h.getStatements().size());
     }
+
+
 }
