@@ -1,17 +1,20 @@
 package net.fortytwo.sesametools.nquads;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
+import org.openrdf.rio.helpers.StatementCollector;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-public class NQuadsTest extends TestCase {
+public class NQuadsTest {
     private static final String
             DOC1 = "<http://xmlns.com/foaf/0.1/Person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> <urn:uuid:60d3626a-b65b-4841-bf07-4fc24ebf368b> .\n" +
             "<http://xmlns.com/foaf/0.1/Person> <http://www.w3.org/2000/01/rdf-schema#label> \"Person\" <urn:uuid:60d3626a-b65b-4841-bf07-4fc24ebf368b> .\n" +
@@ -71,13 +74,14 @@ public class NQuadsTest extends TestCase {
             "<http://tinkerpop.com#12> <http://tinkerpop.com#weight> \"0.2\"^^<http://www.w3.org/2001/XMLSchema#float> <http://tinkerpop.com#graph> .";
 
     // "Manual" test
+    @Test
     public void testAll() throws Exception {
         NQuadsParser p = new NQuadsParser();
 
         RDFWriter w = new NQuadsWriter(System.out);
         p.setRDFHandler(w);
 
-        InputStream in = new ByteArrayInputStream(DOC1.getBytes());
+        Reader in = new StringReader(DOC1);
         try {
             p.parse(in, "");
         } finally {
@@ -86,17 +90,43 @@ public class NQuadsTest extends TestCase {
     }
 
         // "Manual" test
+    @Test
     public void testToOtherFormat() throws Exception {
         NQuadsParser p = new NQuadsParser();
 
         RDFWriter w = Rio.createWriter(RDFFormat.TRIG, System.out);
         p.setRDFHandler(w);
 
-        InputStream in = new ByteArrayInputStream(DOC2.getBytes());
+        Reader in = new StringReader(DOC2);
         try {
             p.parse(in, "");
         } finally {
             in.close();
         }
+    }
+    
+    @Test
+    public void testInvalid() throws Exception {
+        NQuadsParser p = new NQuadsParser();
+        
+        StatementCollector h = new StatementCollector();
+        
+        p.setRDFHandler(h);
+        
+        // this line is invalid
+        Reader testInput = new StringReader("<http://www.wrong.com> <http://wrong.com/1.1/tt> \"x\"^^<http://xxx.net/int> . <http://path.to.graph>");
+        
+        try
+        {
+            p.parse(testInput, "");
+            Assert.fail("Did not receive expected parse exception");
+        }
+        catch(RDFParseException rdfpe)
+        {
+            Assert.assertEquals(1, rdfpe.getLineNumber());
+        }
+        
+        // verify that no statements were given to the RDFHandler
+        Assert.assertEquals(0, h.getStatements().size());
     }
 }
