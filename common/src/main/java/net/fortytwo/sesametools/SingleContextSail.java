@@ -40,6 +40,7 @@ public class SingleContextSail implements StackableSail {
     }
 
     public void initialize() throws SailException {
+        baseSail.initialize();
     }
 
     public boolean isWritable() throws SailException {
@@ -51,5 +52,6 @@ public class SingleContextSail implements StackableSail {
     }
 
     public void shutDown() throws SailException {
+        baseSail.shutDown();
     }
 }
