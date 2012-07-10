@@ -41,6 +41,7 @@ public class DemoApp {
            wget --header="Accept: application/x-trig" http://localhost:8001/graph/demoGraph
 
            wget "http://localhost:8001/sparql?query=SELECT%20%3Fs%20%3Fp%20%3Fo%20WHERE%20%7B%20%3Fs%20%3Fp%20%3Fo%20%7D%20LIMIT%2010"
+           curl --data-urlencode query@/tmp/myquery.rq http://localhost:8001/sparql
          */
     }
 }
