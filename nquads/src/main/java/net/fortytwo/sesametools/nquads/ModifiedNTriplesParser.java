@@ -248,6 +248,7 @@ public class ModifiedNTriplesParser extends RDFParserBase {
     private int parseTriple(int c)
         throws IOException, RDFParseException, RDFHandlerException
     {
+        boolean ignoredAnError = false;
         try
         {
             c = parseSubject(c);
@@ -277,13 +278,20 @@ public class ModifiedNTriplesParser extends RDFParserBase {
             {
                 throw rdfpe;
             }
+            else
+            {
+                ignoredAnError = true;
+            }
         }
         
         c = skipLine(c);
 
-        Statement st = createStatement(subject, predicate, object);
-        rdfHandler.handleStatement(st);
-
+        if(!ignoredAnError)
+        {
+            Statement st = createStatement(subject, predicate, object);
+            rdfHandler.handleStatement(st);
+        }
+        
         subject = null;
         predicate = null;
         object = null;
