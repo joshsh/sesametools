@@ -1,6 +1,8 @@
 
 package net.fortytwo.sesametools;
 
+import java.util.Set;
+
 import info.aduna.iteration.CloseableIteration;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
@@ -12,6 +14,7 @@ import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
 import org.openrdf.query.algebra.UpdateExpr;
+import org.openrdf.query.impl.DatasetImpl;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
@@ -75,14 +78,33 @@ public class SingleContextSailConnection implements SailConnection {
     public CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluate(
             final TupleExpr tupleExpr, final Dataset dataSet, final BindingSet bindingSet, final boolean includeInferred)
             throws SailException {
-// TODO Auto-generated method stub
-        return null;
+        // ignore the given dataset and restrict everything to the single context we have been setup with
+        DatasetImpl singleContextDataset = new DatasetImpl();
+        if(singleContext instanceof URI)
+        {
+            singleContextDataset.setDefaultInsertGraph((URI)singleContext);
+            singleContextDataset.addDefaultGraph((URI)singleContext);
+            singleContextDataset.addNamedGraph((URI)singleContext);
+            singleContextDataset.addDefaultRemoveGraph((URI)singleContext);
+        }
+        
+        return baseSailConnection.evaluate(tupleExpr, singleContextDataset, bindingSet, includeInferred);
     }
 
     @Override
-	public void executeUpdate(UpdateExpr arg0, Dataset arg1, BindingSet arg2,
-			boolean arg3) throws SailException {
-    	baseSailConnection.executeUpdate(arg0, arg1, arg2, arg3);
+	public void executeUpdate(final UpdateExpr updateExpr, final Dataset dataSet, final BindingSet bindingSet,
+			final boolean includeInferred) throws SailException {
+        // ignore the given dataset and restrict everything to the single context we have been setup with
+        DatasetImpl singleContextDataset = new DatasetImpl();
+        if(singleContext instanceof URI)
+        {
+            singleContextDataset.setDefaultInsertGraph((URI)singleContext);
+            singleContextDataset.addDefaultGraph((URI)singleContext);
+            singleContextDataset.addNamedGraph((URI)singleContext);
+            singleContextDataset.addDefaultRemoveGraph((URI)singleContext);
+        }
+        
+    	baseSailConnection.executeUpdate(updateExpr, singleContextDataset, bindingSet, includeInferred);
 	}
 
     public CloseableIteration<? extends Resource, SailException> getContextIDs()
