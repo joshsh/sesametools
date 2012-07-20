@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 
+import static junit.framework.Assert.assertEquals;
+
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
  */
@@ -19,7 +21,7 @@ public class NQuadsTest {
 
     // "Manual" test
     @Test
-    public void testAll() throws Exception {
+    public void testParserAndWriterSucceed() throws Exception {
         NQuadsParser p = new NQuadsParser();
 
         RDFHandler w = new NQuadsWriter(System.out);
@@ -49,6 +51,23 @@ public class NQuadsTest {
         } finally {
             in.close();
         }
+    }
+
+    @Test
+    public void testCountParsedStatements() throws Exception {
+        NQuadsParser p = new NQuadsParser();
+
+        StatementCollector w = new StatementCollector();
+        p.setRDFHandler(w);
+
+        Reader in = new InputStreamReader(NQuadsParser.class.getResourceAsStream("doc2.nq"));
+        try {
+            p.parse(in, "");
+        } finally {
+            in.close();
+        }
+
+        assertEquals(12, w.getStatements().size());
     }
 
     @Test

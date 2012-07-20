@@ -175,12 +175,16 @@ public class ModifiedNTriplesParser extends RDFParserBase {
         return c;
     }
 
-    protected boolean lineContinues(int c) throws IOException {
+    protected int assertLineTerminates(int c) throws IOException, RDFParseException {
         c = reader.read();
 
         c = skipWhitespace(c);
 
-        return c != -1 && c != '\r' && c != '\n';
+        if (c != -1 && c != '\r' && c != '\n') {
+            reportFatalError("content after '.' is not allowed");
+        }
+
+        return c;
     }
 
     /**
