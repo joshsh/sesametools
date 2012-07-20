@@ -139,7 +139,6 @@ public class NQuadsParserTest {
      * @throws IOException
      * @throws RDFParseException
      */
-    @Ignore
     @Test
     public void testNonWhitespaceAfterPeriodNoContext() throws RDFHandlerException, IOException, RDFParseException {
         final ByteArrayInputStream bais = new ByteArrayInputStream(
@@ -153,7 +152,8 @@ public class NQuadsParserTest {
         catch(RDFParseException rdfpe)
         {
             Assert.assertEquals(1, rdfpe.getLineNumber());
-            Assert.assertEquals(44, rdfpe.getColumnNumber());
+            // FIXME: Enable column numbers when parser supports them
+            // Assert.assertEquals(44, rdfpe.getColumnNumber());
         }
     }
 
@@ -164,7 +164,6 @@ public class NQuadsParserTest {
      * @throws IOException
      * @throws RDFParseException
      */
-    @Ignore
     @Test
     public void testNonWhitespaceAfterPeriodWithContext() throws RDFHandlerException, IOException, RDFParseException {
         final ByteArrayInputStream bais = new ByteArrayInputStream(
@@ -178,7 +177,8 @@ public class NQuadsParserTest {
         catch(RDFParseException rdfpe)
         {
             Assert.assertEquals(1, rdfpe.getLineNumber());
-            Assert.assertEquals(44, rdfpe.getColumnNumber());
+            // FIXME: Enable column numbers when parser supports them
+            //Assert.assertEquals(44, rdfpe.getColumnNumber());
         }
     }
 
