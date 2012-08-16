@@ -7,6 +7,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.Sail;
 import org.restlet.Component;
+import org.restlet.Context;
 import org.restlet.data.Protocol;
 import org.restlet.routing.VirtualHost;
 
@@ -21,7 +22,7 @@ public class LinkedDataServer {
     private final Component component;
     private final URI datasetURI;
     //private final Router router;
-    //private final Context context;
+    private final Context context;
     private final VirtualHost host;
 
     private static LinkedDataServer singleton = null;
@@ -121,18 +122,19 @@ public class LinkedDataServer {
         host = component.getDefaultHost();
 
         //router = new Router(component.getContext());
-        //context = component.getContext();
+        context = component.getContext();
     }
 
     /*
     public Router getRouter() {
         return router;
-    }
+    }*/
 
     public Context getContext() {
         return context;
     }
 
+    /*
     public Component getComponent() {
         return component;
     }
