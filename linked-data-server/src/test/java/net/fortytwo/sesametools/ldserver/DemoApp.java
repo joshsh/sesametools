@@ -30,8 +30,8 @@ public class DemoApp {
                 "http://localhost:8001",
                 8001);
 
-        server.getRouter().attach("/person", WebResource.class);
-        server.getRouter().attach("/graph", GraphResource.class);
+        server.getHost().attach("/person", WebResource.class);
+        server.getHost().attach("/graph", GraphResource.class);
         server.getHost().attach("/sparql", new SparqlResource());
 
         server.start();
