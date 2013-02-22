@@ -11,23 +11,23 @@
 	<description>Miscellaneous utilities for use with OpenRDF Sesame</description>
 
 	<modules>
-		<module>caching</module>
+		<module>caching-sail</module>
 		<module>common</module>
-		<module>constrained</module>
-		<module>deduplication</module>
+		<module>constrained-sail</module>
+		<module>deduplication-sail</module>
 		<!-- Remove JSON-LD from reactor until it is stabilised enough for parsing 
 			and writing tests to work consistently <module>jsonld</module> -->
 		<module>linked-data-server</module>
-		<module>mappingsail</module>
+		<module>mapping-sail</module>
 		<module>nquads</module>
 		<module>rdfjson</module>
-		<module>rdftransaction</module>
-		<module>readonly</module>
-		<module>replay</module>
-		<module>reposail</module>
+		<module>rdf-transaction-sail</module>
+		<module>readonly-sail</module>
+		<module>replay-sail</module>
+		<module>repository-sail</module>
 		<module>sesamize</module>
 		<module>uritranslator</module>
-		<module>writeonly</module>
+		<module>writeonly-sail</module>
 	</modules>
 
 	<properties>

@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>deduplication</artifactId>
+    <artifactId>caching-sail</artifactId>
     <packaging>jar</packaging>
-    <name>DeduplicationSail</name>
-    <description>A Sail implementation which avoids duplicate statements</description>
+    <name>CachingSail</name>
+    <description>An in-memory cache for Sail data</description>
 
     <parent>
         <groupId>net.fortytwo.sesametools</groupId>
@@ -24,18 +24,19 @@
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-sail-api</artifactId>
+            <artifactId>sesame-sail-memory</artifactId>
         </dependency>
 
         <!-- test dependencies -->
         <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-sail-memory</artifactId>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>net.fortytwo.sesametools</groupId>
+            <artifactId>replay-sail</artifactId>
+            <version>${sesametools.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

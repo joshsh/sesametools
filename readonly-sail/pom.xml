@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>mappingsail</artifactId>
+    <artifactId>readonly-sail</artifactId>
     <packaging>jar</packaging>
-    <name>MappingSail</name>
-    <description>A Sail which translates between two URI spaces</description>
+    <name>ReadOnlySail</name>
+    <description>A read-only Sail implementation</description>
 
     <parent>
         <groupId>net.fortytwo.sesametools</groupId>
