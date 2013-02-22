@@ -26,7 +26,7 @@
 		<module>replay-sail</module>
 		<module>repository-sail</module>
 		<module>sesamize</module>
-		<module>uritranslator</module>
+		<module>uri-translator</module>
 		<module>writeonly-sail</module>
 	</modules>
 

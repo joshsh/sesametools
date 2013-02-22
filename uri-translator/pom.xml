@@ -2,15 +2,18 @@
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>sesametools-all</artifactId>
-		<groupId>net.fortytwo.sesametools</groupId>
-		<version>1.7-SNAPSHOT</version>
-	</parent>
-	<artifactId>uritranslator</artifactId>
+	<artifactId>uri-translator</artifactId>
 	<name>URI Translator</name>
 	<url>http://fortytwo.net/projects/sesametools</url>
+
+    <parent>
+        <groupId>net.fortytwo.sesametools</groupId>
+        <artifactId>sesametools-all</artifactId>
+        <version>1.7-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
 	<dependencies>
 		<dependency>
