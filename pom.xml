@@ -43,18 +43,19 @@
             <id>joshsh</id>
         </developer>
         <developer>
-            <id>p_ansell</id>
+            <id>ansell</id>
             <email>p_ansell@yahoo.com</email>
             <name>Peter Ansell</name>
+            <url>https://github.com/ansell</url>
         </developer>
     </developers>
 
     <properties>
         <sesametools.version>1.7-SNAPSHOT</sesametools.version>
         <sesame.version>2.6.10</sesame.version>
-        <slf4j.version>1.6.6</slf4j.version>
-        <junit.version>4.10</junit.version>
-        <restlet.version>2.1-RC5</restlet.version>
+        <slf4j.version>1.7.2</slf4j.version>
+        <junit.version>4.11</junit.version>
+        <restlet.version>2.1.1</restlet.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
