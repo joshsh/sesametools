@@ -109,6 +109,7 @@ public class SingleContextSailTest {
             } finally {
                 iter.close();
             }
+            c.rollback();
         } finally {
             c.close();
         }

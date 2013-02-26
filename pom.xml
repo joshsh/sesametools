@@ -43,21 +43,26 @@
             <id>joshsh</id>
         </developer>
         <developer>
-            <id>p_ansell</id>
+            <id>ansell</id>
             <email>p_ansell@yahoo.com</email>
             <name>Peter Ansell</name>
+            <url>https://github.com/ansell</url>
         </developer>
     </developers>
 
     <properties>
         <sesametools.version>1.7-SNAPSHOT</sesametools.version>
         <sesame.version>2.6.10</sesame.version>
-        <slf4j.version>1.6.6</slf4j.version>
-        <junit.version>4.10</junit.version>
-        <restlet.version>2.1-RC5</restlet.version>
+        <slf4j.version>1.7.2</slf4j.version>
+        <junit.version>4.11</junit.version>
+        <restlet.version>2.1.1</restlet.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+
+	<prerequisites>
+		<maven>2.2.1</maven>
+	</prerequisites>
 
 	<modules>
 		<module>caching-sail</module>
@@ -212,7 +217,7 @@
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
-				<version>2.1</version>
+				<version>2.4</version>
 			</dependency>
 
 			<dependency>
@@ -230,7 +235,7 @@
 			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
-				<version>1.2.16</version>
+				<version>1.2.17</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -256,7 +261,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.12</version>
+					<version>2.13</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -273,7 +278,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>2.1.2</version>
+					<version>2.2</version>
 					<executions>
 						<execution>
 							<id>attach-source</id>
@@ -306,14 +311,34 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.5.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.7</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
 					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
 
 	<repositories>
-		<repository>
+ 		<repository>
 			<id>fortytwo</id>
 			<name>fortytwo.net Maven repository</name>
 			<url>http://fortytwo.net/maven2</url>
@@ -330,55 +355,10 @@
 			</snapshots>
 		</repository>
 		<repository>
-			<id>aduna-opensource.snapshots</id>
-			<name>Aduna snapshot repository</name>
-			<url>http://repo.aduna-software.org/maven2/snapshots</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
 			<id>maven-restlet</id>
 			<name>Public online Restlet repository</name>
 			<url>http://maven.restlet.org</url>
 		</repository>
 	</repositories>
-
-	<profiles>
-		<profile>
-			<id>fortytwonet-deploy</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<distributionManagement>
-				<repository>
-					<id>fortytwo</id>
-					<name>fortytwo.net Maven repository</name>
-					<url>file:///mnt/repository</url>
-				</repository>
-			</distributionManagement>
-		</profile>
-		<profile>
-			<id>metadatanet-deploy</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<distributionManagement>
-				<repository>
-					<id>maenad-releases</id>
-					<name>maenad-releases</name>
-					<url>http://maven.metadata.net/artifactory/libs-releases-local</url>
-				</repository>
-				<snapshotRepository>
-					<id>maenad-snapshots</id>
-					<name>maenad-snapshots</name>
-					<url>http://maven.metadata.net/artifactory/libs-snapshots-local</url>
-				</snapshotRepository>
-			</distributionManagement>
-		</profile>
-	</profiles>
 
 </project>
