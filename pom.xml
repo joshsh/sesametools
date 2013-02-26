@@ -314,6 +314,11 @@
 	</build>
 
 	<repositories>
+ 		<repository>
+			<id>fortytwo</id>
+			<name>fortytwo.net Maven repository</name>
+			<url>http://fortytwo.net/maven2</url>
+		</repository>
 		<repository>
 			<id>aduna-opensource.releases</id>
 			<name>Aduna repository</name>
