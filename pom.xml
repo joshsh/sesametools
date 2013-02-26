@@ -60,6 +60,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+	<prerequisites>
+		<maven>2.2.1</maven>
+	</prerequisites>
+
 	<modules>
 		<module>caching-sail</module>
 		<module>common</module>
