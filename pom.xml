@@ -1,14 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>net.fortytwo.sesametools</groupId>
 	<artifactId>sesametools-all</artifactId>
 	<version>1.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>SesameTools</name>
 	<description>Miscellaneous utilities for use with OpenRDF Sesame</description>
+    <url>https://github.com/joshsh/sesametools</url>
+
+    <issueManagement>
+        <url>https://github.com/joshsh/sesametools/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/joshsh/sesametools</url>
+        <connection>scm:git:git://github.com/joshsh/sesametools.git</connection>
+        <developerConnection>scm:git:git@github.com:joshsh/sesametools.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <email>josh@fortytwo.net</email>
+            <name>Joshua Shinavier</name>
+            <url>https://fortytwo.net</url>
+            <id>joshsh</id>
+        </developer>
+        <developer>
+            <id>p_ansell</id>
+            <email>p_ansell@yahoo.com</email>
+            <name>Peter Ansell</name>
+        </developer>
+    </developers>
+
+    <properties>
+        <sesametools.version>1.7-SNAPSHOT</sesametools.version>
+        <sesame.version>2.6.10</sesame.version>
+        <slf4j.version>1.6.6</slf4j.version>
+        <junit.version>4.10</junit.version>
+        <restlet.version>2.1-RC5</restlet.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
 
 	<modules>
 		<module>caching-sail</module>
@@ -29,16 +73,6 @@
 		<module>uri-translator</module>
 		<module>writeonly-sail</module>
 	</modules>
-
-	<properties>
-		<sesametools.version>1.7-SNAPSHOT</sesametools.version>
-		<sesame.version>2.6.10</sesame.version>
-		<slf4j.version>1.6.6</slf4j.version>
-		<junit.version>4.10</junit.version>
-		<restlet.version>2.1-RC5</restlet.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	</properties>
 
 	<dependencyManagement>
 		<dependencies>
