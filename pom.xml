@@ -90,22 +90,22 @@
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>common</artifactId>
-                <version>${sesametools.version}</version>
+                <version>1.7-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>mapping-sail</artifactId>
-                <version>${sesametools.version}</version>
+                <version>1.7-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>nquads</artifactId>
-                <version>${sesametools.version}</version>
+                <version>1.7-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>rdfjson</artifactId>
-                <version>${sesametools.version}</version>
+                <version>1.7-SNAPSHOT</version>
             </dependency>
 
 			<!-- OpenRDF Sesame -->
