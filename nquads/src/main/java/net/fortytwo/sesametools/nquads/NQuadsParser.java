@@ -56,7 +56,7 @@ public class NQuadsParser extends ModifiedNTriplesParser {
 
     @Override
     public RDFFormat getRDFFormat() {
-        return NQuadsFormat.NQUADS;
+        return RDFFormat.NQUADS;
     }
 
     @Override
@@ -118,34 +118,55 @@ public class NQuadsParser extends ModifiedNTriplesParser {
 
     private int parseQuad(int c)
             throws IOException, RDFParseException, RDFHandlerException {
-        c = parseSubject(c);
-
-        c = skipWhitespace(c);
-
-        c = parsePredicate(c);
-
-        c = skipWhitespace(c);
-
-        c = parseObject(c);
-
-        c = skipWhitespace(c);
-
-        // Context is not required
-        if (c != '.') {
-            c = parseContext(c);
+        
+        boolean ignoredAnError = false;
+        try
+        {
+            c = parseSubject(c);
+    
             c = skipWhitespace(c);
+    
+            c = parsePredicate(c);
+    
+            c = skipWhitespace(c);
+    
+            c = parseObject(c);
+    
+            c = skipWhitespace(c);
+    
+            // Context is not required
+            if (c != '.') {
+                c = parseContext(c);
+                c = skipWhitespace(c);
+            }
+            if (c == -1) {
+                throwEOFException();
+            } else if (c != '.') {
+                reportFatalError("Expected '.', found: " + (char) c);
+            }
+    
+            c = assertLineTerminates(c);
         }
-        if (c == -1) {
-            throwEOFException();
-        } else if (c != '.') {
-            reportFatalError("Expected '.', found: " + (char) c);
+        catch(RDFParseException rdfpe)
+        {
+            if(stopAtFirstError())
+            {
+                throw rdfpe;
+            }
+            else
+            {
+                ignoredAnError = true;
+            }
         }
-
+        
         c = skipLine(c);
 
-        Statement st = createStatement(subject, predicate, object, context);
-        rdfHandler.handleStatement(st);
-
+        if(!ignoredAnError)
+        {
+            Statement st = createStatement(subject, predicate, object, context);
+            rdfHandler.handleStatement(st);
+        }
+        
         subject = null;
         predicate = null;
         object = null;

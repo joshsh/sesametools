@@ -1,47 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
 	<groupId>net.fortytwo.sesametools</groupId>
 	<artifactId>sesametools-all</artifactId>
-	<version>1.6</version>
-	<packaging>pom</packaging>
+    <version>1.7</version>
+    <packaging>pom</packaging>
 	<name>SesameTools</name>
 	<description>Miscellaneous utilities for use with OpenRDF Sesame</description>
+    <url>https://github.com/joshsh/sesametools</url>
+
+    <issueManagement>
+        <url>https://github.com/joshsh/sesametools/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>git@github.com:joshsh/sesametools.git</url>
+        <connection>scm:git:git@github.com:joshsh/sesametools.git</connection>
+        <developerConnection>scm:git:git@github.com:joshsh/sesametools.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>joshsh</id>
+            <name>Joshua Shinavier</name>
+            <email>josh@fortytwo.net</email>
+            <url>http://fortytwo.net</url>
+        </developer>
+        <developer>
+            <id>ansell</id>
+            <name>Peter Ansell</name>
+            <email>p_ansell@yahoo.com</email>
+            <url>https://github.com/ansell</url>
+        </developer>
+    </developers>
+
+    <properties>
+        <sesametools.version>1.7-SNAPSHOT</sesametools.version>
+        <sesame.version>2.6.10</sesame.version>
+        <slf4j.version>1.7.2</slf4j.version>
+        <junit.version>4.11</junit.version>
+        <restlet.version>2.1.1</restlet.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+	<prerequisites>
+		<maven>2.2.1</maven>
+	</prerequisites>
 
 	<modules>
-		<module>caching</module>
 		<module>common</module>
-		<module>constrained</module>
-		<module>deduplication</module>
-		<!-- Remove JSON-LD from reactor until it is stabilised enough for parsing 
-			and writing tests to work consistently <module>jsonld</module> -->
-		<module>linked-data-server</module>
-		<module>mappingsail</module>
-		<module>nquads</module>
-		<module>rdfjson</module>
-		<module>rdftransaction</module>
-		<module>readonly</module>
-		<module>replay</module>
-		<module>reposail</module>
-		<module>sesamize</module>
-		<module>uritranslator</module>
-		<module>writeonly</module>
+        <module>caching-sail</module>
+        <module>constrained-sail</module>
+        <module>deduplication-sail</module>
+        <!-- Remove JSON-LD from reactor until it is stabilised enough for parsing
+             and writing tests to work consistently <module>jsonld</module> -->
+        <module>linked-data-server</module>
+        <module>mapping-sail</module>
+        <module>nquads</module>
+        <module>rdf-transaction-sail</module>
+        <module>rdfjson</module>
+        <module>readonly-sail</module>
+        <module>replay-sail</module>
+        <module>repository-sail</module>
+        <module>sesamize</module>
+        <module>uri-translator</module>
+        <module>writeonly-sail</module>
 	</modules>
-
-	<properties>
-		<sesametools.version>1.6</sesametools.version>
-		<sesame.version>2.6.3</sesame.version>
-		<slf4j.version>1.6.4</slf4j.version>
-		<junit.version>4.10</junit.version>
-		<restlet.version>2.1-RC3</restlet.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	</properties>
 
 	<dependencyManagement>
 		<dependencies>
+            <!-- SesameTools -->
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>common</artifactId>
+                <version>1.7</version>
+            </dependency>
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>mapping-sail</artifactId>
+                <version>1.7</version>
+            </dependency>
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>nquads</artifactId>
+                <version>1.7</version>
+            </dependency>
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>rdfjson</artifactId>
+                <version>1.7</version>
+            </dependency>
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>replay-sail</artifactId>
+                <version>1.7</version>
+            </dependency>
+
 			<!-- OpenRDF Sesame -->
 			<dependency>
 				<groupId>org.openrdf.sesame</groupId>
@@ -173,7 +243,7 @@
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
-				<version>2.1</version>
+				<version>2.4</version>
 			</dependency>
 
 			<dependency>
@@ -191,7 +261,7 @@
 			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
-				<version>1.2.16</version>
+				<version>1.2.17</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -208,7 +278,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.3.2</version>
+					<version>2.5.1</version>
 					<configuration>
 						<source>1.6</source>
 						<target>1.6</target>
@@ -217,7 +287,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.12</version>
+					<version>2.13</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -234,7 +304,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>2.1.2</version>
+					<version>2.2</version>
 					<executions>
 						<execution>
 							<id>attach-source</id>
@@ -267,22 +337,48 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.5.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.7</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
 					<version>2.4</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
 
 	<repositories>
-		<repository>
+ 		<repository>
 			<id>fortytwo</id>
 			<name>fortytwo.net Maven repository</name>
 			<url>http://fortytwo.net/maven2</url>
 		</repository>
 		<repository>
-			<id>aduna-repo</id>
+			<id>aduna-opensource.releases</id>
 			<name>Aduna repository</name>
 			<url>http://repo.aduna-software.org/maven2/releases</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>maven-restlet</id>
@@ -290,36 +386,5 @@
 			<url>http://maven.restlet.org</url>
 		</repository>
 	</repositories>
-
-	<profiles>
-		<profile>
-			<id>fortytwonet-deploy</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<distributionManagement>
-				<repository>
-					<id>fortytwo</id>
-					<name>fortytwo.net Maven repository</name>
-					<url>file:///mnt/repository</url>
-				</repository>
-			</distributionManagement>
-		</profile>
-		<profile>
-			<id>metadatanet-deploy</id>
-			<distributionManagement>
-				<repository>
-					<id>maenad-releases</id>
-					<name>maenad-releases</name>
-					<url>http://maven.metadata.net/artifactory/libs-releases-local</url>
-				</repository>
-				<snapshotRepository>
-					<id>maenad-snapshots</id>
-					<name>maenad-snapshots</name>
-					<url>http://maven.metadata.net/artifactory/libs-snapshots-local</url>
-				</snapshotRepository>
-			</distributionManagement>
-		</profile>
-	</profiles>
 
 </project>

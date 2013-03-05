@@ -34,4 +34,16 @@ public class SimpleDatasetImpl implements Dataset {
     public Set<URI> getNamedGraphs() {
         return namedGraphs;
     }
+
+    @Override
+    public URI getDefaultInsertGraph() {
+        // FIXME: Implement me!
+        return null;
+    }
+
+    @Override
+    public Set<URI> getDefaultRemoveGraphs() {
+        // FIXME: Implement me!
+        return null;
+    }
 }

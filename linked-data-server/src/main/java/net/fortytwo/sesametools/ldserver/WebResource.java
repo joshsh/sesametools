@@ -13,6 +13,7 @@ import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
+import org.restlet.representation.Variant;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
@@ -41,7 +42,7 @@ public class WebResource extends ServerResource {
         InformationResource, NonInformationResource
     }
 
-    protected final String selfURI;
+    protected String selfURI;
 
     private String hostIdentifier;
     private String baseRef;
@@ -53,10 +54,19 @@ public class WebResource extends ServerResource {
     private URI datasetURI;
 
     public WebResource() throws Exception {
+        super();
+
+        getVariants().addAll(RDFMediaTypes.getRDFVariants());
+    }
+
+    @Get
+    public Representation get(final Variant variant) {
         selfURI = this.getRequest().getResourceRef().toString();
 
         /*
         System.out.println("selfURI = " + selfURI);
+        System.out.println("request: " + this.getRequest());
+        Request request = this.getRequest();
         System.out.println("baseRef = " + request.getResourceRef().getBaseRef());
         System.out.println("host domain = " + request.getResourceRef().getHostDomain());
         System.out.println("host identifier = " + request.getResourceRef().getHostIdentifier());
@@ -84,15 +94,14 @@ public class WebResource extends ServerResource {
             datasetURI = LinkedDataServer.getInstance().getDatasetURI();
             sail = LinkedDataServer.getInstance().getSail();
         }
-    }
 
-    @Get
-    public Representation represent(final Representation entity) {
+        MediaType type = variant.getMediaType();
+
         switch (webResourceCategory) {
             case InformationResource:
                 return representInformationResource();
             case NonInformationResource:
-                return representNonInformationResource(entity);
+                return representNonInformationResource(type);
             default:
                 throw new IllegalStateException("no such resource type: " + webResourceCategory);
         }
@@ -108,10 +117,15 @@ public class WebResource extends ServerResource {
         }
     }
 
-    private Representation representNonInformationResource(final Representation entity) {
-        MediaType type = entity.getMediaType();
+    private Representation representNonInformationResource(final MediaType type) {
         RDFFormat format = RDFMediaTypes.findRdfFormat(type);
+        if (null == format) {
+            throw new IllegalStateException("no RDF format for media type " + type);
+        }
         String suffix = RDFMediaTypes.findSuffix(format);
+        if (null == suffix) {
+            throw new IllegalStateException("no suffix for RDF format " + type);
+        }
 
         getResponse().redirectSeeOther(selfURI + "." + suffix);
 

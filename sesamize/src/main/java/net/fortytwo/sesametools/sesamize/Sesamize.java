@@ -2,7 +2,6 @@ package net.fortytwo.sesametools.sesamize;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
-import net.fortytwo.sesametools.nquads.NQuadsFormat;
 import org.apache.commons.io.IOUtils;
 import org.openrdf.model.Resource;
 import org.openrdf.query.BindingSet;
@@ -56,10 +55,11 @@ public class Sesamize {
     private static boolean quiet;
 
     static {
-        RDFFormat.register(NQuadsFormat.NQUADS);
+        // Note: this may no longer be necessary
+        RDFFormat.register(RDFFormat.NQUADS);
     }
     
-    private enum Command {
+    private enum Subcommand {
         CONSTRUCT("construct"),
         DUMP("dump"),
         IMPORT("import"),
@@ -68,12 +68,12 @@ public class Sesamize {
 
         private final String name;
 
-        private Command(final String name) {
+        private Subcommand(final String name) {
             this.name = name;
         }
 
-        public static Command lookup(final String name) {
-            for (Command c : Command.values()) {
+        public static Subcommand lookup(final String name) {
+            for (Subcommand c : Subcommand.values()) {
                 if (c.name.equals(name)) {
                     return c;
                 }
@@ -84,7 +84,7 @@ public class Sesamize {
     }
 
     private static void printUsage() {
-        System.out.println("Usage:  sesamize [options] command [arguments]");
+        System.out.println("Usage:  sesamize [options] subcommand [arguments]");
         System.out.println("Options:\n"
                 + "  -h           Print this help and exit\n"
                 + "  -q           Suppress normal output\n"
@@ -108,7 +108,7 @@ public class Sesamize {
         SesamizeArgs a = new SesamizeArgs(Arrays.copyOfRange(args, 1, args.length));
         //Args a = new Args(args);
         //System.out.println("command = " + args[0]);
-        Command c = Command.lookup(args[0]);
+        Subcommand c = Subcommand.lookup(args[0]);
 
         if (null == c) {
             badUsage();
@@ -146,7 +146,7 @@ public class Sesamize {
         quiet = false;
         boolean showVersion = false, showHelp = false;
         //File inputFile = null;
-        Command command;
+        Subcommand subcommand;
 
         // Long options are available but are not advertised.
         LongOpt[] longOptions = {
@@ -190,9 +190,9 @@ public class Sesamize {
 
             //inputFile = new File(args[i]);
             System.out.println("a -> " + args[i]);
-            command = Command.lookup(args[i].toLowerCase());
-            if (null == command) {
-                System.out.println("found command: " + command);
+            subcommand = Subcommand.lookup(args[i].toLowerCase());
+            if (null == subcommand) {
+                System.out.println("found command: " + subcommand);
                 printUsage();
                 System.exit(1);
             }

@@ -9,7 +9,6 @@ import org.openrdf.sail.Sail;
 import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.data.Protocol;
-import org.restlet.routing.Router;
 import org.restlet.routing.VirtualHost;
 
 /**
@@ -22,7 +21,7 @@ public class LinkedDataServer {
     private final Sail sail;
     private final Component component;
     private final URI datasetURI;
-    private final Router router;
+    //private final Router router;
     private final Context context;
     private final VirtualHost host;
 
@@ -65,15 +64,15 @@ public class LinkedDataServer {
         if (!internalBaseURI.equals(externalBaseURI)) {
             RewriteRule outboundRewriter = new RewriteRule() {
                 public URI rewrite(final URI original) {
-                    System.out.println("outbound: " + original);
+                    //System.out.println("outbound: " + original);
 
                     if (null == original) {
                         return null;
                     } else {
                         String s = original.stringValue();
-                        System.out.println("\t--> " + (s.startsWith(internalBaseURI)
-                                ? vf.createURI(s.replace(internalBaseURI, externalBaseURI))
-                                : original));
+                        //System.out.println("\t--> " + (s.startsWith(internalBaseURI)
+                        //        ? vf.createURI(s.replace(internalBaseURI, externalBaseURI))
+                        //        : original));
                         return s.startsWith(internalBaseURI)
                                 ? vf.createURI(s.replace(internalBaseURI, externalBaseURI))
                                 : original;
@@ -83,14 +82,14 @@ public class LinkedDataServer {
 
             RewriteRule inboundRewriter = new RewriteRule() {
                 public URI rewrite(final URI original) {
-                    System.out.println("inbound: " + original);
+                    //System.out.println("inbound: " + original);
                     if (null == original) {
                         return null;
                     } else {
                         String s = original.stringValue();
-                        System.out.println("\t--> " + (s.startsWith(externalBaseURI)
-                                ? vf.createURI(s.replace(externalBaseURI, internalBaseURI))
-                                : original));
+                        //System.out.println("\t--> " + (s.startsWith(externalBaseURI)
+                        //        ? vf.createURI(s.replace(externalBaseURI, internalBaseURI))
+                        //        : original));
                         return s.startsWith(externalBaseURI)
                                 ? vf.createURI(s.replace(externalBaseURI, internalBaseURI))
                                 : original;
@@ -122,21 +121,24 @@ public class LinkedDataServer {
 
         host = component.getDefaultHost();
 
-        router = new Router(component.getContext());
+        //router = new Router(component.getContext());
         context = component.getContext();
     }
 
+    /*
     public Router getRouter() {
         return router;
-    }
+    }*/
 
     public Context getContext() {
         return context;
     }
 
+    /*
     public Component getComponent() {
         return component;
     }
+    */
 
     public VirtualHost getHost() {
         return host;

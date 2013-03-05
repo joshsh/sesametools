@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>jsonld</artifactId>
-    <version>1.6</version>
+    <version>1.7</version>
     <packaging>jar</packaging>
     <name>JSON-LD utilities</name>
     <description>Writer and parser for the JSON-LD format</description>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>net.fortytwo.sesametools</groupId>
         <artifactId>sesametools-all</artifactId>
-        <version>1.6</version>
+        <version>1.7</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -35,7 +35,6 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>common</artifactId>
-            <version>${sesametools.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
@@ -63,21 +62,16 @@
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-turtle</artifactId>
             <version>${sesame.version}</version>
-            <type>jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-            <type>jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
-            <type>jar</type>
             <scope>test</scope>
         </dependency>
     </dependencies>

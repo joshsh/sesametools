@@ -1,4 +1,3 @@
-
 package net.fortytwo.sesametools;
 
 import info.aduna.iteration.CloseableIteration;
@@ -12,19 +11,20 @@ import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
 import org.openrdf.query.algebra.UpdateExpr;
+import org.openrdf.query.impl.DatasetImpl;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 
 
 /**
- * A SailConnection which treats the wildcard context as a single, specific
- * context, and disallows access to all other contexts, including the null
- * context.  No restriction is imposed on namespace manipulation.
+ * A SailConnection which treats the wildcard context as a single, specific context,
+ * and disallows read and write access to all other contexts, including the default context.
+ * Namespaces may be set and retrieved without restriction.
  *
- * @author josh
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
-public class SingleContextSailConnection implements SailConnection {
+class SingleContextSailConnection implements SailConnection {
     private SailConnection baseSailConnection;
     private Resource singleContext;
 
@@ -39,7 +39,7 @@ public class SingleContextSailConnection implements SailConnection {
             baseSailConnection.addStatement(subj, pred, obj, singleContext);
         } else {
             for (Resource context : contexts) {
-                if (context.equals(singleContext)) {
+                if (null != context && context.equals(singleContext)) {
                     baseSailConnection.addStatement(subj, pred, obj, singleContext);
                     break;
                 }
@@ -52,7 +52,7 @@ public class SingleContextSailConnection implements SailConnection {
             baseSailConnection.clear(singleContext);
         } else {
             for (Resource context : contexts) {
-                if (context.equals(singleContext)) {
+                if (null != context && context.equals(singleContext)) {
                     baseSailConnection.clear(singleContext);
                     break;
                 }
@@ -75,15 +75,31 @@ public class SingleContextSailConnection implements SailConnection {
     public CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluate(
             final TupleExpr tupleExpr, final Dataset dataSet, final BindingSet bindingSet, final boolean includeInferred)
             throws SailException {
-// TODO Auto-generated method stub
-        return null;
+        // ignore the given dataset and restrict everything to the single context we have been setup with
+        DatasetImpl singleContextDataset = new DatasetImpl();
+        if (singleContext instanceof URI) {
+            singleContextDataset.setDefaultInsertGraph((URI) singleContext);
+            singleContextDataset.addDefaultGraph((URI) singleContext);
+            singleContextDataset.addNamedGraph((URI) singleContext);
+            singleContextDataset.addDefaultRemoveGraph((URI) singleContext);
+        }
+
+        return baseSailConnection.evaluate(tupleExpr, singleContextDataset, bindingSet, includeInferred);
     }
 
-    @Override
-	public void executeUpdate(UpdateExpr arg0, Dataset arg1, BindingSet arg2,
-			boolean arg3) throws SailException {
-    	baseSailConnection.executeUpdate(arg0, arg1, arg2, arg3);
-	}
+    public void executeUpdate(final UpdateExpr updateExpr, final Dataset dataSet, final BindingSet bindingSet,
+                              final boolean includeInferred) throws SailException {
+        // ignore the given dataset and restrict everything to the single context we have been setup with
+        DatasetImpl singleContextDataset = new DatasetImpl();
+        if (singleContext instanceof URI) {
+            singleContextDataset.setDefaultInsertGraph((URI) singleContext);
+            singleContextDataset.addDefaultGraph((URI) singleContext);
+            singleContextDataset.addNamedGraph((URI) singleContext);
+            singleContextDataset.addDefaultRemoveGraph((URI) singleContext);
+        }
+
+        baseSailConnection.executeUpdate(updateExpr, singleContextDataset, bindingSet, includeInferred);
+    }
 
     public CloseableIteration<? extends Resource, SailException> getContextIDs()
             throws SailException {
@@ -106,7 +122,7 @@ public class SingleContextSailConnection implements SailConnection {
             return baseSailConnection.getStatements(subj, pred, obj, includeInferred, singleContext);
         } else {
             for (Resource context : contexts) {
-                if (context.equals(singleContext)) {
+                if (null != context && context.equals(singleContext)) {
                     return baseSailConnection.getStatements(subj, pred, obj, includeInferred, singleContext);
                 }
             }
@@ -129,7 +145,7 @@ public class SingleContextSailConnection implements SailConnection {
             baseSailConnection.removeStatements(subj, pred, obj, singleContext);
         } else {
             for (Resource context : contexts) {
-                if (context.equals(singleContext)) {
+                if (null != context && context.equals(singleContext)) {
                     baseSailConnection.removeStatements(subj, pred, obj, singleContext);
                     break;
                 }
@@ -150,7 +166,7 @@ public class SingleContextSailConnection implements SailConnection {
             return baseSailConnection.size(singleContext);
         } else {
             for (Resource context : contexts) {
-                if (context.equals(singleContext)) {
+                if (null != context && context.equals(singleContext)) {
                     return baseSailConnection.size(singleContext);
                 }
             }
