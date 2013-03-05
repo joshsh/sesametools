@@ -22,7 +22,7 @@ SesameTools is a collection of general-purpose components for use with the [Sesa
 * **URI Translator**: a utility which runs SPARQL-1.1 Update queries against a Repository to convert URIs between different prefixes
 * **WriteOnlySail**: a write-only Sail implementation
 
-See also the [Sesametools API](http://fortytwo.net/projects/sesametools/api/latest/).
+See also the [Sesametools API](http://fortytwo.net/projects/sesametools/api/latest/index.html).
 
 For projects which use Maven, SesameTools snapshots and release packages can be imported by adding configuration like the following to the project's POM:
 
