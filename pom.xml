@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -10,7 +9,7 @@
 
 	<groupId>net.fortytwo.sesametools</groupId>
 	<artifactId>sesametools-all</artifactId>
-	<version>1.7-SNAPSHOT</version>
+	<version>1.7</version>
 	<packaging>pom</packaging>
 	<name>SesameTools</name>
 	<description>Miscellaneous utilities for use with OpenRDF Sesame</description>
@@ -90,27 +89,27 @@
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>common</artifactId>
-                <version>1.7-SNAPSHOT</version>
+                <version>1.7</version>
             </dependency>
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>mapping-sail</artifactId>
-                <version>1.7-SNAPSHOT</version>
+                <version>1.7</version>
             </dependency>
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>nquads</artifactId>
-                <version>1.7-SNAPSHOT</version>
+                <version>1.7</version>
             </dependency>
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>rdfjson</artifactId>
-                <version>1.7-SNAPSHOT</version>
+                <version>1.7</version>
             </dependency>
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>replay-sail</artifactId>
-                <version>1.7-SNAPSHOT</version>
+                <version>1.7</version>
             </dependency>
 
 			<!-- OpenRDF Sesame -->
