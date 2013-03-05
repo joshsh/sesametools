@@ -86,6 +86,28 @@
 
 	<dependencyManagement>
 		<dependencies>
+            <!-- SesameTools -->
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>common</artifactId>
+                <version>${sesametools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>mapping-sail</artifactId>
+                <version>${sesametools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>nquads</artifactId>
+                <version>${sesametools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>rdfjson</artifactId>
+                <version>${sesametools.version}</version>
+            </dependency>
+
 			<!-- OpenRDF Sesame -->
 			<dependency>
 				<groupId>org.openrdf.sesame</groupId>

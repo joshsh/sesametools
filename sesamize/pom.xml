@@ -20,13 +20,12 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>nquads</artifactId>
-            <version>${sesametools.version}</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>rdfjson</artifactId>
-            <version>${sesametools.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-repository-sail</artifactId>
@@ -102,6 +101,7 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

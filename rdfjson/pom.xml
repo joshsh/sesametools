@@ -20,7 +20,6 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>common</artifactId>
-            <version>${sesametools.version}</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
@@ -39,6 +38,12 @@
 
         <!-- test dependencies -->
         <dependency>
+            <groupId>net.fortytwo.sesametools</groupId>
+            <artifactId>sesametools-rdfjson-test-resources</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
@@ -51,12 +56,6 @@
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-rdfxml</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.fortytwo.sesametools</groupId>
-            <artifactId>sesametools-rdfjson-test-resources</artifactId>
-            <version>1.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

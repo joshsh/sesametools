@@ -21,22 +21,18 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>common</artifactId>
-            <version>${sesametools.version}</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>mapping-sail</artifactId>
-            <version>${sesametools.version}</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>nquads</artifactId>
-            <version>${sesametools.version}</version>
         </dependency>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>rdfjson</artifactId>
-            <version>${sesametools.version}</version>
         </dependency>
 
         <!-- Sesame -->
@@ -102,7 +98,6 @@
             <artifactId>org.restlet.ext.httpclient</artifactId>
         </dependency>
 
-        <!-- test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
