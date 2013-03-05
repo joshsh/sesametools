@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -10,8 +9,8 @@
 
 	<groupId>net.fortytwo.sesametools</groupId>
 	<artifactId>sesametools-all</artifactId>
-	<version>1.7</version>
-	<packaging>pom</packaging>
+    <version>1.7</version>
+    <packaging>pom</packaging>
 	<name>SesameTools</name>
 	<description>Miscellaneous utilities for use with OpenRDF Sesame</description>
     <url>https://github.com/joshsh/sesametools</url>
@@ -37,15 +36,15 @@
 
     <developers>
         <developer>
-            <email>josh@fortytwo.net</email>
-            <name>Joshua Shinavier</name>
-            <url>https://fortytwo.net</url>
             <id>joshsh</id>
+            <name>Joshua Shinavier</name>
+            <email>josh@fortytwo.net</email>
+            <url>http://fortytwo.net</url>
         </developer>
         <developer>
             <id>ansell</id>
-            <email>p_ansell@yahoo.com</email>
             <name>Peter Ansell</name>
+            <email>p_ansell@yahoo.com</email>
             <url>https://github.com/ansell</url>
         </developer>
     </developers>
@@ -86,6 +85,33 @@
 
 	<dependencyManagement>
 		<dependencies>
+            <!-- SesameTools -->
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>common</artifactId>
+                <version>1.7</version>
+            </dependency>
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>mapping-sail</artifactId>
+                <version>1.7</version>
+            </dependency>
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>nquads</artifactId>
+                <version>1.7</version>
+            </dependency>
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>rdfjson</artifactId>
+                <version>1.7</version>
+            </dependency>
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>replay-sail</artifactId>
+                <version>1.7</version>
+            </dependency>
+
 			<!-- OpenRDF Sesame -->
 			<dependency>
 				<groupId>org.openrdf.sesame</groupId>
