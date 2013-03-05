@@ -35,7 +35,6 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>replay-sail</artifactId>
-            <version>${sesametools.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

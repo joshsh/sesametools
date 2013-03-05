@@ -107,6 +107,11 @@
                 <artifactId>rdfjson</artifactId>
                 <version>1.7-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>net.fortytwo.sesametools</groupId>
+                <artifactId>replay-sail</artifactId>
+                <version>1.7-SNAPSHOT</version>
+            </dependency>
 
 			<!-- OpenRDF Sesame -->
 			<dependency>
