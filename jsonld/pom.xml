@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>jsonld</artifactId>
-    <version>1.7</version>
+    <version>1.7-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>JSON-LD utilities</name>
     <description>Writer and parser for the JSON-LD format</description>
@@ -14,7 +14,7 @@
     <parent>
         <groupId>net.fortytwo.sesametools</groupId>
         <artifactId>sesametools-all</artifactId>
-        <version>1.7</version>
+        <version>1.7-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

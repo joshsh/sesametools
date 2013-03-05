@@ -10,7 +10,7 @@
 
 	<groupId>net.fortytwo.sesametools</groupId>
 	<artifactId>sesametools-all</artifactId>
-	<version>1.7</version>
+	<version>1.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>SesameTools</name>
 	<description>Miscellaneous utilities for use with OpenRDF Sesame</description>
@@ -37,15 +37,15 @@
 
     <developers>
         <developer>
-            <email>josh@fortytwo.net</email>
-            <name>Joshua Shinavier</name>
-            <url>https://fortytwo.net</url>
             <id>joshsh</id>
+            <name>Joshua Shinavier</name>
+            <email>josh@fortytwo.net</email>
+            <url>http://fortytwo.net</url>
         </developer>
         <developer>
             <id>ansell</id>
-            <email>p_ansell@yahoo.com</email>
             <name>Peter Ansell</name>
+            <email>p_ansell@yahoo.com</email>
             <url>https://github.com/ansell</url>
         </developer>
     </developers>
