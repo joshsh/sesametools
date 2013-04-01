@@ -17,10 +17,6 @@
     <dependencies>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
-            <artifactId>nquads</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>rdfjson</artifactId>
         </dependency>
 

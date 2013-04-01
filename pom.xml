@@ -50,11 +50,12 @@
     </developers>
 
     <properties>
-        <sesametools.version>1.7-SNAPSHOT</sesametools.version>
-        <sesame.version>2.6.10</sesame.version>
+        <!--<sesametools.version>1.7-SNAPSHOT</sesametools.version>-->
+        <sesame.version>2.7.0-beta3-SNAPSHOT</sesame.version>
+        <restlet.version>2.1.1</restlet.version>
+        <log4j.version>1.2.17</log4j.version>
         <slf4j.version>1.7.2</slf4j.version>
         <junit.version>4.11</junit.version>
-        <restlet.version>2.1.1</restlet.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -72,7 +73,6 @@
              and writing tests to work consistently <module>jsonld</module> -->
         <module>linked-data-server</module>
         <module>mapping-sail</module>
-        <module>nquads</module>
         <module>rdf-transaction-sail</module>
         <module>rdfjson</module>
         <module>readonly-sail</module>
@@ -94,11 +94,6 @@
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>mapping-sail</artifactId>
-                <version>1.8-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>net.fortytwo.sesametools</groupId>
-                <artifactId>nquads</artifactId>
                 <version>1.8-SNAPSHOT</version>
             </dependency>
             <dependency>
@@ -188,6 +183,11 @@
 				<artifactId>sesame-rio-trix</artifactId>
 				<version>${sesame.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-rio-nquads</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
 			<dependency>
 				<groupId>org.openrdf.sesame</groupId>
 				<artifactId>sesame-rio-rdfxml</artifactId>
@@ -261,7 +261,7 @@
 			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
-				<version>1.2.17</version>
+				<version>${log4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>

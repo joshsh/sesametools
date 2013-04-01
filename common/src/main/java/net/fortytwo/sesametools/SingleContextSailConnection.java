@@ -87,6 +87,7 @@ class SingleContextSailConnection implements SailConnection {
         return baseSailConnection.evaluate(tupleExpr, singleContextDataset, bindingSet, includeInferred);
     }
 
+    /*
     public void executeUpdate(final UpdateExpr updateExpr, final Dataset dataSet, final BindingSet bindingSet,
                               final boolean includeInferred) throws SailException {
         // ignore the given dataset and restrict everything to the single context we have been setup with
@@ -99,7 +100,7 @@ class SingleContextSailConnection implements SailConnection {
         }
 
         baseSailConnection.executeUpdate(updateExpr, singleContextDataset, bindingSet, includeInferred);
-    }
+    }*/
 
     public CloseableIteration<? extends Resource, SailException> getContextIDs()
             throws SailException {

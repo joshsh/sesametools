@@ -50,8 +50,7 @@ public class CloseableGraphQueryResult implements GraphQueryResult {
     }
 
     @Override
-    public Map<String, String> getNamespaces()
-    {
+    public Map<String, String> getNamespaces() throws QueryEvaluationException {
         return result.getNamespaces();
     }
 
