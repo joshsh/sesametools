@@ -36,6 +36,11 @@
             <artifactId>sesame-sail-memory</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-repository-sail</artifactId>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
