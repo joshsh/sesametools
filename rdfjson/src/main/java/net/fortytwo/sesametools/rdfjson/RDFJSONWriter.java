@@ -1,11 +1,10 @@
 package net.fortytwo.sesametools.rdfjson;
 
 import net.fortytwo.sesametools.StatementComparator;
-
 import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.helpers.RDFWriterBase;
 import se.kmr.scam.rest.util.RDFJSON;
 
 import java.io.IOException;
@@ -21,7 +20,7 @@ import java.util.TreeSet;
  *
  * @author Joshua Shinavier (http://fortytwo.net).  Builds on code by Hannes Ebner
  */
-public class RDFJSONWriter implements RDFWriter {
+public class RDFJSONWriter extends RDFWriterBase {
 
     private final Writer writer;
     private Set<Statement> graph;

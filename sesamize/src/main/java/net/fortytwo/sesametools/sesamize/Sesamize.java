@@ -13,6 +13,7 @@ import org.openrdf.query.TupleQueryResult;
 import org.openrdf.query.resultio.TupleQueryResultWriter;
 import org.openrdf.query.resultio.sparqljson.SPARQLResultsJSONWriter;
 import org.openrdf.query.resultio.sparqlxml.SPARQLResultsXMLWriter;
+import org.openrdf.query.resultio.text.tsv.SPARQLResultsTSVWriter;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -320,7 +321,7 @@ public class Sesamize {
                 w = new SPARQLResultsXMLWriter(out);
                 break;
             case TAB:
-                w = new SPARQLResultsTabWriter(out);
+                w = new SPARQLResultsTSVWriter(out);
                 break;
             default:
                 throw new IllegalArgumentException("bad query result format: " + outFormat);

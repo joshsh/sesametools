@@ -6,6 +6,7 @@ import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.StackableSail;
+import org.openrdf.sail.helpers.SailBase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -16,7 +17,7 @@ import java.io.PrintStream;
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-public class RecorderSail implements StackableSail {
+public class RecorderSail extends SailBase implements StackableSail {
     private final Sail baseSail;
     private final ReplayConfiguration config;
     private final Handler<SailConnectionCall, SailException> queryHandler;
@@ -45,28 +46,31 @@ public class RecorderSail implements StackableSail {
         };
     }
 
+    @Override
     public void setDataDir(final File file) {
         baseSail.setDataDir(file);
     }
 
+    @Override
     public File getDataDir() {
         return baseSail.getDataDir();
     }
 
-    public void initialize() throws SailException {
+    protected void initializeInternal() throws SailException {
         baseSail.initialize();
     }
 
-    public void shutDown() throws SailException {
+    protected void shutDownInternal() throws SailException {
         baseSail.shutDown();
     }
 
+    @Override
     public boolean isWritable() throws SailException {
         return baseSail.isWritable();
     }
 
-    public SailConnection getConnection() throws SailException {
-        return new RecorderSailConnection(baseSail, config, queryHandler);
+    protected SailConnection getConnectionInternal() throws SailException {
+        return new RecorderSailConnection(this, baseSail, config, queryHandler);
     }
 
     public ValueFactory getValueFactory() {

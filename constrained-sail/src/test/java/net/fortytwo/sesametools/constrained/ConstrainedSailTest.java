@@ -62,6 +62,7 @@ public class ConstrainedSailTest extends TestCase {
 
         // Add a statement to each named analysis, below the ConstrainedSail
         sc = baseSail.getConnection();
+        sc.begin();
         sc.addStatement(RDF.TYPE, RDF.TYPE, RDF.TYPE, CONTEXT1_RW, CONTEXT2_R, CONTEXT3_W);
         sc.commit();
         assertEquals(3, count(sc.getStatements(RDF.TYPE, null, null, false)));
@@ -78,6 +79,7 @@ public class ConstrainedSailTest extends TestCase {
         assertEquals(1, count(sc.getStatements(RDF.TYPE, null, null, false, CONTEXT2_R)));
         assertEquals(0, count(sc.getStatements(RDF.TYPE, null, null, false, CONTEXT3_W)));
         // Wildcard remove of the added statements
+        sc.begin();
         sc.removeStatements(RDF.TYPE, null, null);
         sc.commit();
         // We still see the statement in the readable but non-writable named analysis
@@ -100,6 +102,7 @@ public class ConstrainedSailTest extends TestCase {
         // writable contexts for matching statements leads to a zero-length
         // array vararg argument, which then matches *all* statements).
         sc = constrainedSail.getConnection();
+        sc.begin();
         sc.removeStatements(RDF.TYPE, null, null);
         sc.commit();
         assertEquals(1, count(sc.getStatements(RDF.TYPE, null, null, false)));

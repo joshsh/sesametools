@@ -9,7 +9,7 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParseException;
-import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.helpers.RDFParserBase;
 import se.kmr.scam.rest.util.RDFJSON;
 
 import java.io.BufferedReader;
@@ -27,7 +27,7 @@ import java.util.Collection;
  * @author Joshua Shinavier (http://fortytwo.net).  Builds on code by Hannes Ebner
  */
 @SuppressWarnings("unused")
-public class RDFJSONParser implements RDFParser {
+public class RDFJSONParser extends RDFParserBase {
 
     private ValueFactory valueFactory;
     private RDFHandler rdfHandler;

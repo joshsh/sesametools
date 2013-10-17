@@ -45,10 +45,14 @@ public class SingleContextSailTest {
     @Test
     public void testStatementsInSpecialContextAreVisible() throws Exception {
         SailConnection bc = baseSail.getConnection();
-        bc.addStatement(THING1, RELATION1, THING2, SPECIAL_CONTEXT);
-        bc.addStatement(THING2, RELATION1, THING2, SPECIAL_CONTEXT);
-        bc.commit();
-        bc.close();
+        try {
+            bc.begin();
+            bc.addStatement(THING1, RELATION1, THING2, SPECIAL_CONTEXT);
+            bc.addStatement(THING2, RELATION1, THING2, SPECIAL_CONTEXT);
+            bc.commit();
+        } finally {
+            bc.close();
+        }
 
         assertEquals(2, countStatements(null, null, null, SPECIAL_CONTEXT));
         assertEquals(2, countStatements(null, null, null));
@@ -62,11 +66,15 @@ public class SingleContextSailTest {
     @Test
     public void testStatementsInOtherContextsAreInvisible() throws Exception {
         SailConnection bc = baseSail.getConnection();
-        bc.addStatement(THING1, RELATION1, THING2, SPECIAL_CONTEXT);
-        bc.addStatement(THING2, RELATION1, THING1, OTHER_CONTEXT);
-        bc.addStatement(THING2, RELATION1, THING2, (Resource) null);
-        bc.commit();
-        bc.close();
+        try {
+            bc.begin();
+            bc.addStatement(THING1, RELATION1, THING2, SPECIAL_CONTEXT);
+            bc.addStatement(THING2, RELATION1, THING1, OTHER_CONTEXT);
+            bc.addStatement(THING2, RELATION1, THING2, (Resource) null);
+            bc.commit();
+        } finally {
+            bc.close();
+        }
 
         assertEquals(1, countStatements(null, null, null, SPECIAL_CONTEXT));
         assertEquals(1, countStatements(null, null, null));
@@ -82,11 +90,15 @@ public class SingleContextSailTest {
     @Test
     public void canWriteIntoOnlySpecialContext() throws Exception {
         SailConnection c = sail.getConnection();
-        c.addStatement(THING1, RELATION1, THING2, SPECIAL_CONTEXT);
-        c.addStatement(THING2, RELATION1, THING1, OTHER_CONTEXT);
-        c.addStatement(THING2, RELATION1, THING2, (Resource) null);
-        c.commit();
-        c.close();
+        try {
+            c.begin();
+            c.addStatement(THING1, RELATION1, THING2, SPECIAL_CONTEXT);
+            c.addStatement(THING2, RELATION1, THING1, OTHER_CONTEXT);
+            c.addStatement(THING2, RELATION1, THING2, (Resource) null);
+            c.commit();
+        } finally {
+            c.close();
+        }
 
         assertEquals(1, countStatements(null, null, null));
     }
