@@ -75,7 +75,6 @@
         <module>linked-data-server</module>
         <module>mapping-sail</module>
         <module>rdf-transaction-sail</module>
-        <module>rdfjson</module>
         <module>readonly-sail</module>
         <module>replay-sail</module>
         <module>repository-sail</module>
