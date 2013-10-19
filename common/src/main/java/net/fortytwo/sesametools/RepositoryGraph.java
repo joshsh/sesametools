@@ -6,7 +6,6 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
@@ -15,31 +14,21 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * An adapter which wraps a Repository as a Graph
+ * An adapter which wraps a RepositoryConnection as a Graph
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class RepositoryGraph implements Graph {
     private static final boolean INFER = false;
 
-    private RepositoryConnection rc;
-    private ValueFactory vf;
+    private final RepositoryConnection rc;
 
-    public RepositoryGraph(final Repository repo) throws RepositoryException {
-        rc = repo.getConnection();
-        vf = repo.getValueFactory();
-    }
-
-    public void close() {
-        try {
-            rc.close();
-        } catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
+    public RepositoryGraph(final RepositoryConnection rc) throws RepositoryException {
+        this.rc = rc;
     }
 
     public ValueFactory getValueFactory() {
-        return vf;
+        return rc.getValueFactory();
     }
 
     public boolean add(Resource s, URI p, Value o, Resource... c) {
@@ -49,7 +38,7 @@ public class RepositoryGraph implements Graph {
             rc.commit();
             return true;
         } catch (RepositoryException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryGraphRuntimeException(e);
         }
     }
 
@@ -59,7 +48,7 @@ public class RepositoryGraph implements Graph {
         try {
             result = rc.getStatements(s, p, o, INFER, c);
         } catch (RepositoryException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryGraphRuntimeException(e);
         }
         return new RepositoryResultIterator(result);
     }
@@ -68,7 +57,7 @@ public class RepositoryGraph implements Graph {
         try {
             return (int) rc.size();
         } catch (RepositoryException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryGraphRuntimeException(e);
         }
     }
 
@@ -87,7 +76,7 @@ public class RepositoryGraph implements Graph {
                     result.close();
                 }
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new RepositoryGraphRuntimeException(e);
             }
         } else {
             return false;
@@ -114,7 +103,7 @@ public class RepositoryGraph implements Graph {
                     result.close();
                 }
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new RepositoryGraphRuntimeException(e);
             }
         }
 
@@ -130,7 +119,7 @@ public class RepositoryGraph implements Graph {
         try {
             rc.add(statement);
         } catch (RepositoryException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryGraphRuntimeException(e);
         }
 
         // the RepositoryConnection API does not provide an efficient means of knowing whether the repository was changed
@@ -143,7 +132,7 @@ public class RepositoryGraph implements Graph {
             try {
                 rc.remove(st.getSubject(), st.getPredicate(), st.getObject(), st.getContext());
             } catch (RepositoryException e) {
-                throw new RuntimeException(e);
+                throw new RepositoryGraphRuntimeException(e);
             }
         }
         // the RepositoryConnection API does not provide an efficient means of knowing whether a statement was removed
@@ -184,7 +173,7 @@ public class RepositoryGraph implements Graph {
         try {
             rc.clear();
         } catch (RepositoryException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryGraphRuntimeException(e);
         }
     }
 
@@ -199,7 +188,7 @@ public class RepositoryGraph implements Graph {
             try {
                 return result.hasNext();
             } catch (RepositoryException e) {
-                throw new RuntimeException(e);
+                throw new RepositoryGraphRuntimeException(e);
             }
         }
 
@@ -207,7 +196,7 @@ public class RepositoryGraph implements Graph {
             try {
                 return (Statement) result.next();
             } catch (RepositoryException e) {
-                throw new RuntimeException(e);
+                throw new RepositoryGraphRuntimeException(e);
             }
         }
 
@@ -215,8 +204,14 @@ public class RepositoryGraph implements Graph {
             try {
                 result.remove();
             } catch (RepositoryException e) {
-                throw new RuntimeException(e);
+                throw new RepositoryGraphRuntimeException(e);
             }
+        }
+    }
+
+    public class RepositoryGraphRuntimeException extends RuntimeException {
+        public RepositoryGraphRuntimeException(final Throwable cause) {
+            super(cause);
         }
     }
 }

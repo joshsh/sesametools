@@ -1873,7 +1873,8 @@ public class RdfListUtilTest
 
         Repository repo  = new SailRepository(new MemoryStore());
         repo.initialize();
-        RepositoryGraph g = new RepositoryGraph(repo);
+        RepositoryConnection rc = repo.getConnection();
+        RepositoryGraph g = new RepositoryGraph(rc);
         this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
                 this.testGraph);
         for (Statement s : this.testGraph) {
@@ -1884,12 +1885,7 @@ public class RdfListUtilTest
 
         assertEquals(7, this.testGraph.size());
         assertEquals(7, g.size());
-        RepositoryConnection rc = repo.getConnection();
-        try {
-            assertEquals(7, rc.size());
-        }   finally {
-            rc.close();
-        }
+        assertEquals(7, rc.size());
 
         // Now proceed with the rest of the test case, using the Repository-based Graph instead of the original
 
@@ -1998,8 +1994,8 @@ public class RdfListUtilTest
 
         assertEquals(RDF.NIL, restListMatchedStatement3.getObject());
 
-        // Close the Repository-based Graph, with its internal RepositoryConnection
+        // Close the connection
 
-        g.close();
+        rc.close();
     }
 }
