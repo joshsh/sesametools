@@ -70,8 +70,6 @@
         <module>caching-sail</module>
         <module>constrained-sail</module>
         <module>deduplication-sail</module>
-        <!-- Remove JSON-LD from reactor until it is stabilised enough for parsing
-             and writing tests to work consistently <module>jsonld</module> -->
         <module>linked-data-server</module>
         <module>mapping-sail</module>
         <module>rdf-transaction-sail</module>
