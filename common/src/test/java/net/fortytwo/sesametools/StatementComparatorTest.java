@@ -705,6 +705,97 @@ public class StatementComparatorTest
 		// Different literal values sort
 		assertTrue(testComparator.compare(statement11, statement3) < 0);
 		assertTrue(testComparator.compare(statement3, statement11) > 0);
+
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement4, statement5) < 0);
+		assertTrue(testComparator.compare(statement5, statement4) > 0);
+		// Same literal values sort one lang, other xsd:string
+		assertTrue(testComparator.compare(statement6, statement4) < 0);
+		assertTrue(testComparator.compare(statement4, statement6) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement4, statement7) < 0);
+		assertTrue(testComparator.compare(statement7, statement4) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement8, statement4) < 0);
+		assertTrue(testComparator.compare(statement4, statement8) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement9, statement4) < 0);
+		assertTrue(testComparator.compare(statement4, statement9) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement10, statement4) < 0);
+		assertTrue(testComparator.compare(statement4, statement10) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement11, statement4) < 0);
+		assertTrue(testComparator.compare(statement4, statement11) > 0);
+
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement6, statement5) < 0);
+		assertTrue(testComparator.compare(statement5, statement6) > 0);
+		// Same literal values sort one lang, other xsd:string
+		assertTrue(testComparator.compare(statement7, statement5) < 0);
+		assertTrue(testComparator.compare(statement5, statement7) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement8, statement5) < 0);
+		assertTrue(testComparator.compare(statement5, statement8) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement9, statement5) < 0);
+		assertTrue(testComparator.compare(statement5, statement9) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement10, statement5) < 0);
+		assertTrue(testComparator.compare(statement5, statement10) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement11, statement5) < 0);
+		assertTrue(testComparator.compare(statement5, statement11) > 0);
+
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement6, statement7) < 0);
+		assertTrue(testComparator.compare(statement7, statement6) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement8, statement6) < 0);
+		assertTrue(testComparator.compare(statement6, statement8) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement9, statement6) < 0);
+		assertTrue(testComparator.compare(statement6, statement9) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement10, statement6) < 0);
+		assertTrue(testComparator.compare(statement6, statement10) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement11, statement6) < 0);
+		assertTrue(testComparator.compare(statement6, statement11) > 0);
+
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement8, statement7) < 0);
+		assertTrue(testComparator.compare(statement7, statement8) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement9, statement7) < 0);
+		assertTrue(testComparator.compare(statement7, statement9) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement10, statement7) < 0);
+		assertTrue(testComparator.compare(statement7, statement10) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement11, statement7) < 0);
+		assertTrue(testComparator.compare(statement7, statement11) > 0);
+
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement8, statement9) < 0);
+		assertTrue(testComparator.compare(statement9, statement8) > 0);
+		// Same literal values sort one xsd:integer, other xsd:string
+		assertTrue(testComparator.compare(statement8, statement10) < 0);
+		assertTrue(testComparator.compare(statement10, statement8) > 0);
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement8, statement11) < 0);
+		assertTrue(testComparator.compare(statement11, statement8) > 0);
+
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement10, statement9) < 0);
+		assertTrue(testComparator.compare(statement9, statement10) > 0);
+		// Same literal values sort one xsd:integer, other xsd:string
+		assertTrue(testComparator.compare(statement9, statement11) < 0);
+		assertTrue(testComparator.compare(statement11, statement9) > 0);
+
+		// Different literal values sort
+		assertTrue(testComparator.compare(statement10, statement11) < 0);
+		assertTrue(testComparator.compare(statement11, statement10) > 0);
 	}
 
 	/**
