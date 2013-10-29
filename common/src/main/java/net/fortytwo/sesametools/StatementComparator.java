@@ -12,6 +12,18 @@ import org.openrdf.model.Statement;
  */
 public class StatementComparator implements Comparator<Statement>
 {
+	/**
+	 * A thread-safe pre-instantiated instance of StatementComparator.
+	 */
+	private final static StatementComparator INSTANCE = new StatementComparator();
+	
+	/**
+	 * @return A thread-safe pre-instantiated instance of StatementComparator.
+	 */
+	public final static StatementComparator getInstance() {
+		return INSTANCE;
+	}
+	
 	public final static int BEFORE = -1;
 	public final static int EQUALS = 0;
 	public final static int AFTER = 1;
@@ -50,22 +62,22 @@ public class StatementComparator implements Comparator<Statement>
 					}
 					else
 					{
-						return new ValueComparator().compare(first.getContext(), second.getContext());
+						return ValueComparator.getInstance().compare(first.getContext(), second.getContext());
 					}
 				}
 				else
 				{
-					return new ValueComparator().compare(first.getObject(), second.getObject());
+					return ValueComparator.getInstance().compare(first.getObject(), second.getObject());
 				}
 			}
 			else
 			{
-				return new ValueComparator().compare(first.getPredicate(), second.getPredicate());
+				return ValueComparator.getInstance().compare(first.getPredicate(), second.getPredicate());
 			}
 		}
 		else
 		{
-			return new ValueComparator().compare(first.getSubject(), second.getSubject());
+			return ValueComparator.getInstance().compare(first.getSubject(), second.getSubject());
 		}
 	}
 
