@@ -84,25 +84,30 @@ public class ValueComparator implements Comparator<Value> {
             int cmp = first.stringValue().compareTo(second.stringValue());
 
             if (EQUALS == cmp) {
+                String firstLang = ((Literal) first).getLanguage();
+                String secondLang = ((Literal) second).getLanguage();
+                if (null != firstLang) {
+                    if (null != secondLang) {
+                        return firstLang.compareTo(secondLang);
+                    } else {
+                        return AFTER;
+                    }
+                } else if (null != secondLang) {
+                    return BEFORE;
+                }
+                
                 URI firstType = ((Literal) first).getDatatype();
                 URI secondType = ((Literal) second).getDatatype();
-                if (null == firstType) {
-                    if (null == secondType) {
-                        String firstLang = ((Literal) first).getLanguage();
-                        String secondLang = ((Literal) second).getLanguage();
-
-                        return null == firstLang
-                                ? (null == secondLang ? EQUALS : BEFORE)
-                                : (null == secondLang ? AFTER : firstLang.compareTo(secondLang));
-                    } else {
-                        return BEFORE;
-                    }
+            	if (null == firstType) {
+            		if (null == secondType) {
+            			return EQUALS;
+            		} else {
+            			return BEFORE;
+            		}
+            	} else if (null == secondType) {
+                    return AFTER;
                 } else {
-                    if (null == secondType) {
-                        return AFTER;
-                    } else {
-                        return firstType.stringValue().compareTo(secondType.stringValue());
-                    }
+                    return firstType.stringValue().compareTo(secondType.stringValue());
                 }
             } else {
                 return cmp;
