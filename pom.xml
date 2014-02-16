@@ -50,7 +50,6 @@
     </developers>
 
     <properties>
-        <!--<sesametools.version>1.8-SNAPSHOT</sesametools.version>-->
         <junit.version>4.11</junit.version>
         <log4j.version>1.2.17</log4j.version>
         <restlet.version>2.1.1</restlet.version>
@@ -70,8 +69,6 @@
         <module>caching-sail</module>
         <module>constrained-sail</module>
         <module>deduplication-sail</module>
-        <!-- Remove JSON-LD from reactor until it is stabilised enough for parsing
-             and writing tests to work consistently <module>jsonld</module> -->
         <module>linked-data-server</module>
         <module>mapping-sail</module>
         <module>rdf-transaction-sail</module>
@@ -196,6 +193,11 @@
 			<dependency>
 				<groupId>org.openrdf.sesame</groupId>
 				<artifactId>sesame-rio-rdfxml</artifactId>
+				<version>${sesame.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-rio-rdfjson</artifactId>
 				<version>${sesame.version}</version>
 			</dependency>
 			<dependency>
