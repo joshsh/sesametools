@@ -24,10 +24,6 @@
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>mapping-sail</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.fortytwo.sesametools</groupId>
-            <artifactId>rdfjson</artifactId>
-        </dependency>
 
         <!-- Sesame -->
         <dependency>
