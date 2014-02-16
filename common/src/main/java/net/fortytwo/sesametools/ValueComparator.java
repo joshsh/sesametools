@@ -20,6 +20,19 @@ import java.util.Comparator;
  * @author Peter Ansell p_ansell@yahoo.com
  */
 public class ValueComparator implements Comparator<Value> {
+	
+	/**
+	 * A thread-safe pre-instantiated instance of ValueComparator.
+	 */
+	private final static ValueComparator INSTANCE = new ValueComparator();
+	
+	/**
+	 * A thread-safe pre-instantiated instance of ValueComparator.
+	 */
+	public final static ValueComparator getInstance() {
+		return INSTANCE;
+	}
+	
     public final static int BEFORE = -1;
     public final static int EQUALS = 0;
     public final static int AFTER = 1;
@@ -81,28 +94,35 @@ public class ValueComparator implements Comparator<Value> {
         }
         // they must both be Literal's, so sort based on the lexical value of the Literal
         else {
-            int cmp = first.stringValue().compareTo(second.stringValue());
+        	Literal firstLiteral = (Literal)first;
+        	Literal secondLiteral = (Literal)second;
+            int cmp = firstLiteral.getLabel().compareTo(secondLiteral.getLabel());
 
             if (EQUALS == cmp) {
-                URI firstType = ((Literal) first).getDatatype();
-                URI secondType = ((Literal) second).getDatatype();
-                if (null == firstType) {
-                    if (null == secondType) {
-                        String firstLang = ((Literal) first).getLanguage();
-                        String secondLang = ((Literal) second).getLanguage();
-
-                        return null == firstLang
-                                ? (null == secondLang ? EQUALS : BEFORE)
-                                : (null == secondLang ? AFTER : firstLang.compareTo(secondLang));
+                String firstLang = firstLiteral.getLanguage();
+                String secondLang = secondLiteral.getLanguage();
+                if (null != firstLang) {
+                    if (null != secondLang) {
+                        return firstLang.compareTo(secondLang);
                     } else {
-                        return BEFORE;
-                    }
-                } else {
-                    if (null == secondType) {
                         return AFTER;
-                    } else {
-                        return firstType.stringValue().compareTo(secondType.stringValue());
                     }
+                } else if (null != secondLang) {
+                    return BEFORE;
+                }
+                
+                URI firstType = firstLiteral.getDatatype();
+                URI secondType = secondLiteral.getDatatype();
+            	if (null == firstType) {
+            		if (null == secondType) {
+            			return EQUALS;
+            		} else {
+            			return BEFORE;
+            		}
+            	} else if (null == secondType) {
+                    return AFTER;
+                } else {
+                    return firstType.stringValue().compareTo(secondType.stringValue());
                 }
             } else {
                 return cmp;
