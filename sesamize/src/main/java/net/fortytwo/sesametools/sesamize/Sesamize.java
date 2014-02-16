@@ -49,16 +49,11 @@ import java.util.List;
 public class Sesamize {
     private static final String
             NAME = "Sesamize",
-            VERSION = "0.6";
+            VERSION = "0.8";
     private static final String
             DEFAULT_BASEURI = "http://example.org/baseURI#";
 
     private static boolean quiet;
-
-    static {
-        // Note: this may no longer be necessary
-        RDFFormat.register(RDFFormat.NQUADS);
-    }
     
     private enum Subcommand {
         CONSTRUCT("construct"),
