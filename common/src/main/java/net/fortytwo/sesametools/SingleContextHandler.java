@@ -10,9 +10,9 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 
 /**
- * Author: josh
- * Date: Jan 28, 2008
- * Time: 3:09:30 PM
+ * An <code>RDFHandler</code> which forces each received statement into a designated Named Graph context.
+ *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class SingleContextHandler implements RDFHandler {
     private RDFHandler baseHandler;

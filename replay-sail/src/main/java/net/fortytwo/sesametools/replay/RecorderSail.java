@@ -8,13 +8,14 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.StackableSail;
 import org.openrdf.sail.helpers.SailBase;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
 /**
+ * A Sail which creates an ongoing log of operations as they are executed.
+ * The log can later be used to recreate the operations in order.
+ *
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RecorderSail extends SailBase implements StackableSail {
@@ -87,52 +88,5 @@ public class RecorderSail extends SailBase implements StackableSail {
 
     public ReplayConfiguration getConfiguration() {
         return config;
-    }
-
-    // FIXME: temporary
-    public static void main(final String[] args) throws Exception {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        InputStream in;
-        Sail baseSail, itmSail, sail;
-
-        // Record and play back
-/*
-        baseSail = new MemoryStore(), itmSail;
-        sail = new RecorderSail(baseSail, new PrintStream(out));
-        sail.initialize();
-        Repository repo = new SailRepository(sail);
-        RepositoryConnection rc = repo.getConnection();
-        rc.add(FormatConverter.class.getResourceAsStream("cens-addon.trig"), "", RDFFormat.TRIG);
-//        rc.add(FormatConverter.class.getResourceAsStream("krsPrefixes.ttl"), "", RDFFormat.TURTLE);
-        rc.close();
-        System.out.println(out.toString());
-
-        sail.shutDown();
-        baseSail.shutDown();
-
-        in = new ByteArrayInputStream(out.toByteArray());
-        baseSail = new MemoryStore();
-        baseSail.initialize();
-        itmSail = new RecorderSail(baseSail, System.out);
-        sail = new PlaybackSail(itmSail, in);
-        sail.initialize();
-        in.close();
-*/
-        // Play back from reef-recorder.log
-
-        /*
-        in = new FileInputStream("/tmp/reef-recorder.log");
-        baseSail = new MemoryStore();
-        baseSail.initialize();
-        itmSail = new RecorderSail(baseSail, new FileOutputStream("/tmp/reef-recorder2.log"));
-        sail = new PlaybackSail(itmSail, in);
-        sail.initialize();
-        in.close();
-
-        ////////////////////////////////
-
-        baseSail.shutDown();
-        sail.shutDown();
-        */
     }
 }

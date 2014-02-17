@@ -13,18 +13,18 @@ import org.openrdf.model.Value;
 import org.openrdf.model.URI;
 
 /**
- * Created by IntelliJ IDEA.
- * User: josh
- * Date: Nov 26, 2007
- * Time: 10:59:38 AM
- * To change this template use File | Settings | File Templates.
+ * A <code>TripleSource</code> which is based on a <code>SailConnection</code>
+ *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class SailConnectionTripleSource implements TripleSource {
     private SailConnection baseConnection;
     private ValueFactory valueFactory;
     private boolean includeInferred;
 
-    public SailConnectionTripleSource(final SailConnection conn, final ValueFactory valueFactory, final boolean includeInferred) {
+    public SailConnectionTripleSource(final SailConnection conn,
+                                      final ValueFactory valueFactory,
+                                      final boolean includeInferred) {
         baseConnection = conn;
         this.valueFactory = valueFactory;
         this.includeInferred = includeInferred;
@@ -44,5 +44,45 @@ public class SailConnectionTripleSource implements TripleSource {
 
     public ValueFactory getValueFactory() {
         return valueFactory;
+    }
+
+    public static class QueryEvaluationIteration implements CloseableIteration<Statement, QueryEvaluationException> {
+        private CloseableIteration<? extends Statement, SailException> baseIteration;
+
+        public QueryEvaluationIteration(final CloseableIteration<? extends Statement, SailException> baseIteration) {
+            this.baseIteration = baseIteration;
+        }
+
+        public void close() throws QueryEvaluationException {
+            try {
+                baseIteration.close();
+            } catch (SailException e) {
+                throw new QueryEvaluationException(e);
+            }
+        }
+
+        public boolean hasNext() throws QueryEvaluationException {
+            try {
+                return baseIteration.hasNext();
+            } catch (SailException e) {
+                throw new QueryEvaluationException(e);
+            }
+        }
+
+        public Statement next() throws QueryEvaluationException {
+            try {
+                return baseIteration.next();
+            } catch (SailException e) {
+                throw new QueryEvaluationException(e);
+            }
+        }
+
+        public void remove() throws QueryEvaluationException {
+            try {
+                baseIteration.remove();
+            } catch (SailException e) {
+                throw new QueryEvaluationException(e);
+            }
+        }
     }
 }

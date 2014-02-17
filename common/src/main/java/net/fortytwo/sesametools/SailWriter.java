@@ -10,9 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Author: josh
- * Date: Jul 8, 2008
- * Time: 11:34:28 AM
+ * An <code>RDFHandler</code> which either adds or removes received <code>Statements</code> from a <code>Sail</code>
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class SailWriter implements RDFHandler {
     

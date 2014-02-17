@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
+ * Global constants
+ *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class SesameTools {

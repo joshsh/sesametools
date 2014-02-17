@@ -15,9 +15,9 @@ import java.util.UUID;
 
 
 /**
- * Author: josh
- * Date: Feb 26, 2008
- * Time: 6:05:05 PM
+ * A utility for generating random values and statements
+ *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class RandomValueFactory {
     private static final int MAXINT = 65535;

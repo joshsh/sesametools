@@ -3,19 +3,15 @@ package net.fortytwo.sesametools.constrained;
 
 import info.aduna.iteration.CloseableIteration;
 import junit.framework.TestCase;
-import net.fortytwo.sesametools.SimpleDatasetImpl;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.query.Dataset;
+import org.openrdf.query.impl.DatasetImpl;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Joshua Shinavier (http://fortytwo.net)
@@ -30,17 +26,13 @@ public class ConstrainedSailTest extends TestCase {
     private ConstrainedSail constrainedSail;
 
     public void setUp() throws Exception {
-        Set<URI> emptySet = new HashSet<URI>();
+        DatasetImpl writableSet = new DatasetImpl();
+        writableSet.addDefaultGraph(CONTEXT1_RW);
+        writableSet.addDefaultGraph(CONTEXT3_W);
 
-        Set<URI> writable = new HashSet<URI>();
-        writable.add(CONTEXT1_RW);
-        writable.add(CONTEXT3_W);
-        Dataset writableSet = new SimpleDatasetImpl(writable, emptySet);
-
-        Set<URI> readable = new HashSet<URI>();
-        readable.add(CONTEXT1_RW);
-        readable.add(CONTEXT2_R);
-        Dataset readableSet = new SimpleDatasetImpl(readable, emptySet);
+        DatasetImpl readableSet = new DatasetImpl();
+        readableSet.addDefaultGraph(CONTEXT1_RW);
+        readableSet.addDefaultGraph(CONTEXT2_R);
 
         baseSail = new MemoryStore();
         baseSail.initialize();

@@ -14,9 +14,7 @@ import java.io.File;
  * Sail (avoiding re-initialization of the base Sail as the individual stacked
  * Sails are initialized)
  * <p/>
- * Author: josh
- * Date: Mar 28, 2008
- * Time: 3:51:50 PM
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class MultiStackableSail implements StackableSail {
     private Sail baseSail;

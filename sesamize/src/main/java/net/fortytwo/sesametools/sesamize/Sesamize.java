@@ -1,8 +1,11 @@
 package net.fortytwo.sesametools.sesamize;
 
+import net.fortytwo.sesametools.RandomValueFactory;
 import net.fortytwo.sesametools.SesameTools;
 import org.apache.commons.io.IOUtils;
 import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
+import org.openrdf.model.impl.ValueFactoryImpl;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
@@ -53,6 +56,7 @@ public class Sesamize {
         CONSTRUCT("construct"),
         DUMP("dump"),
         IMPORT("import"),
+        RANDOM("random"),
         SELECT("select"),
         TRANSLATE("translate");
 
@@ -120,6 +124,9 @@ public class Sesamize {
                 case IMPORT:
                     doImport(a);
                     break;
+                case RANDOM:
+                    doRandom(a);
+                    break;
                 case SELECT:
                     doSelect(a);
                     break;
@@ -184,6 +191,26 @@ public class Sesamize {
                 fileInput.close();
             }
         }
+    }
+
+    private static void doRandom(final SesamizeArgs args) throws Exception {
+        Long totalTriples = Long.valueOf(args.nonOptions.get(1));
+        RDFFormat outputFormat = args.getRDFFormat(RDFFormat.RDFXML, "o", "outputFormat");
+
+        OutputStream os = System.out;
+
+        RandomValueFactory rvf = new RandomValueFactory(
+                new ValueFactoryImpl());
+
+        RDFWriter writer = Rio.createWriter(outputFormat, os);
+        writer.startRDF();
+        for (long l = 0l; l < totalTriples; l++) {
+            Statement st = rvf.randomStatement();
+            writer.handleStatement(st);
+        }
+        writer.endRDF();
+
+        os.close();
     }
 
     private static void doSelect(final SesamizeArgs args) throws Exception {
