@@ -8,6 +8,9 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.helpers.SailBase;
 
 /**
+ * A <code>Sail</code> which can be written to, but not read from.
+ * Read operations are simply ignored or return no results.
+ *
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class WriteOnlySail extends SailBase {

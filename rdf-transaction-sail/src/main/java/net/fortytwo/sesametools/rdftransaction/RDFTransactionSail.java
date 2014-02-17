@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * A Sail which uploads committed transactions in the application/x-rdftransaction format
+ * A <code>Sail</code> which uploads committed transactions in the application/x-rdftransaction format
  *
  * @author Joshua Shinavier (http://fortytwo.net).
  */

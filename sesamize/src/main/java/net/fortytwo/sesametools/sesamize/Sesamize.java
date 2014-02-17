@@ -42,7 +42,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * A collection of command-line tools for Sesame.
+ * A collection of command-line tools for Sesame
  *
  * @author Joshua Shinavier (http://fortytwo.net).
  */

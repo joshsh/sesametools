@@ -6,6 +6,9 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.helpers.SailWrapper;
 
 /**
+ * A <code>Sail</code> which avoids adding duplicate statements to a base <code>Sail</code>.
+ * For use with <code>Sail</code> implementations in which duplicate statements are possible.
+ *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class DeduplicationSail extends SailWrapper {

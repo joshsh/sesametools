@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 
 /**
+ * A <code>Sail</code> which wraps a <code>Repository</code>
+ *
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RepositorySail extends SailBase {
