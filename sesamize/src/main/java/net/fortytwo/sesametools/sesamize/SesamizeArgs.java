@@ -41,11 +41,19 @@ class SesamizeArgs {
                 }
             }
         }
+
+        if (inOption) {
+            flags.add(getOptionName(args[args.length - 1]));
+        }
     }
 
     public String getOption(final String defaultValue,
                             final String... alternatives) {
         for (String s : alternatives) {
+            if (flags.contains(s)) {
+                return "true";
+            }
+
             String o = pairs.get(s);
             if (null != o) {
                 return o;
