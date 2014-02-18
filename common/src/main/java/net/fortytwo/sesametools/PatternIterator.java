@@ -1,13 +1,16 @@
 package net.fortytwo.sesametools;
 
-import java.util.Iterator;
-
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.util.iterators.FilterIterator;
 
+import java.util.Iterator;
+
+/**
+ * A <code>FilterIterator</code> which matches statements against a given subject, predicate, object, and optional context(s).
+ */
 public class PatternIterator extends FilterIterator<Statement> {
 
 	private Resource subj;

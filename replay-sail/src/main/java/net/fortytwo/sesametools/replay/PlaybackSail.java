@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * A Sail which reads a log of previously recorded Sail operations and executes them.
+ *
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class PlaybackSail implements StackableSail {

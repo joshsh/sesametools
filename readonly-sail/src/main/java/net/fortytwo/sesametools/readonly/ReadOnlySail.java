@@ -5,6 +5,7 @@ import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.StackableSail;
+import org.openrdf.sail.helpers.SailBase;
 
 import java.io.File;
 
@@ -15,35 +16,38 @@ import java.io.File;
  *
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-public class ReadOnlySail implements StackableSail {
+public class ReadOnlySail extends SailBase implements StackableSail {
     private Sail baseSail;
 
     public ReadOnlySail(final Sail baseSail) {
         this.baseSail = baseSail;
     }
 
+    @Override
     public void setDataDir(final File dir) {
         baseSail.setDataDir(dir);
     }
 
+    @Override
     public File getDataDir() {
         return baseSail.getDataDir();
     }
 
-    public void initialize() throws SailException {
+    protected void initializeInternal() throws SailException {
         // Do nothing.
     }
 
-    public void shutDown() throws SailException {
+    protected void shutDownInternal() throws SailException {
         // Do nothing.
     }
 
+    @Override
     public boolean isWritable() throws SailException {
         return false;
     }
 
-    public SailConnection getConnection() throws SailException {
-        return new ReadOnlySailConnection(baseSail);
+    protected SailConnection getConnectionInternal() throws SailException {
+        return new ReadOnlySailConnection(this, baseSail);
     }
 
     public ValueFactory getValueFactory() {

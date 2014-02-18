@@ -1,14 +1,13 @@
 
 package net.fortytwo.sesametools.constrained;
 
+import org.openrdf.model.URI;
+import org.openrdf.query.Dataset;
+import org.openrdf.query.impl.DatasetImpl;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.helpers.SailWrapper;
-import org.openrdf.query.Dataset;
-import org.openrdf.model.URI;
-
-import net.fortytwo.sesametools.SimpleDatasetImpl;
 
 /**
  * A StackableSail which is constrained in reading and writing triples by a pair
@@ -55,7 +54,7 @@ public class ConstrainedSail extends SailWrapper {
     public ConstrainedSail(final Sail baseSail,
                            final URI defaultWriteContext,
                            final boolean hideNonWritableContexts) {
-        this(baseSail, new SimpleDatasetImpl(), new SimpleDatasetImpl(), defaultWriteContext, hideNonWritableContexts);
+        this(baseSail, new DatasetImpl(), new DatasetImpl(), defaultWriteContext, hideNonWritableContexts);
     }
 
     public void addReadableGraph(final URI g) {

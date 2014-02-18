@@ -3,6 +3,9 @@ package net.fortytwo.sesametools;
 
 import info.aduna.iteration.CloseableIteration;
 
+/**
+ * @author Joshua Shinavier (http://fortytwo.net)
+ */
 public class EmptyCloseableIteration<T, E extends Exception> implements CloseableIteration<T, E> {
 
     public void close() throws E {

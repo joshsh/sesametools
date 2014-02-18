@@ -112,19 +112,23 @@ public class CachingSailTest {
 
         URI resA = uri("http://example.org/ns/resA");
 
+        sc.begin();
         sc.addStatement(resA, resA, resA);
         sc.commit();
         count = countStatements(sc.getStatements(resA, null, null, false));
         assertEquals(1, count);
+        sc.begin();
         sc.removeStatements(null, resA, null);
         sc.commit();
         count = countStatements(sc.getStatements(null, null, resA, false));
         assertEquals(0, count);
 
+        sc.begin();
         sc.addStatement(resA, resA, resA, resA);
         sc.commit();
         count = countStatements(sc.getStatements(null, null, null, false, resA));
         assertEquals(1, count);
+        sc.begin();
         sc.removeStatements(null, null, null, resA);
         sc.commit();
         count = countStatements(sc.getStatements(null, null, resA, false));

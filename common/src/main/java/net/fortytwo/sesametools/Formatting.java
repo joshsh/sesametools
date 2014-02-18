@@ -3,9 +3,9 @@ package net.fortytwo.sesametools;
 
 
 /**
- * Author: josh
- * Date: Mar 31, 2008
- * Time: 10:46:26 AM
+ * Miscellaneous helper methods for string formatting
+ *
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class Formatting {
 

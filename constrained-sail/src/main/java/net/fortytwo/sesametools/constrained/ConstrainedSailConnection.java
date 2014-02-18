@@ -15,7 +15,6 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
-import org.openrdf.query.algebra.UpdateExpr;
 import org.openrdf.query.algebra.evaluation.TripleSource;
 import org.openrdf.query.algebra.evaluation.impl.EvaluationStrategyImpl;
 import org.openrdf.query.impl.DatasetImpl;
@@ -200,14 +199,6 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
         }
 
         return super.evaluate(tupleExpr, d, bindings, includeInferred);
-    }
-
-    @Override
-    public void executeUpdate(final UpdateExpr updateExpr,
-                              final Dataset dataset,
-                              final BindingSet bindingSet,
-                              final boolean b) throws SailException {
-        throw new UnsupportedOperationException("SPARQL Update is not yet supported");
     }
 
     private CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateByDecomposition(

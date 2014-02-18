@@ -6,61 +6,44 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
-import org.openrdf.query.algebra.UpdateExpr;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailConnectionListener;
 import org.openrdf.sail.SailException;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.openrdf.sail.helpers.SailBase;
+import org.openrdf.sail.helpers.SailConnectionBase;
 
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-public class ReadOnlySailConnection implements SailConnection {
+public class ReadOnlySailConnection extends SailConnectionBase {
     private final SailConnection baseSailConnection;
-    private final Set<SailConnectionListener> listeners;
-    private final ValueFactory valueFactory;
 
-    public ReadOnlySailConnection(final Sail baseSail) throws SailException {
+    public ReadOnlySailConnection(final SailBase sail,
+                                  final Sail baseSail) throws SailException {
+        super(sail);
         baseSailConnection = baseSail.getConnection();
-        valueFactory = baseSail.getValueFactory();
-        listeners = new HashSet<SailConnectionListener>();
     }
 
-    public boolean isOpen() throws SailException {
-        return baseSailConnection.isOpen();
-    }
-
-    public void close() throws SailException {
+    protected void closeInternal() throws SailException {
         baseSailConnection.close();
     }
 
-    public CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluate(final TupleExpr tupleExpr,
+    protected CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateInternal(final TupleExpr tupleExpr,
                                                                                        final Dataset dataset,
                                                                                        final BindingSet bindings,
                                                                                        final boolean includeInferred) throws SailException {
         return baseSailConnection.evaluate(tupleExpr, dataset, bindings, includeInferred);
     }
 
-    public void executeUpdate(final UpdateExpr updateExpr,
-                              final Dataset dataset,
-                              final BindingSet bindingSet,
-                              final boolean b) throws SailException {
-        throw new UnsupportedOperationException("SPARQL Update is not yet supported");
-    }
-
-    public CloseableIteration<? extends Resource, SailException> getContextIDs() throws SailException {
+    protected CloseableIteration<? extends Resource, SailException> getContextIDsInternal() throws SailException {
         return baseSailConnection.getContextIDs();
     }
 
-    public CloseableIteration<? extends Statement, SailException> getStatements(final Resource subject,
+    protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(final Resource subject,
                                                                                 final URI predicate,
                                                                                 final Value object,
                                                                                 final boolean includeInferred,
@@ -68,82 +51,58 @@ public class ReadOnlySailConnection implements SailConnection {
         return baseSailConnection.getStatements(subject, predicate, object, includeInferred, contexts);
     }
 
-    public long size(final Resource... contexts) throws SailException {
+    protected long sizeInternal(final Resource... contexts) throws SailException {
         return baseSailConnection.size(contexts);
     }
 
-    public void commit() throws SailException {
+    protected void commitInternal() throws SailException {
         // Do nothing.
     }
 
-    public void rollback() throws SailException {
+    protected void rollbackInternal() throws SailException {
         // Do nothing.
     }
 
-    public void addStatement(final Resource subject,
+    protected void addStatementInternal(final Resource subject,
                              final URI predicate,
                              final Value object,
                              final Resource... contexts) throws SailException {
         // Do nothing.
-
-        // Note: this is only good for specific statements (no wildcards, no missing context).
-        if (0 < listeners.size()) {
-            for (Resource context : contexts) {
-                Statement st = valueFactory.createStatement(subject, predicate, object, context);
-                for (SailConnectionListener listener : listeners) {
-                    listener.statementAdded(st);
-                }
-            }
-        }
     }
 
-    public void removeStatements(final Resource subject,
+    protected void removeStatementsInternal(final Resource subject,
                                  final URI predicate,
                                  final Value object,
                                  final Resource... contexts) throws SailException {
         // Do nothing.
-
-        // Note: this is only good for specific statements (no wildcards, no missing context).
-        if (0 < listeners.size()) {
-            for (Resource context : contexts) {
-                Statement st = valueFactory.createStatement(subject, predicate, object, context);
-                for (SailConnectionListener listener : listeners) {
-                    listener.statementRemoved(st);
-                }
-            }
-        }
     }
 
-    public void clear(final Resource... contexts) throws SailException {
+    protected void clearInternal(final Resource... contexts) throws SailException {
         // Do nothing.
     }
 
-    public CloseableIteration<? extends Namespace, SailException> getNamespaces() throws SailException {
+    protected CloseableIteration<? extends Namespace, SailException> getNamespacesInternal() throws SailException {
         return baseSailConnection.getNamespaces();
     }
 
-    public String getNamespace(final String prefix) throws SailException {
+    protected String getNamespaceInternal(final String prefix) throws SailException {
         return baseSailConnection.getNamespace(prefix);
     }
 
-    public void setNamespace(final String prefix,
+    protected void setNamespaceInternal(final String prefix,
                              final String uri) throws SailException {
         // Do nothing.
     }
 
-    public void removeNamespace(final String prefix) throws SailException {
+    protected void removeNamespaceInternal(final String prefix) throws SailException {
         // Do nothing.
     }
 
-    public void clearNamespaces() throws SailException {
+    protected void clearNamespacesInternal() throws SailException {
         // Do nothing.
     }
 
-    public void addConnectionListener(final SailConnectionListener listener) {
-        listeners.add(listener);
-    }
-
-    public void removeConnectionListener(final SailConnectionListener listener) {
-        listeners.remove(listener);
+    protected void startTransactionInternal() throws SailException {
+        baseSailConnection.begin();
     }
 }

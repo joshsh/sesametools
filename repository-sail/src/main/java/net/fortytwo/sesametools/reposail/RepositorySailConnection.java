@@ -12,31 +12,33 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
-import org.openrdf.query.algebra.UpdateExpr;
 import org.openrdf.query.algebra.evaluation.TripleSource;
 import org.openrdf.query.algebra.evaluation.impl.EvaluationStrategyImpl;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
-import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
+import org.openrdf.sail.helpers.SailBase;
+import org.openrdf.sail.helpers.SailConnectionBase;
 
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-public class RepositorySailConnection implements SailConnection {
+public class RepositorySailConnection extends SailConnectionBase {
     private RepositoryConnection repoConnection;
     private final boolean inferenceDisabled;
     private final ValueFactory valueFactory;
 
-    public RepositorySailConnection(final RepositoryConnection repoConnection,
+    public RepositorySailConnection(final SailBase sail,
+                                    final RepositoryConnection repoConnection,
                                     final boolean inferenceDisabled,
                                     final ValueFactory valueFactory) {
+        super(sail);
         this.repoConnection = repoConnection;
         this.inferenceDisabled = inferenceDisabled;
         this.valueFactory = valueFactory;
     }
 
-    public void addStatement(Resource subj, URI pred, Value obj,
+    protected void addStatementInternal(Resource subj, URI pred, Value obj,
                              Resource... contexts) throws SailException {
         try {
             repoConnection.add(subj, pred, obj, contexts);
@@ -45,8 +47,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public void clear(Resource... contexts) throws SailException {
-        // TODO Auto-generated method stub
+    protected void clearInternal(Resource... contexts) throws SailException {
         try {
             repoConnection.clear(contexts);
         } catch (RepositoryException e) {
@@ -54,7 +55,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public void clearNamespaces() throws SailException {
+    protected void clearNamespacesInternal() throws SailException {
         try {
             repoConnection.clearNamespaces();
         } catch (RepositoryException e) {
@@ -62,7 +63,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public void close() throws SailException {
+    protected void closeInternal() throws SailException {
         try {
             repoConnection.close();
         } catch (RepositoryException e) {
@@ -70,7 +71,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public void commit() throws SailException {
+    protected void commitInternal() throws SailException {
         try {
             repoConnection.commit();
         } catch (RepositoryException e) {
@@ -78,7 +79,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluate(
+    protected CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateInternal(
             TupleExpr query, Dataset dataset, BindingSet bindings, boolean includeInferred)
             throws SailException {
         try {
@@ -90,15 +91,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public void executeUpdate(final UpdateExpr updateExpr,
-                              final Dataset dataset,
-                              final BindingSet bindingSet,
-                              final boolean b) throws SailException {
-        throw new UnsupportedOperationException("Sail to Repository updates not implemented yet");
-    }
-
-
-    public CloseableIteration<? extends Resource, SailException> getContextIDs()
+    protected CloseableIteration<? extends Resource, SailException> getContextIDsInternal()
             throws SailException {
         try {
             return new RepositoryResourceIteration(repoConnection.getContextIDs());
@@ -107,7 +100,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public String getNamespace(String prefix) throws SailException {
+    protected String getNamespaceInternal(String prefix) throws SailException {
         try {
             return repoConnection.getNamespace(prefix);
         } catch (RepositoryException e) {
@@ -115,7 +108,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public CloseableIteration<? extends Namespace, SailException> getNamespaces()
+    protected CloseableIteration<? extends Namespace, SailException> getNamespacesInternal()
             throws SailException {
         try {
             return new RepositoryNamespaceIteration(
@@ -125,7 +118,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public CloseableIteration<? extends Statement, SailException> getStatements(
+    protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(
             Resource subj, URI pred, Value obj, boolean includeInferred, Resource... contexts)
             throws SailException {
         try {
@@ -136,15 +129,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public boolean isOpen() throws SailException {
-        try {
-            return repoConnection.isOpen();
-        } catch (RepositoryException e) {
-            throw new SailException(e);
-        }
-    }
-
-    public void removeNamespace(String prefix) throws SailException {
+    protected void removeNamespaceInternal(String prefix) throws SailException {
         try {
             repoConnection.removeNamespace(prefix);
         } catch (RepositoryException e) {
@@ -152,7 +137,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public void removeStatements(Resource subj, URI pred, Value obj,
+    protected void removeStatementsInternal(Resource subj, URI pred, Value obj,
                                  Resource... contexts) throws SailException {
         try {
             repoConnection.remove(subj, pred, obj, contexts);
@@ -161,7 +146,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public void rollback() throws SailException {
+    protected void rollbackInternal() throws SailException {
         try {
             repoConnection.rollback();
         } catch (RepositoryException e) {
@@ -169,7 +154,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public void setNamespace(String prefix, String name) throws SailException {
+    protected void setNamespaceInternal(String prefix, String name) throws SailException {
         try {
             repoConnection.setNamespace(prefix, name);
         } catch (RepositoryException e) {
@@ -177,7 +162,7 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
-    public long size(Resource... contexts) throws SailException {
+    protected long sizeInternal(Resource... contexts) throws SailException {
         try {
             return repoConnection.size();
         } catch (RepositoryException e) {
@@ -185,4 +170,11 @@ public class RepositorySailConnection implements SailConnection {
         }
     }
 
+    protected void startTransactionInternal() throws SailException {
+        try {
+            repoConnection.begin();
+        } catch (RepositoryException e) {
+            throw new SailException(e);
+        }
+    }
 }

@@ -33,6 +33,7 @@ public class DuplicateStatementFinderTest extends TestCase {
 
     public void testSimple() throws Exception {
         SailConnection sc = sail.getConnection();
+        sc.begin();
 
         URI ctx1 = valueFactory.createURI(NS + "ctx1");
         URI ctx2 = valueFactory.createURI(NS + "ctx2");

@@ -23,7 +23,7 @@ public class CloseableTupleQueryResult implements TupleQueryResult {
     }
 
     @Override
-    public List<String> getBindingNames() {
+    public List<String> getBindingNames() throws QueryEvaluationException {
         return result.getBindingNames();
     }
 

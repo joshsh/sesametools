@@ -7,12 +7,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * A CloseableIteration which wraps an ordered collection of other
- * CloseableIterations.
+ * A CloseableIteration which wraps an ordered collection of other CloseableIterations.
  *
- * @author josh
- * @param <T>
- * @param <E>
+ * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class CompoundCloseableIteration<T, E extends Exception> implements CloseableIteration<T, E> {
     private Iterator<CloseableIteration<T, E>> iterations;

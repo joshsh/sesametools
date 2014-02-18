@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
         <version>7</version>
     </parent>
 
-	<groupId>net.fortytwo.sesametools</groupId>
-	<artifactId>sesametools-all</artifactId>
-    <version>1.7</version>
+    <groupId>net.fortytwo.sesametools</groupId>
+    <artifactId>sesametools-all</artifactId>
+    <version>1.8</version>
     <packaging>pom</packaging>
-	<name>SesameTools</name>
-	<description>Miscellaneous utilities for use with OpenRDF Sesame</description>
+    <name>SesameTools</name>
+    <description>Miscellaneous utilities for use with OpenRDF Sesame</description>
     <url>https://github.com/joshsh/sesametools</url>
 
     <issueManagement>
@@ -50,341 +51,373 @@
     </developers>
 
     <properties>
-        <sesametools.version>1.7-SNAPSHOT</sesametools.version>
-        <sesame.version>2.6.10</sesame.version>
-        <slf4j.version>1.7.2</slf4j.version>
         <junit.version>4.11</junit.version>
+        <log4j.version>1.2.17</log4j.version>
         <restlet.version>2.1.1</restlet.version>
+        <sesame.version>2.7.10</sesame.version>
+        <sesametools.version>1.8</sesametools.version>
+        <slf4j.version>1.7.2</slf4j.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-	<prerequisites>
-		<maven>2.2.1</maven>
-	</prerequisites>
+    <prerequisites>
+        <maven>2.2.1</maven>
+    </prerequisites>
 
-	<modules>
-		<module>common</module>
+    <modules>
+        <module>common</module>
         <module>caching-sail</module>
         <module>constrained-sail</module>
         <module>deduplication-sail</module>
-        <!-- Remove JSON-LD from reactor until it is stabilised enough for parsing
-             and writing tests to work consistently <module>jsonld</module> -->
         <module>linked-data-server</module>
         <module>mapping-sail</module>
-        <module>nquads</module>
         <module>rdf-transaction-sail</module>
-        <module>rdfjson</module>
         <module>readonly-sail</module>
         <module>replay-sail</module>
         <module>repository-sail</module>
         <module>sesamize</module>
         <module>uri-translator</module>
         <module>writeonly-sail</module>
-	</modules>
+    </modules>
 
-	<dependencyManagement>
-		<dependencies>
+    <dependencyManagement>
+        <dependencies>
             <!-- SesameTools -->
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>common</artifactId>
-                <version>1.7</version>
+                <version>${sesametools.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>mapping-sail</artifactId>
-                <version>1.7</version>
-            </dependency>
-            <dependency>
-                <groupId>net.fortytwo.sesametools</groupId>
-                <artifactId>nquads</artifactId>
-                <version>1.7</version>
-            </dependency>
-            <dependency>
-                <groupId>net.fortytwo.sesametools</groupId>
-                <artifactId>rdfjson</artifactId>
-                <version>1.7</version>
+                <version>${sesametools.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>replay-sail</artifactId>
-                <version>1.7</version>
+                <version>${sesametools.version}</version>
             </dependency>
 
-			<!-- OpenRDF Sesame -->
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-model</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-sail-memory</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-sail-api</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-util</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-http-protocol</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-queryalgebra-evaluation</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-queryparser-sparql</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-queryresultio-sparqlxml</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-queryresultio-sparqljson</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-rio-api</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-rio-ntriples</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-rio-n3</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-rio-turtle</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-rio-trig</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-rio-trix</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-rio-rdfxml</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-repository-api</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-repository-sail</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.openrdf.sesame</groupId>
-				<artifactId>sesame-sail-nativerdf</artifactId>
-				<version>${sesame.version}</version>
-			</dependency>
+            <!-- OpenRDF Sesame -->
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-model</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-sail-memory</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-sail-api</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-util</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-http-protocol</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-queryalgebra-evaluation</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-queryparser-sparql</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-queryresultio-sparqlxml</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-queryresultio-sparqljson</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-queryresultio-text</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-rio-api</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-rio-ntriples</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-rio-n3</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-rio-turtle</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-rio-trig</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-rio-trix</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-rio-nquads</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-rio-rdfxml</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-rio-rdfjson</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-repository-api</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-repository-sail</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openrdf.sesame</groupId>
+                <artifactId>sesame-sail-nativerdf</artifactId>
+                <version>${sesame.version}</version>
+            </dependency>
 
-			<!-- Restlet -->
-			<dependency>
-				<groupId>org.restlet.jse</groupId>
-				<artifactId>org.restlet</artifactId>
-				<version>${restlet.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.restlet.jse</groupId>
-				<artifactId>org.restlet.ext.simple</artifactId>
-				<version>${restlet.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.restlet.jse</groupId>
-				<artifactId>org.restlet.ext.httpclient</artifactId>
-				<version>${restlet.version}</version>
-			</dependency>
+            <!-- Restlet -->
+            <dependency>
+                <groupId>org.restlet.jse</groupId>
+                <artifactId>org.restlet</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jse</groupId>
+                <artifactId>org.restlet.ext.simple</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jse</groupId>
+                <artifactId>org.restlet.ext.httpclient</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
 
-			<!-- Miscellaneous dependencies -->
+            <!-- Miscellaneous dependencies -->
 
-			<dependency>
-				<groupId>org.json</groupId>
-				<artifactId>json</artifactId>
-				<version>20090211</version>
-			</dependency>
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>20090211</version>
+            </dependency>
 
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
 
-			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>2.4</version>
-			</dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.4</version>
+            </dependency>
 
-			<dependency>
-				<groupId>urbanophile</groupId>
-				<artifactId>java-getopt</artifactId>
-				<version>1.0.9</version>
-			</dependency>
+            <dependency>
+                <groupId>urbanophile</groupId>
+                <artifactId>java-getopt</artifactId>
+                <version>1.0.9</version>
+            </dependency>
 
-			<!-- test dependencies -->
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>1.2.17</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+            <!-- test dependencies -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-	<build>
-		<directory>${basedir}/target</directory>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.5.1</version>
-					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.13</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.4</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>test-jar</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-source-plugin</artifactId>
-					<version>2.2</version>
-					<executions>
-						<execution>
-							<id>attach-source</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.8.1</version>
-					<executions>
-						<execution>
-							<id>attach-javadoc</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>aggregate</id>
-							<goals>
-								<goal>aggregate</goal>
-							</goals>
-							<phase>site</phase>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<version>2.5.1</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-clean-plugin</artifactId>
-					<version>2.5</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>2.7</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-install-plugin</artifactId>
-					<version>2.4</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.6</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+    <build>
+        <directory>${basedir}/target</directory>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.5.1</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.13</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.4</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>test-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.2</version>
+                    <executions>
+                        <execution>
+                            <id>attach-source</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.8.1</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadoc</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>aggregate</id>
+                            <goals>
+                                <goal>aggregate</goal>
+                            </goals>
+                            <phase>site</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.8</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>2.5</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
-	<repositories>
- 		<repository>
-			<id>fortytwo</id>
-			<name>fortytwo.net Maven repository</name>
-			<url>http://fortytwo.net/maven2</url>
-		</repository>
-		<repository>
-			<id>aduna-opensource.releases</id>
-			<name>Aduna repository</name>
-			<url>http://repo.aduna-software.org/maven2/releases</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>maven-restlet</id>
-			<name>Public online Restlet repository</name>
-			<url>http://maven.restlet.org</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>fortytwo</id>
+            <name>fortytwo.net Maven repository</name>
+            <url>http://fortytwo.net/maven2</url>
+        </repository>
+        <!--<repository>
+            <id>aduna-opensource.releases</id>
+            <name>Aduna repository</name>
+            <url>http://repo.aduna-software.org/maven2/releases</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>-->
+        <repository>
+            <id>maven-restlet</id>
+            <name>Public online Restlet repository</name>
+            <url>http://maven.restlet.org</url>
+        </repository>
+    </repositories>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-gpg-plugin</artifactId>
+                            <version>1.4</version>
+                            <executions>
+                                <execution>
+                                    <id>sign-artifacts</id>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

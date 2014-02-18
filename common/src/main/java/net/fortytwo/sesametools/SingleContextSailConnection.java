@@ -10,11 +10,12 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
-import org.openrdf.query.algebra.UpdateExpr;
 import org.openrdf.query.impl.DatasetImpl;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
+import org.openrdf.sail.helpers.SailBase;
+import org.openrdf.sail.helpers.SailConnectionBase;
 
 
 /**
@@ -24,16 +25,19 @@ import org.openrdf.sail.SailException;
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
-class SingleContextSailConnection implements SailConnection {
+class SingleContextSailConnection extends SailConnectionBase {
     private SailConnection baseSailConnection;
     private Resource singleContext;
 
-    public SingleContextSailConnection(final Sail baseSail, final Resource context) throws SailException {
+    public SingleContextSailConnection(final SailBase sail,
+                                       final Sail baseSail,
+                                       final Resource context) throws SailException {
+        super(sail);
         baseSailConnection = baseSail.getConnection();
         singleContext = context;
     }
 
-    public void addStatement(final Resource subj, final URI pred, final Value obj,
+    protected void addStatementInternal(final Resource subj, final URI pred, final Value obj,
                              final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
             baseSailConnection.addStatement(subj, pred, obj, singleContext);
@@ -47,7 +51,7 @@ class SingleContextSailConnection implements SailConnection {
         }
     }
 
-    public void clear(final Resource... contexts) throws SailException {
+    protected void clearInternal(final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
             baseSailConnection.clear(singleContext);
         } else {
@@ -60,19 +64,23 @@ class SingleContextSailConnection implements SailConnection {
         }
     }
 
-    public void clearNamespaces() throws SailException {
+    protected void clearNamespacesInternal() throws SailException {
         baseSailConnection.clearNamespaces();
     }
 
-    public void close() throws SailException {
+    protected void startTransactionInternal() throws SailException {
+        baseSailConnection.begin();
+    }
+
+    protected void closeInternal() throws SailException {
         baseSailConnection.close();
     }
 
-    public void commit() throws SailException {
+    protected void commitInternal() throws SailException {
         baseSailConnection.commit();
     }
 
-    public CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluate(
+    protected CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateInternal(
             final TupleExpr tupleExpr, final Dataset dataSet, final BindingSet bindingSet, final boolean includeInferred)
             throws SailException {
         // ignore the given dataset and restrict everything to the single context we have been setup with
@@ -87,6 +95,7 @@ class SingleContextSailConnection implements SailConnection {
         return baseSailConnection.evaluate(tupleExpr, singleContextDataset, bindingSet, includeInferred);
     }
 
+    /*
     public void executeUpdate(final UpdateExpr updateExpr, final Dataset dataSet, final BindingSet bindingSet,
                               final boolean includeInferred) throws SailException {
         // ignore the given dataset and restrict everything to the single context we have been setup with
@@ -99,23 +108,23 @@ class SingleContextSailConnection implements SailConnection {
         }
 
         baseSailConnection.executeUpdate(updateExpr, singleContextDataset, bindingSet, includeInferred);
-    }
+    }*/
 
-    public CloseableIteration<? extends Resource, SailException> getContextIDs()
+    protected CloseableIteration<? extends Resource, SailException> getContextIDsInternal()
             throws SailException {
         return new SingleContextIteration();
     }
 
-    public String getNamespace(final String prefix) throws SailException {
+    protected String getNamespaceInternal(final String prefix) throws SailException {
         return baseSailConnection.getNamespace(prefix);
     }
 
-    public CloseableIteration<? extends Namespace, SailException> getNamespaces()
+    protected CloseableIteration<? extends Namespace, SailException> getNamespacesInternal()
             throws SailException {
         return baseSailConnection.getNamespaces();
     }
 
-    public CloseableIteration<? extends Statement, SailException> getStatements(
+    protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(
             final Resource subj, final URI pred, final Value obj, final boolean includeInferred, final Resource... contexts)
             throws SailException {
         if (0 == contexts.length) {
@@ -131,15 +140,11 @@ class SingleContextSailConnection implements SailConnection {
         }
     }
 
-    public boolean isOpen() throws SailException {
-        return baseSailConnection.isOpen();
-    }
-
-    public void removeNamespace(final String prefix) throws SailException {
+    protected void removeNamespaceInternal(final String prefix) throws SailException {
         baseSailConnection.removeNamespace(prefix);
     }
 
-    public void removeStatements(final Resource subj, final URI pred, final Value obj,
+    protected void removeStatementsInternal(final Resource subj, final URI pred, final Value obj,
                                  final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
             baseSailConnection.removeStatements(subj, pred, obj, singleContext);
@@ -153,15 +158,15 @@ class SingleContextSailConnection implements SailConnection {
         }
     }
 
-    public void rollback() throws SailException {
+    protected void rollbackInternal() throws SailException {
         baseSailConnection.rollback();
     }
 
-    public void setNamespace(final String prefix, final String name) throws SailException {
+    protected void setNamespaceInternal(final String prefix, final String name) throws SailException {
         baseSailConnection.setNamespace(prefix, name);
     }
 
-    public long size(final Resource... contexts) throws SailException {
+    protected long sizeInternal(final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
             return baseSailConnection.size(singleContext);
         } else {

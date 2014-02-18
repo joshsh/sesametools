@@ -10,7 +10,7 @@
     <parent>
         <groupId>net.fortytwo.sesametools</groupId>
         <artifactId>sesametools-all</artifactId>
-        <version>1.7</version>
+        <version>1.8</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -23,14 +23,6 @@
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>mapping-sail</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.fortytwo.sesametools</groupId>
-            <artifactId>nquads</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.fortytwo.sesametools</groupId>
-            <artifactId>rdfjson</artifactId>
         </dependency>
 
         <!-- Sesame -->
@@ -69,6 +61,10 @@
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-rdfxml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-rio-rdfjson</artifactId>
         </dependency>
 
         <dependency>

@@ -10,20 +10,15 @@
     <parent>
         <groupId>net.fortytwo.sesametools</groupId>
         <artifactId>sesametools-all</artifactId>
-        <version>1.7</version>
+        <version>1.8</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
-            <artifactId>nquads</artifactId>
+            <artifactId>common</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.fortytwo.sesametools</groupId>
-            <artifactId>rdfjson</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-repository-sail</artifactId>
@@ -48,18 +43,31 @@
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-queryresultio-sparqljson</artifactId>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-queryresultio-text</artifactId>
-            <version>${sesame.version}</version>
-        </dependency> -->
+        </dependency>
+
+        <!-- Sesame Rio -->
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-n3</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-rio-nquads</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-ntriples</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-rio-rdfjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-rio-rdfxml</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
@@ -71,12 +79,9 @@
         </dependency>
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-rio-rdfxml</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-rio-turtle</artifactId>
         </dependency>
+
         <dependency>
             <groupId>urbanophile</groupId>
             <artifactId>java-getopt</artifactId>
