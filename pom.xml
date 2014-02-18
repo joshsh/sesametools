@@ -10,7 +10,7 @@
 
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>sesametools-all</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.8</version>
     <packaging>pom</packaging>
     <name>SesameTools</name>
     <description>Miscellaneous utilities for use with OpenRDF Sesame</description>
@@ -55,6 +55,7 @@
         <log4j.version>1.2.17</log4j.version>
         <restlet.version>2.1.1</restlet.version>
         <sesame.version>2.7.10</sesame.version>
+        <sesametools.version>1.8</sesametools.version>
         <slf4j.version>1.7.2</slf4j.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -87,22 +88,17 @@
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>common</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>${sesametools.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>mapping-sail</artifactId>
-                <version>1.8-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>net.fortytwo.sesametools</groupId>
-                <artifactId>rdfjson</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>${sesametools.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.fortytwo.sesametools</groupId>
                 <artifactId>replay-sail</artifactId>
-                <version>1.8-SNAPSHOT</version>
+                <version>${sesametools.version}</version>
             </dependency>
 
             <!-- OpenRDF Sesame -->
@@ -394,5 +390,34 @@
             <url>http://maven.restlet.org</url>
         </repository>
     </repositories>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-gpg-plugin</artifactId>
+                            <version>1.4</version>
+                            <executions>
+                                <execution>
+                                    <id>sign-artifacts</id>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
