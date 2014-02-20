@@ -36,7 +36,7 @@ public class LinkedDataServer {
     public LinkedDataServer(final Sail baseSail,
                             final String internalBaseURI,
                             final String externalBaseURI,
-                            final int serverPort) throws ServerException {
+                            final int serverPort) {
         this(baseSail, internalBaseURI, externalBaseURI, serverPort, null);
     }
 

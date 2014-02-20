@@ -14,7 +14,7 @@ import org.openrdf.sail.helpers.SailWrapper;
  * of Dataset objects.  A connection may only read statements from the set of
  * named graphs in the readable Dataset, and may only write statements to the
  * named graphs in the writeable Dataset.
- * <p/>
+ * 
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class ConstrainedSail extends SailWrapper {

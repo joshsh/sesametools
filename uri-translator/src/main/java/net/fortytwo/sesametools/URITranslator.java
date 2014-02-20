@@ -82,8 +82,11 @@ public class URITranslator
      *            The string defining the start of the URIs which matched the inputUriPrefix, after
      *            the translation is complete.
      * @param nextSubjectMappingPredicates
+     * 			  The predicates used to map subject URIs that are translated.
      * @param nextPredicateMappingPredicates
+     * 			  The predicates used to map predicate URIs that are translated.
      * @param nextObjectMappingPredicates
+     * 			  The predicates used to map object URIs that are translated.
      * @param deleteTranslatedTriples
      *            If this is true, then any triples which contained translated URIs will be deleted.
      *            Mapping triples will still exist if any mapping predicates were utilised.
@@ -126,17 +129,31 @@ public class URITranslator
      *            The string defining the start of the URIs which matched the inputUriPrefix, after
      *            the translation is complete.
      * @param nextSubjectMappingPredicates
+     * 			  The predicates used to map subject URIs that are translated.
      * @param translateSubjectUris
+     * 			  True to translate subject URIs and false otherwise.
+     * @param exactSubjectMatchRequired
+     * 			  True to indicate that translation should only occur if the subject URI matched the 
+     * 			  inputUriPrefix exactly.
      * @param nextPredicateMappingPredicates
+     * 			  The predicates used to map predicate URIs that are translated.
      * @param translatePredicateUris
+     * 			  True to translate predicate URIs and false otherwise.
+     * @param exactPredicateMatchRequired
+     * 			  True to indicate that translation should only occur if the predicate URI matched the 
+     * 			  inputUriPrefix exactly.
      * @param nextObjectMappingPredicates
+     * 			  The predicates used to map object URIs that are translated.
      * @param translateObjectUris
+     * 			  True to translate object URIs and false otherwise.
+     * @param exactObjectMatchRequired
+     * 			  True to indicate that translation should only occur if the object URI matched the 
+     * 			  inputUriPrefix exactly.
      * @param deleteTranslatedTriples
      *            If this is true, then any triples which contained translated URIs will be deleted.
      *            Mapping triples will still exist if any mapping predicates were utilised.
      * @param contexts
      *            The contexts in the repository that are relevant to the mapping
-     * @param exactMatchRequired
      * @throws RepositoryException
      *             If the repository threw an exception during the course of the method.
      * @throws MalformedQueryException

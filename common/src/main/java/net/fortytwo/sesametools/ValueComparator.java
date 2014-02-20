@@ -1,5 +1,6 @@
 package net.fortytwo.sesametools;
 
+import org.openrdf.OpenRDFUtil;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
@@ -8,13 +9,14 @@ import org.openrdf.model.Value;
 import java.util.Comparator;
 
 /**
- * Implements a Comparator for OpenRDF Value objects where:
- * <p/>
+ * Implements a Comparator for OpenRDF Value objects where
  * the order for Values is:
- * * Blank Node's
- * * URI's
- * * Literals
- * <p/>
+ * <ol>
+ * <li> Blank Node's </li>
+ * <li> URI's </li>
+ * <li> Literals </li>
+ * </ol>
+ * 
  * with null Values sorted before others
  *
  * @author Peter Ansell p_ansell@yahoo.com
@@ -38,19 +40,18 @@ public class ValueComparator implements Comparator<Value> {
     public final static int AFTER = 1;
 
     /**
-     * Sorts in the order nulls>BNodes>URIs>Literals
-     * <p/>
+     * Sorts in the order nulls&gt;BNodes&gt;URIs&gt;Literals
+     * <p>
      * This is due to the fact that nulls are only applicable to contexts,
      * and according to the OpenRDF documentation, the type of the null
      * cannot be sufficiently distinguished from any other Value to make
-     * an intelligent comparison to other Values
-     * <p/>
-     * http://www.openrdf.org/doc/sesame2/api/org/openrdf/OpenRDFUtil.html#verifyContextNotNull(org.openrdf.model.Resource...)
-     * <p/>
+     * an intelligent comparison to other Values:
+     * </p>
+     * <p>
      * BNodes are sorted according to the lexical compare of their identifiers,
      * which provides a way to sort statements with the same BNodes in the same positions, near each other
-     * <p/>
      * BNode sorting is not specified across sessions
+     * </p>
      */
     @Override
     public int compare(Value first, Value second) {
