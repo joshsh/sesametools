@@ -13,7 +13,7 @@ import java.io.File;
  * A StackableSail which allows multiple Sails to be stacked upon the same base
  * Sail (avoiding re-initialization of the base Sail as the individual stacked
  * Sails are initialized)
- * <p/>
+ * 
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class MultiStackableSail implements StackableSail {

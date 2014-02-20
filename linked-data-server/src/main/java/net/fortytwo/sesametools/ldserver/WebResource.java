@@ -26,12 +26,16 @@ import java.util.logging.Logger;
 
 /**
  * Information and non-information resources are distinguished by the suffix of the resource's URI:
- * 1) information resource URIs end in .rdf or .trig
- * 2) non-information resources have no such suffix (and TwitLogic will not make statements about such URIs)
- * <p/>
+ * <ol>
+ * <li> information resource URIs end in .rdf or .trig </li>
+ * <li> non-information resources have no such suffix (and TwitLogic will not make statements about such URIs) </li>
+ * </ol>
+ * <p>
  * A request for an information resource is fulfilled with the resource itself.  No content negotiation occurs.
- * <p/>
+ * </p>
+ * <p>
  * A request for a non-information resource is fulfilled with a 303-redirect to an information resource of the appropriate media type.
+ * </p>
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */

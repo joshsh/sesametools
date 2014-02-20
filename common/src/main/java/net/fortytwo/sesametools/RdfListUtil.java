@@ -221,11 +221,13 @@ public class RdfListUtil {
     /**
      * Fetches a single headed list from the graph based on the given subject
      * and predicate
-     * <p/>
+     * <p>
      * Note: We silently fail if no list is detected at all and return null
-     * <p/>
+     * </p>
+     * <p>
      * In addition, only the first triple matching the subject-predicate
      * combination is used to detect the head of the list.
+     * </p>
      *
      * @param subject       the subject of a statement pointing to the list
      * @param predicate     the predicate of a statement pointing to the list

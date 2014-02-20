@@ -77,6 +77,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
      * @param namespacesAreWritable whether the requestor can modify namespace
      *                              definitions
      * @param hideNonWritableContexts removes context information from non-writable graphs.
+     * @throws SailException If there is an error communicating with the base SAIL
      */
     public ConstrainedSailConnection(final SailConnection baseSailConnection,
                                      final ValueFactory valueFactory,

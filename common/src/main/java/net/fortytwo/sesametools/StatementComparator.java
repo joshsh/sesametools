@@ -6,7 +6,7 @@ import org.openrdf.model.Statement;
 
 /**
  * Implements a Comparator for OpenRDF Statements 
- * using the order Subject->Predicate->Object->Context
+ * using the order Subject-&gt;Predicate-&gt;Object-&gt;Context
  * 
  * @author Peter Ansell p_ansell@yahoo.com
  */

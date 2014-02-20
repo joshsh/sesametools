@@ -6,7 +6,7 @@ import org.openrdf.model.Statement;
 
 /**
  * Implements a Comparator for OpenRDF Statements 
- * using the order Subject->Predicate->Object
+ * using the order Subject-&gt;Predicate-&gt;Object
  * 
  * @author Peter Ansell p_ansell@yahoo.com
  */
@@ -34,17 +34,17 @@ public class ContextInsensitiveStatementComparator implements Comparator<Stateme
 				}
 				else
 				{
-					return new ValueComparator().compare(first.getObject(), second.getObject());
+					return ValueComparator.getInstance().compare(first.getObject(), second.getObject());
 				}
 			}
 			else
 			{
-				return new ValueComparator().compare(first.getPredicate(), second.getPredicate());
+				return ValueComparator.getInstance().compare(first.getPredicate(), second.getPredicate());
 			}
 		}
 		else
 		{
-			return new ValueComparator().compare(first.getSubject(), second.getSubject());
+			return ValueComparator.getInstance().compare(first.getSubject(), second.getSubject());
 		}
 	}
 
