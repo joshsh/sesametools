@@ -29,7 +29,7 @@ public class RepositorySail extends SailBase {
     public Repository getRepository() {
         return repository;
     }
-    
+
     public void disableInference() {
         inferenceDisabled = true;
     }

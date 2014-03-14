@@ -3,12 +3,14 @@ package net.fortytwo.sesametools.replay;
 
 import net.fortytwo.sesametools.Formatting;
 import net.fortytwo.sesametools.replay.calls.AddStatementCall;
+import net.fortytwo.sesametools.replay.calls.BeginCall;
 import net.fortytwo.sesametools.replay.calls.ClearCall;
 import net.fortytwo.sesametools.replay.calls.ClearNamespacesCall;
 import net.fortytwo.sesametools.replay.calls.CloseConnectionCall;
 import net.fortytwo.sesametools.replay.calls.CloseIterationCall;
 import net.fortytwo.sesametools.replay.calls.CommitCall;
 import net.fortytwo.sesametools.replay.calls.ConstructorCall;
+import net.fortytwo.sesametools.replay.calls.EvaluateCall;
 import net.fortytwo.sesametools.replay.calls.GetContextIDsCall;
 import net.fortytwo.sesametools.replay.calls.GetNamespaceCall;
 import net.fortytwo.sesametools.replay.calls.GetNamespacesCall;
@@ -46,12 +48,14 @@ public abstract class SailConnectionCall<T, R> {
 
     public enum Type {
         ADD_STATEMENT,
+        BEGIN,
         CLEAR,
         CLEAR_NAMESPACES,
         CLOSE_CONNECTION,
         CLOSE_ITERATION,
         COMMIT,
         CONSTRUCT,
+        EVALUATE,
         GET_CONTEXT_IDS,
         GET_NAMESPACE,
         GET_NAMESPACES,
@@ -91,6 +95,8 @@ public abstract class SailConnectionCall<T, R> {
         switch (type) {
             case ADD_STATEMENT:
                 return new AddStatementCall(id, type, tok);
+            case BEGIN:
+                return new BeginCall(id, type, tok);
             case CLEAR:
                 return new ClearCall(id, type, tok);
             case CLEAR_NAMESPACES:
@@ -103,6 +109,8 @@ public abstract class SailConnectionCall<T, R> {
                 return new CommitCall(id, type, tok);
             case CONSTRUCT:
                 return new ConstructorCall(id, type, tok);
+            case EVALUATE:
+                return new EvaluateCall(id, type, tok);
             case GET_CONTEXT_IDS:
                 return new GetContextIDsCall(id, type, tok);
             case GET_NAMESPACE:
