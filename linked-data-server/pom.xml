@@ -90,6 +90,13 @@
         <dependency>
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.httpclient</artifactId>
+            <exclusions>
+                <!-- conflict with Sesame -->
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
