@@ -31,6 +31,6 @@ For projects which use Maven, SesameTools snapshots and release packages can be 
         </dependency>
 ```
 
-The latest Maven packages can be browsed [here](http://fortytwo.net/maven2/net/fortytwo/sesametools).
+The latest Maven packages can be browsed [here](http://search.maven.org/#search%7Cga%7C1%7Csesametools).
 
 **Credits**: SesameTools is written and maintained by [Joshua Shinavier](https://github.com/joshsh) and [Peter Ansell](https://github.com/ansell). Patches have been contributed by [fkleedorfer](https://github.com/fkleedorfer). An RDF/JSON parser and writer present in releases 1.7 and earlier contain code by [Hannes Ebner](http://ebner.wordpress.com/).
