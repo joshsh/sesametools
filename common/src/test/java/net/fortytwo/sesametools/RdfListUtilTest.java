@@ -22,8 +22,6 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.sail.memory.MemoryStore;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +30,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -41,7 +40,7 @@ import static junit.framework.Assert.assertEquals;
  */
 public class RdfListUtilTest
 {
-    private static final Logger log = LoggerFactory.getLogger(RdfListUtilTest.class);
+    private static final Logger log = Logger.getLogger(RdfListUtilTest.class.getName());
 
     private RdfListUtil testRdfListUtilDefaults;
     private RdfListUtil testRdfListUtilNoChecks;
