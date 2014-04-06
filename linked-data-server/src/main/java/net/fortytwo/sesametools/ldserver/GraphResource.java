@@ -31,22 +31,12 @@ import java.util.logging.Logger;
 public class GraphResource extends ServerResource {
     private static final Logger LOGGER = Logger.getLogger(GraphResource.class.getName());
 
-    protected final String selfURI;
+    protected String selfURI;
 
     protected Sail sail;
 
     public GraphResource() {
-
-        selfURI = this.getRequest().getResourceRef().toString();
-
-        /*
-        System.out.println("selfURI = " + selfURI);
-        System.out.println("baseRef = " + request.getResourceRef().getBaseRef());
-        System.out.println("host domain = " + request.getResourceRef().getHostDomain());
-        System.out.println("host identifier = " + request.getResourceRef().getHostIdentifier());
-        System.out.println("hierarchical part = " + request.getResourceRef().getHierarchicalPart());
-        System.out.println("host ref = " + request.getHostRef().toString());
-        //*/
+    	super();
 
         getVariants().addAll(RDFMediaTypes.getRDFVariants());
 
@@ -57,7 +47,17 @@ public class GraphResource extends ServerResource {
     private Representation representInformationResource(final Representation entity) {
         MediaType type = entity.getMediaType();
         RDFFormat format = RDFMediaTypes.findRdfFormat(type);
+        selfURI = this.getRequest().getResourceRef().toString();
 
+        /*
+        System.out.println("selfURI = " + selfURI);
+        System.out.println("baseRef = " + request.getResourceRef().getBaseRef());
+        System.out.println("host domain = " + request.getResourceRef().getHostDomain());
+        System.out.println("host identifier = " + request.getResourceRef().getHostIdentifier());
+        System.out.println("hierarchical part = " + request.getResourceRef().getHierarchicalPart());
+        System.out.println("host ref = " + request.getHostRef().toString());
+        //*/
+        
         try {
             URI subject = sail.getValueFactory().createURI(selfURI);
             return getRDFRepresentation(subject, format);
