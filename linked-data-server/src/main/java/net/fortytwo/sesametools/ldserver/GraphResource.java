@@ -10,6 +10,7 @@ import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
+import org.restlet.representation.Variant;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
@@ -43,8 +44,9 @@ public class GraphResource extends ServerResource {
         sail = LinkedDataServer.getInstance().getSail();
     }
 
+    @Override
     @Get
-    private Representation representInformationResource(final Representation entity) {
+    public Representation get(final Variant entity) {
         MediaType type = entity.getMediaType();
         RDFFormat format = RDFMediaTypes.findRdfFormat(type);
         selfURI = this.getRequest().getResourceRef().toString();
