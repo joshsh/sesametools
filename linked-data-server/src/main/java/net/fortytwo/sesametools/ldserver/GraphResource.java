@@ -10,6 +10,7 @@ import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
+import org.restlet.representation.Variant;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
@@ -31,12 +32,23 @@ import java.util.logging.Logger;
 public class GraphResource extends ServerResource {
     private static final Logger LOGGER = Logger.getLogger(GraphResource.class.getName());
 
-    protected final String selfURI;
+    protected String selfURI;
 
     protected Sail sail;
 
     public GraphResource() {
+    	super();
 
+        getVariants().addAll(RDFMediaTypes.getRDFVariants());
+
+        sail = LinkedDataServer.getInstance().getSail();
+    }
+
+    @Override
+    @Get
+    public Representation get(final Variant entity) {
+        MediaType type = entity.getMediaType();
+        RDFFormat format = RDFMediaTypes.findRdfFormat(type);
         selfURI = this.getRequest().getResourceRef().toString();
 
         /*
@@ -47,17 +59,7 @@ public class GraphResource extends ServerResource {
         System.out.println("hierarchical part = " + request.getResourceRef().getHierarchicalPart());
         System.out.println("host ref = " + request.getHostRef().toString());
         //*/
-
-        getVariants().addAll(RDFMediaTypes.getRDFVariants());
-
-        sail = LinkedDataServer.getInstance().getSail();
-    }
-
-    @Get
-    private Representation representInformationResource(final Representation entity) {
-        MediaType type = entity.getMediaType();
-        RDFFormat format = RDFMediaTypes.findRdfFormat(type);
-
+        
         try {
             URI subject = sail.getValueFactory().createURI(selfURI);
             return getRDFRepresentation(subject, format);
