@@ -7,6 +7,8 @@ import org.openrdf.repository.sail.SailRepository;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.memory.MemoryStore;
+import org.restlet.Component;
+import org.restlet.data.Protocol;
 
 /**
  * @author Joshua Shinavier (http://fortytwo.net)
@@ -24,17 +26,17 @@ public class DemoApp {
             rc.close();
         }
 
+        Component component = new Component();
+        component.getServers().add(Protocol.HTTP, 8001);
         LinkedDataServer server = new LinkedDataServer(
                 sail,
                 "http://example.org",
-                "http://localhost:8001",
-                8001);
-
-        server.getHost().attach("/person", WebResource.class);
-        server.getHost().attach("/graph", GraphResource.class);
-        server.getHost().attach("/sparql", new SparqlResource());
-
-        server.start();
+                "http://localhost:8001");
+        component.getDefaultHost().attach("/person", WebResource.class);
+        component.getDefaultHost().attach("/graph", GraphResource.class);
+        component.getDefaultHost().attach("/sparql", new SparqlResource());
+        component.getDefaultHost().attach(server);
+        component.start();
 
         /* Now try:
            wget http://localhost:8001/person/arthur

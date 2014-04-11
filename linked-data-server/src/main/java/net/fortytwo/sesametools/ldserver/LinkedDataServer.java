@@ -6,57 +6,47 @@ import net.fortytwo.sesametools.mappingsail.RewriteRule;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.Sail;
-import org.restlet.Component;
-import org.restlet.Context;
-import org.restlet.data.Protocol;
-import org.restlet.routing.VirtualHost;
+import org.restlet.Application;
 
 /**
  * A RESTful web service which publishes the contents of a Sail data store as Linked Data.
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
-public class LinkedDataServer {
+public class LinkedDataServer extends Application {
 
     private final Sail sail;
-    private final Component component;
     private final URI datasetURI;
-    private final Context context;
-    private final VirtualHost host;
 
-    private static LinkedDataServer singleton = null;
+    private static LinkedDataServer SINGLETON = null;
 
     /**
      * @param baseSail        the data store published by this server
      * @param internalBaseURI the base URI of resources within the data store
      * @param externalBaseURI the base URI of resources as they are to be seen in the Linked Data
-     * @param serverPort      the TCP port through which to make the data accessible
      */
     public LinkedDataServer(final Sail baseSail,
                             final String internalBaseURI,
-                            final String externalBaseURI,
-                            final int serverPort) {
-        this(baseSail, internalBaseURI, externalBaseURI, serverPort, null);
+                            final String externalBaseURI) {
+        this(baseSail, internalBaseURI, externalBaseURI, null);
     }
 
     /**
      * @param baseSail        the data store published by this server
      * @param internalBaseURI the base URI of resources within the data store
      * @param externalBaseURI the base URI of resources as they are to be seen in the Linked Data
-     * @param serverPort      the TCP port through which to make the data accessible
      * @param dataset         the URI of the data set to be published.
      *                        This allows resource descriptions to be associated with metadata about the data set which contains them.
      */
     public LinkedDataServer(final Sail baseSail,
                             final String internalBaseURI,
                             final String externalBaseURI,
-                            final int serverPort,
                             final String dataset) {
-        if (null != singleton) {
+        if (null != SINGLETON) {
             throw new IllegalStateException("only one LinkedDataServer may be instantiated per JVM");
         }
 
-        singleton = this;
+        SINGLETON = this;
 
         final ValueFactory vf = baseSail.getValueFactory();
 
@@ -110,30 +100,6 @@ public class LinkedDataServer {
                     ? null
                     : vf.createURI(dataset);
         }
-
-        // Create a new Restlet component and add a HTTP server connector to it
-        component = new Component();
-        component.getServers().add(Protocol.HTTP, serverPort);
-        component.getClients().add(Protocol.FILE);
-
-        //component.getContext().getAttributes().put(SERVER_ATTR, this);
-
-        host = component.getDefaultHost();
-
-        //router = new Router(component.getContext());
-        context = component.getContext();
-    }
-
-    public Context getContext() {
-        return context;
-    }
-
-    public VirtualHost getHost() {
-        return host;
-    }
-
-    public void start() throws Exception {
-        component.start();
     }
 
     /**
@@ -154,6 +120,6 @@ public class LinkedDataServer {
      * @return the single Linked Data server
      */
     public static LinkedDataServer getInstance() {
-        return singleton;
+        return SINGLETON;
     }
 }

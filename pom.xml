@@ -385,6 +385,7 @@
     </build>
 
     <repositories>
+        <!-- as of 2014-04-11, this repo is still necessary for Restlet (2.2.0) -->
         <repository>
             <id>maven-restlet</id>
             <name>Public online Restlet repository</name>
