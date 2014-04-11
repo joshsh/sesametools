@@ -26,16 +26,10 @@ import java.util.logging.Logger;
 
 /**
  * Information and non-information resources are distinguished by the suffix of the resource's URI:
- * <ol>
- * <li> information resource URIs end in .rdf or .trig </li>
- * <li> non-information resources have no such suffix (and TwitLogic will not make statements about such URIs) </li>
- * </ol>
- * <p>
+ * information resource URIs end in .rdf or .trig,
+ * while non-information resources have no such suffix (and LinkedDataServer will not make statements about such URIs).
  * A request for an information resource is fulfilled with the resource itself.  No content negotiation occurs.
- * </p>
- * <p>
  * A request for a non-information resource is fulfilled with a 303-redirect to an information resource of the appropriate media type.
- * </p>
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
@@ -80,8 +74,7 @@ public class WebResource extends ServerResource {
 
         int i = selfURI.lastIndexOf(".");
         if (i > 0) {
-            String suffix = selfURI.substring(i + 1);
-            format = RDFMediaTypes.findFormat(suffix);
+            format = RDFFormat.forFileName(selfURI);
         }
 
         if (null == format) {
@@ -126,7 +119,7 @@ public class WebResource extends ServerResource {
         if (null == format) {
             throw new IllegalStateException("no RDF format for media type " + type);
         }
-        String suffix = RDFMediaTypes.findSuffix(format);
+        String suffix = format.getDefaultFileExtension();
         if (null == suffix) {
             throw new IllegalStateException("no suffix for RDF format " + type);
         }

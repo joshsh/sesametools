@@ -23,9 +23,8 @@ import java.util.logging.Logger;
  * Graph resources are information resources which (in the present schema) do not use suffixes identifying the RDF
  * format (e.g. .rdf or .ttl).  Instead, they use content negotiation to serve an appropriate representation against
  * the URI of the graph, without redirection.
- * <p>
+ *
  * This conforms to the common expectation that RDF documents and corresponding named graphs have the same URI.
- * </p>
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
@@ -113,10 +112,9 @@ public class GraphResource extends ServerResource {
             return new RDFRepresentation(statements, namespaces, format);
 
         } catch (Throwable t) {
-            // TODO: put this in the logger message
-            t.printStackTrace();
-
             LOGGER.log(Level.WARNING, "failed to create RDF representation", t);
+            t.printStackTrace(System.err);
+
             return null;
         }
     }

@@ -1,5 +1,6 @@
 package net.fortytwo.sesametools.ldserver;
 
+import net.fortytwo.sesametools.SesameTools;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFFormat;
@@ -48,7 +49,7 @@ public class RDFRepresentation extends OutputRepresentation {
                 for (Statement st : statements) {
                     writer.handleStatement(st);
                 }
-                writer.handleComment("created by TwitLogic using the Sesame 2 RDF framework");
+                writer.handleComment("created by LinkedDataServer " + SesameTools.getProperties().getProperty(SesameTools.VERSION_PROP) + " using the Sesame 2 RDF framework");
             } finally {
                 writer.endRDF();
             }

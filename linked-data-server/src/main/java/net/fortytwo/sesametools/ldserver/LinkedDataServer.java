@@ -21,7 +21,6 @@ public class LinkedDataServer {
     private final Sail sail;
     private final Component component;
     private final URI datasetURI;
-    //private final Router router;
     private final Context context;
     private final VirtualHost host;
 
@@ -54,7 +53,7 @@ public class LinkedDataServer {
                             final int serverPort,
                             final String dataset) {
         if (null != singleton) {
-            throw new IllegalStateException("only one LinkedDataServer may be instantiated in the same JVM");
+            throw new IllegalStateException("only one LinkedDataServer may be instantiated per JVM");
         }
 
         singleton = this;
@@ -125,20 +124,9 @@ public class LinkedDataServer {
         context = component.getContext();
     }
 
-    /*
-    public Router getRouter() {
-        return router;
-    }*/
-
     public Context getContext() {
         return context;
     }
-
-    /*
-    public Component getComponent() {
-        return component;
-    }
-    */
 
     public VirtualHost getHost() {
         return host;

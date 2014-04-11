@@ -37,6 +37,7 @@ public class DemoApp {
         server.start();
 
         /* Now try:
+           wget http://localhost:8001/person/arthur
            wget --header="Accept: application/x-trig" http://localhost:8001/person/arthur
            wget --header="Accept: application/x-trig" http://localhost:8001/graph/demoGraph
 
