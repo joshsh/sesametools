@@ -26,17 +26,18 @@ public class DemoApp {
             rc.close();
         }
 
-        Component component = new Component();
-        component.getServers().add(Protocol.HTTP, 8001);
         LinkedDataServer server = new LinkedDataServer(
                 sail,
                 "http://example.org",
                 "http://localhost:8001");
+
+        Component component = new Component();
+        component.getServers().add(Protocol.HTTP, 8001);
         component.getDefaultHost().attach("/person", WebResource.class);
         component.getDefaultHost().attach("/graph", GraphResource.class);
         component.getDefaultHost().attach("/sparql", new SparqlResource());
-        component.getDefaultHost().attach(server);
-        component.start();
+        server.setInboundRoot(component);
+        server.start();
 
         /* Now try:
            wget http://localhost:8001/person/arthur
