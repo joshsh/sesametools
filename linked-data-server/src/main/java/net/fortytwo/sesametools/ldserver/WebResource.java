@@ -42,19 +42,27 @@ public class WebResource extends ServerResource {
 
     protected String selfURI;
 
-    private String hostIdentifier;
-    private String baseRef;
-    private String subjectResourceURI;
-    private String typeSpecificId;
+    protected String hostIdentifier;
+    protected String baseRef;
+    protected String subjectResourceURI;
+    protected String typeSpecificId;
     protected WebResourceCategory webResourceCategory;
     protected Sail sail;
-    private RDFFormat format = null;
-    private URI datasetURI;
+    protected RDFFormat format = null;
+    protected URI datasetURI;
 
     public WebResource() throws Exception {
         super();
 
         getVariants().addAll(RDFMediaTypes.getRDFVariants());
+    }
+
+    public void preprocessingHook() throws Exception {
+        // Do nothing by default
+    }
+
+    public void postProcessingHook() throws Exception {
+        // Do nothing by default
     }
 
     @Get
@@ -106,8 +114,11 @@ public class WebResource extends ServerResource {
 
     private Representation representInformationResource() {
         try {
+            preprocessingHook();
             URI subject = sail.getValueFactory().createURI(subjectResourceURI);
-            return getRDFRepresentation(subject, format);
+            Representation result = getRDFRepresentation(subject, format);
+            postProcessingHook();
+            return result;
         } catch (Throwable t) {
             t.printStackTrace();
             return null;
