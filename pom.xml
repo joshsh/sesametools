@@ -384,4 +384,12 @@
         </pluginManagement>
     </build>
 
+    <repositories>
+        <!-- for Restlet -->
+        <repository>
+            <id>sonatype-forge</id>
+            <url>https://repository.sonatype.org/content/groups/forge/</url>
+        </repository>
+    </repositories>
+
 </project>
