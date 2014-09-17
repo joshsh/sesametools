@@ -53,9 +53,7 @@ public class RDFRepresentation extends OutputRepresentation {
             } finally {
                 writer.endRDF();
             }
-        }
-
-        catch (Throwable t) {
+        } catch (Throwable t) {
             if (t instanceof IOException) {
                 throw (IOException) t;
             } else {
