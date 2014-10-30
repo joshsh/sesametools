@@ -58,24 +58,22 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
     private Resource defaultWriteContext;
 
     /**
-     * @param baseSailConnection    a subordinate SailConnection.  When this SailConnection is
-     *                              closed, it closes the subordinate collection as well.
-     *
-     * @param valueFactory          ValueFactory from wrapped sail.
-     *
-     * @param readableSet           all contexts from which the requestor is
-     *                              allowed to read (possibly including the null context)
-     * @param writableSet           all contexts to or from which the
-     *                              requestor is allowed to add or delete statements.  Note that while it's
-     *                              possible to add statements to the null context, it is not possible to
-     *                              remove statements from it
-     * @param defaultWriteContext   the default context to or from which to add
-     *                              or remove statements when no other context is given.  It must be a
-     *                              writable namespace to be of use
-     * @param namespacesAreReadable whether the requestor can see namespace
-     *                              definitions
-     * @param namespacesAreWritable whether the requestor can modify namespace
-     *                              definitions
+     * @param baseSailConnection      a subordinate SailConnection.  When this SailConnection is
+     *                                closed, it closes the subordinate collection as well.
+     * @param valueFactory            ValueFactory from wrapped sail.
+     * @param readableSet             all contexts from which the requestor is
+     *                                allowed to read (possibly including the null context)
+     * @param writableSet             all contexts to or from which the
+     *                                requestor is allowed to add or delete statements.  Note that while it's
+     *                                possible to add statements to the null context, it is not possible to
+     *                                remove statements from it
+     * @param defaultWriteContext     the default context to or from which to add
+     *                                or remove statements when no other context is given.  It must be a
+     *                                writable namespace to be of use
+     * @param namespacesAreReadable   whether the requestor can see namespace
+     *                                definitions
+     * @param namespacesAreWritable   whether the requestor can modify namespace
+     *                                definitions
      * @param hideNonWritableContexts removes context information from non-writable graphs.
      * @throws SailException If there is an error communicating with the base SAIL
      */
@@ -212,15 +210,14 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
             EvaluationStrategyImpl strategy = new EvaluationStrategyImpl(tripleSource, dataset);
 
             return strategy.evaluate(tupleExpr, bindings);
-        }
-        catch (QueryEvaluationException e) {
+        } catch (QueryEvaluationException e) {
             throw new SailException(e);
         }
     }
 
     /**
      * @return an iterator containing only those context IDs to which the
-     *         requestor has read access (excluding the null context).
+     * requestor has read access (excluding the null context).
      */
     @Override
     public CloseableIteration<? extends Resource, SailException> getContextIDs()
@@ -479,6 +476,6 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
          * Has no effect.
          */
         public void remove() throws SailException {
-		}
-	}
+        }
+    }
 }

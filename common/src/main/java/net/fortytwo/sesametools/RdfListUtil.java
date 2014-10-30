@@ -1,6 +1,3 @@
-/**
- *
- */
 package net.fortytwo.sesametools;
 
 import org.openrdf.OpenRDFUtil;
@@ -40,83 +37,80 @@ public class RdfListUtil {
     /**
      * The default value for checkIncomplete if no other value is given.
      */
-	public final static boolean DEFAULT_CHECK_INCOMPLETE = true;
+    public final static boolean DEFAULT_CHECK_INCOMPLETE = true;
 
     /**
      * The default value for useIterativeOnError if no other value is given.
      */
-	public final static boolean DEFAULT_USE_ITERATIVE_ON_ERROR = true;
+    public final static boolean DEFAULT_USE_ITERATIVE_ON_ERROR = true;
 
     /**
      * If enabled, this causes the getLists method to throw RuntimeExceptions if cyclic lists are found.
-     * 
+     * <p/>
      * Disabling this property should not cause infinite loops, as otherwise simple cyclic loops would always cause OutOfMemoryExceptions or StackOverflowExceptions.
-     * 
+     * <p/>
      * Disabling this property may result in missing lists from results.
-     * 
+     * <p/>
      * NOTE: Tests will fail if you disable this property.
-     * 
+     * <p/>
      * Defaults to the constant defined in RdfListUtil.DEFAULT_CHECK_CYCLES
      */
     private final boolean checkCycles;
 
     /**
      * If enabled, this causes the getLists method to throw RuntimeExceptions when incomplete or invalid lists are found.
-     * 
+     * <p/>
      * Some of the cases checked include:
-     * 
+     * <p/>
      * <ul>
-     *  <li>whether RDF.REST predicates all map to Resource Objects</li>
-     *  <li>whether all of the given heads are Resources</li>
-     *  <li>whether RDF.REST predicates map to Resource objects that contain both RDF.FIRST and valid RDF.REST statements</li>
+     * <li>whether RDF.REST predicates all map to Resource Objects</li>
+     * <li>whether all of the given heads are Resources</li>
+     * <li>whether RDF.REST predicates map to Resource objects that contain both RDF.FIRST and valid RDF.REST statements</li>
      * </ul>
-     * 
+     * <p/>
      * Disabling this check may cause unexpected results, including incomplete and missing lists.
-     * 
+     * <p/>
      * NOTE: Tests will fail if you disable this property.
-     * 
+     * <p/>
      * Defaults to the constant defined in RdfListUtil.DEFAULT_CHECK_INCOMPLETE
      */
     private final boolean checkIncomplete;
 
     /**
-     * If enabled, this causes the getLists method to switch from the recursive 
-     * method to the iterative method when the hardcoded recursion limit is 
+     * If enabled, this causes the getLists method to switch from the recursive
+     * method to the iterative method when the hardcoded recursion limit is
      * reached for a list.
-     * 
-     * The iterative approach is slower in general than the recursive approach, 
+     * <p/>
+     * The iterative approach is slower in general than the recursive approach,
      * but can handle much deeper and wider lists.
-     * 
+     * <p/>
      * Defaults to the constant defined in RdfListUtil.DEFAULT_USE_ITERATIVE_ON_ERROR
      */
     private final boolean useIterativeOnError;
 
     /**
-     * Constructs an instance of the RDF List Processing Utility using the 
+     * Constructs an instance of the RDF List Processing Utility using the
      * default error checking and redundancy values.
      */
-	public RdfListUtil() {
-	    this(DEFAULT_CHECK_CYCLES, DEFAULT_CHECK_INCOMPLETE, DEFAULT_USE_ITERATIVE_ON_ERROR);
-	}
-	
-	/**
-	 * Constructs an instance of the RDF List Processing Utility using the 
-	 * given values to define operational checking and redundancy parameters.
-	 * 
-	 * @param checkCycles 
-	 *         Defines whether to check for cycles in lists.
-	 * @param checkIncomplete 
-	 *         Defines whether to check for properly ended lists.
-	 * @param useIterativeOnError 
-	 *         Defines whether to use iterative approach when recursive 
-	 *         approach fails with out of memory or stack overflow.
-	 */
-	public RdfListUtil(boolean checkCycles, boolean checkIncomplete, boolean useIterativeOnError) {
+    public RdfListUtil() {
+        this(DEFAULT_CHECK_CYCLES, DEFAULT_CHECK_INCOMPLETE, DEFAULT_USE_ITERATIVE_ON_ERROR);
+    }
+
+    /**
+     * Constructs an instance of the RDF List Processing Utility using the
+     * given values to define operational checking and redundancy parameters.
+     *
+     * @param checkCycles         Defines whether to check for cycles in lists.
+     * @param checkIncomplete     Defines whether to check for properly ended lists.
+     * @param useIterativeOnError Defines whether to use iterative approach when recursive
+     *                            approach fails with out of memory or stack overflow.
+     */
+    public RdfListUtil(boolean checkCycles, boolean checkIncomplete, boolean useIterativeOnError) {
         this.checkCycles = checkCycles;
         this.checkIncomplete = checkIncomplete;
         this.useIterativeOnError = useIterativeOnError;
-	}
-	
+    }
+
     /**
      * Adds an RDF List with the given elements to a graph.
      *
@@ -129,9 +123,9 @@ public class RdfListUtil {
      *                     (null) context.
      */
     public void addList(final Resource head,
-                               final List<Value> nextValues,
-                               final Graph graphToAddTo,
-                               final Resource... contexts) {
+                        final List<Value> nextValues,
+                        final Graph graphToAddTo,
+                        final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
         final ValueFactory vf = graphToAddTo.getValueFactory();
@@ -175,8 +169,8 @@ public class RdfListUtil {
      *                     (null) context.
      */
     public void addListAtNode(final Resource subject,
-                                     final URI predicate, final List<Value> nextValues,
-                                     final Graph graphToAddTo, final Resource... contexts) {
+                              final URI predicate, final List<Value> nextValues,
+                              final Graph graphToAddTo, final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
         final ValueFactory vf = graphToAddTo.getValueFactory();
@@ -199,7 +193,7 @@ public class RdfListUtil {
      * @return the contents of the list
      */
     public List<Value> getList(final Resource head,
-                                      final Graph graphToSearch, final Resource... contexts) {
+                               final Graph graphToSearch, final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
         final Collection<List<Value>> results = this.getLists(Collections.singleton(head),
@@ -237,9 +231,9 @@ public class RdfListUtil {
      * @throws RuntimeException if the list structure was not complete, or it had cycles
      */
     public List<Value> getListAtNode(final Resource subject,
-                                            final URI predicate,
-                                            final Graph graphToSearch,
-                                            final Resource... contexts) {
+                                     final URI predicate,
+                                     final Graph graphToSearch,
+                                     final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
         final Collection<List<Value>> allLists = this.getListsAtNode(
@@ -266,16 +260,16 @@ public class RdfListUtil {
      * @param graphToSearch the graph from which the list is to be fetched
      * @param contexts      the graph contexts from which the list is to be fetched
      * @return all matching lists. If no matching lists are found, an empty
-     *         collection is returned.
+     * collection is returned.
      */
     //*
     public Collection<List<Value>> getListsIterative(final Set<Resource> heads,
-                                                   final Graph graphToSearch,
-                                                   final Resource... contexts) {
+                                                     final Graph graphToSearch,
+                                                     final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
         final List<List<Value>> results = new ArrayList<List<Value>>(heads.size());
-        
+
         List<List<Resource>> completedPointerTrails = new ArrayList<List<Resource>>(
                 heads.size());
 
@@ -288,9 +282,9 @@ public class RdfListUtil {
 
             followPointerTrails(nextHead, graphToSearch,
                     completedPointerTrails, contexts);
-            
+
             results.addAll(getValuesForPointerTrails(graphToSearch, completedPointerTrails, contexts));
-            
+
             completedPointerTrails.clear();
         }
 
@@ -303,38 +297,32 @@ public class RdfListUtil {
 
     //*
     public Collection<List<Value>> getLists(final Set<Resource> heads,
-                                                   final Graph graphToSearch,
-                                                   final Resource... contexts) {
+                                            final Graph graphToSearch,
+                                            final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
-        
+
         Collection<List<Value>> matches = new LinkedList<List<Value>>();
-        
-    	try
-    	{
-    		for (Resource h : heads) {
-        		matches.addAll(getListsRecursive(h, graphToSearch, contexts));
-        	}
+
+        try {
+            for (Resource h : heads) {
+                matches.addAll(getListsRecursive(h, graphToSearch, contexts));
+            }
+        } catch (RuntimeException rex) {
+            if (this.getUseIterativeOnError() && rex.getMessage().contains("List was too long")) {
+                matches.clear();
+                matches = getListsIterative(heads, graphToSearch, contexts);
+            } else {
+                throw rex;
+            }
         }
-    	catch(RuntimeException rex)
-    	{
-    		if(this.getUseIterativeOnError() && rex.getMessage().contains("List was too long"))
-    		{
-    			matches.clear();
-    			matches = getListsIterative(heads, graphToSearch, contexts);
-    		}
-    		else
-    		{
-    			throw rex;
-    		}
-    	}
 
         return matches;
     }
     //*/
 
     public Collection<List<Value>> getListsRecursive(final Resource head,
-                                                   final Graph graph,
-                                                   final Resource... contexts) {
+                                                     final Graph graph,
+                                                     final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
         Collection<List<Value>> matches = new LinkedList<List<Value>>();
@@ -353,59 +341,59 @@ public class RdfListUtil {
     }
 
     private void matchLists(final Resource head,
-                                   final Graph graph,
-                                   final Collection<List<Value>> matches,
-                                   final Set<Resource> prev,
-                                   final Value[] buffer,
-                                   final int i,
-                                   final Resource... contexts) {
+                            final Graph graph,
+                            final Collection<List<Value>> matches,
+                            final Set<Resource> prev,
+                            final Value[] buffer,
+                            final int i,
+                            final Resource... contexts) {
         if (head.equals(RDF.NIL)) {  // End of list
             List<Value> finalisedList = new ArrayList<Value>(i);
             for (int j = 0; j < i; j++) {
                 finalisedList.add(j, buffer[j]);
             }
             matches.add(finalisedList);
-        } else if(this.getCheckIncomplete() && !(head instanceof Resource)) {
-        	throw new RuntimeException("List structure was not complete");
+        } else if (this.getCheckIncomplete() && !(head instanceof Resource)) {
+            throw new RuntimeException("List structure was not complete");
         } else if (!prev.contains(head)) {  // List continues, no cycle so far.
             prev.add(head);
 
             Iterator<Statement> first = graph.match(head, RDF.FIRST, null, contexts);
-            
-            if(this.getCheckIncomplete() && !first.hasNext()) {
-            	throw new RuntimeException("List structure was not complete");
+
+            if (this.getCheckIncomplete() && !first.hasNext()) {
+                throw new RuntimeException("List structure was not complete");
             }
-            
+
             while (first.hasNext()) {
                 buffer[i] = first.next().getObject();
 
                 Iterator<Statement> rest = graph.match(head, RDF.REST, null, contexts);
 
-                if(this.getCheckIncomplete() && !rest.hasNext()) {
-                	throw new RuntimeException("List structure was not complete");
+                if (this.getCheckIncomplete() && !rest.hasNext()) {
+                    throw new RuntimeException("List structure was not complete");
                 }
-                
+
                 while (rest.hasNext()) {
                     Value r = rest.next().getObject();
 
                     if (r instanceof Resource) {
-                    	if((i+1) >= buffer.length) {
-                    		throw new RuntimeException(String.format("List was too long, maximum is %d elements long", buffer.length));
-                    	}
+                        if ((i + 1) >= buffer.length) {
+                            throw new RuntimeException(String.format("List was too long, maximum is %d elements long", buffer.length));
+                        }
                         matchLists((Resource) r, graph, matches, prev, buffer, i + 1);
-	                } else if(this.getCheckIncomplete()) {
-	                	throw new RuntimeException("List structure was not complete");
-	                }
+                    } else if (this.getCheckIncomplete()) {
+                        throw new RuntimeException("List structure was not complete");
+                    }
                 }
             }
 
             prev.remove(head);
-        } else if(prev.contains(head) && this.getCheckCycles()) {
-        	throw new RuntimeException("List cannot contain cycles");
-        } else if(this.getCheckIncomplete()) {
-        	throw new RuntimeException("List structure was not complete");
+        } else if (prev.contains(head) && this.getCheckCycles()) {
+            throw new RuntimeException("List cannot contain cycles");
+        } else if (this.getCheckIncomplete()) {
+            throw new RuntimeException("List structure was not complete");
         }
-        
+
     }
 
     private List<List<Value>> getValuesForPointerTrails(
@@ -476,8 +464,8 @@ public class RdfListUtil {
     }
 
     private void followPointerTrails(Resource nextHead,
-                                            Graph graphToSearch, List<List<Resource>> completedPointerTrails,
-                                            Resource... contexts) {
+                                     Graph graphToSearch, List<List<Resource>> completedPointerTrails,
+                                     Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
         List<Resource> firstPointerTrail = new ArrayList<Resource>();
@@ -588,7 +576,7 @@ public class RdfListUtil {
      * @param graphToSearch the graph from which the list is to be fetched
      * @param contexts      the graph contexts from which the list is to be fetched
      * @return all matching lists. If no matching lists are found, an empty
-     *         collection is returned.
+     * collection is returned.
      */
     public Collection<List<Value>> getListsAtNode(
             final Resource subject, final URI predicate,
@@ -616,29 +604,26 @@ public class RdfListUtil {
     }
 
     /**
-     * @return True if this utility is setup to check for cycles and throw 
-     *          exceptions if it finds cycles in lists.
+     * @return True if this utility is setup to check for cycles and throw
+     * exceptions if it finds cycles in lists.
      */
-    public boolean getCheckCycles()
-    {
+    public boolean getCheckCycles() {
         return checkCycles;
     }
 
     /**
-     * @return True if this utility is setup to check for incomplete, 
-     *          unterminated lists, and throw exceptions if it finds any.
+     * @return True if this utility is setup to check for incomplete,
+     * unterminated lists, and throw exceptions if it finds any.
      */
-    public boolean getCheckIncomplete()
-    {
+    public boolean getCheckIncomplete() {
         return checkIncomplete;
     }
 
-    /** 
+    /**
      * @return True if this utility is setup to use a slower iterative approach
-     *          then a recursive approach fails.
+     * then a recursive approach fails.
      */
-    public boolean getUseIterativeOnError()
-    {
+    public boolean getUseIterativeOnError() {
         return useIterativeOnError;
     }
 

@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * Graph resources are information resources which (in the present schema) do not use suffixes identifying the RDF
  * format (e.g. .rdf or .ttl).  Instead, they use content negotiation to serve an appropriate representation against
  * the URI of the graph, without redirection.
- *
+ * <p/>
  * This conforms to the common expectation that RDF documents and corresponding named graphs have the same URI.
  *
  * @author Joshua Shinavier (http://fortytwo.net)
@@ -36,7 +36,7 @@ public class GraphResource extends ServerResource {
     protected Sail sail;
 
     public GraphResource() {
-    	super();
+        super();
 
         getVariants().addAll(RDFMediaTypes.getRDFVariants());
 
@@ -58,7 +58,7 @@ public class GraphResource extends ServerResource {
         System.out.println("hierarchical part = " + request.getResourceRef().getHierarchicalPart());
         System.out.println("host ref = " + request.getHostRef().toString());
         //*/
-        
+
         try {
             URI subject = sail.getValueFactory().createURI(selfURI);
             return getRDFRepresentation(subject, format);

@@ -1,6 +1,5 @@
 package net.fortytwo.sesametools;
 
-import org.openrdf.OpenRDFUtil;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
@@ -16,25 +15,25 @@ import java.util.Comparator;
  * <li> URI's </li>
  * <li> Literals </li>
  * </ol>
- * 
+ * <p/>
  * with null Values sorted before others
  *
  * @author Peter Ansell p_ansell@yahoo.com
  */
 public class ValueComparator implements Comparator<Value> {
-	
-	/**
-	 * A thread-safe pre-instantiated instance of ValueComparator.
-	 */
-	private final static ValueComparator INSTANCE = new ValueComparator();
-	
-	/**
-	 * A thread-safe pre-instantiated instance of ValueComparator.
-	 */
-	public final static ValueComparator getInstance() {
-		return INSTANCE;
-	}
-	
+
+    /**
+     * A thread-safe pre-instantiated instance of ValueComparator.
+     */
+    private final static ValueComparator INSTANCE = new ValueComparator();
+
+    /**
+     * A thread-safe pre-instantiated instance of ValueComparator.
+     */
+    public final static ValueComparator getInstance() {
+        return INSTANCE;
+    }
+
     public final static int BEFORE = -1;
     public final static int EQUALS = 0;
     public final static int AFTER = 1;
@@ -95,8 +94,8 @@ public class ValueComparator implements Comparator<Value> {
         }
         // they must both be Literal's, so sort based on the lexical value of the Literal
         else {
-        	Literal firstLiteral = (Literal)first;
-        	Literal secondLiteral = (Literal)second;
+            Literal firstLiteral = (Literal) first;
+            Literal secondLiteral = (Literal) second;
             int cmp = firstLiteral.getLabel().compareTo(secondLiteral.getLabel());
 
             if (EQUALS == cmp) {
@@ -111,16 +110,16 @@ public class ValueComparator implements Comparator<Value> {
                 } else if (null != secondLang) {
                     return BEFORE;
                 }
-                
+
                 URI firstType = firstLiteral.getDatatype();
                 URI secondType = secondLiteral.getDatatype();
-            	if (null == firstType) {
-            		if (null == secondType) {
-            			return EQUALS;
-            		} else {
-            			return BEFORE;
-            		}
-            	} else if (null == secondType) {
+                if (null == firstType) {
+                    if (null == secondType) {
+                        return EQUALS;
+                    } else {
+                        return BEFORE;
+                    }
+                } else if (null == secondType) {
                     return AFTER;
                 } else {
                     return firstType.stringValue().compareTo(secondType.stringValue());
