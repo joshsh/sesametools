@@ -36,7 +36,8 @@ public class LinkedDataServer extends Application {
      * @param internalBaseURI the base URI of resources within the data store
      * @param externalBaseURI the base URI of resources as they are to be seen in the Linked Data
      * @param dataset         the URI of the data set to be published.
-     *                        This allows resource descriptions to be associated with metadata about the data set which contains them.
+     *                        This allows resource descriptions to be associated
+     *                        with metadata about the data set which contains them.
      */
     public LinkedDataServer(final Sail baseSail,
                             final String internalBaseURI,

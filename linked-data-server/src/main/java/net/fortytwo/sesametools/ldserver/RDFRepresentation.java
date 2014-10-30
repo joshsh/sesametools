@@ -49,7 +49,9 @@ public class RDFRepresentation extends OutputRepresentation {
                 for (Statement st : statements) {
                     writer.handleStatement(st);
                 }
-                writer.handleComment("created by LinkedDataServer " + SesameTools.getProperties().getProperty(SesameTools.VERSION_PROP) + " using the Sesame 2 RDF framework");
+                writer.handleComment("created by LinkedDataServer "
+                        + SesameTools.getProperties().getProperty(SesameTools.VERSION_PROP)
+                        + " using the Sesame 2 RDF framework");
             } finally {
                 writer.endRDF();
             }

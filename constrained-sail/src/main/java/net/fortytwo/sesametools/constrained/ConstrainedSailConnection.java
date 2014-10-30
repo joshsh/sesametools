@@ -357,8 +357,6 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-
     public boolean readPermitted(final Resource context) throws SailException {
         return readableSet.getDefaultGraphs().contains(context);
     }

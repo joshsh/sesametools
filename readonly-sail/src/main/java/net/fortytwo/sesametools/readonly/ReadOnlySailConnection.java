@@ -32,10 +32,10 @@ public class ReadOnlySailConnection extends SailConnectionBase {
         baseSailConnection.close();
     }
 
-    protected CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateInternal(final TupleExpr tupleExpr,
-                                                                                       final Dataset dataset,
-                                                                                       final BindingSet bindings,
-                                                                                       final boolean includeInferred) throws SailException {
+    protected CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateInternal(
+            final TupleExpr tupleExpr, final Dataset dataset, final BindingSet bindings, final boolean includeInferred)
+            throws SailException {
+
         return baseSailConnection.evaluate(tupleExpr, dataset, bindings, includeInferred);
     }
 
@@ -43,11 +43,10 @@ public class ReadOnlySailConnection extends SailConnectionBase {
         return baseSailConnection.getContextIDs();
     }
 
-    protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(final Resource subject,
-                                                                                final URI predicate,
-                                                                                final Value object,
-                                                                                final boolean includeInferred,
-                                                                                final Resource... contexts) throws SailException {
+    protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(
+            final Resource subject, final URI predicate, final Value object, final boolean includeInferred,
+            final Resource... contexts) throws SailException {
+
         return baseSailConnection.getStatements(subject, predicate, object, includeInferred, contexts);
     }
 
@@ -64,16 +63,16 @@ public class ReadOnlySailConnection extends SailConnectionBase {
     }
 
     protected void addStatementInternal(final Resource subject,
-                             final URI predicate,
-                             final Value object,
-                             final Resource... contexts) throws SailException {
+                                        final URI predicate,
+                                        final Value object,
+                                        final Resource... contexts) throws SailException {
         // Do nothing.
     }
 
     protected void removeStatementsInternal(final Resource subject,
-                                 final URI predicate,
-                                 final Value object,
-                                 final Resource... contexts) throws SailException {
+                                            final URI predicate,
+                                            final Value object,
+                                            final Resource... contexts) throws SailException {
         // Do nothing.
     }
 
@@ -90,7 +89,7 @@ public class ReadOnlySailConnection extends SailConnectionBase {
     }
 
     protected void setNamespaceInternal(final String prefix,
-                             final String uri) throws SailException {
+                                        final String uri) throws SailException {
         // Do nothing.
     }
 

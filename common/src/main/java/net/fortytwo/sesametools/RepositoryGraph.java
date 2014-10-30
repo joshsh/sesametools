@@ -69,7 +69,8 @@ public class RepositoryGraph implements Graph {
         if (o instanceof Statement) {
             Statement st = (Statement) o;
             try {
-                RepositoryResult result = rc.getStatements(st.getSubject(), st.getPredicate(), st.getObject(), INFER, st.getContext());
+                RepositoryResult result = rc.getStatements(
+                        st.getSubject(), st.getPredicate(), st.getObject(), INFER, st.getContext());
                 try {
                     return result.hasNext();
                 } finally {
@@ -122,7 +123,8 @@ public class RepositoryGraph implements Graph {
             throw new RepositoryGraphRuntimeException(e);
         }
 
-        // the RepositoryConnection API does not provide an efficient means of knowing whether the repository was changed
+        // the RepositoryConnection API does not provide an efficient means
+        // of knowing whether the repository was changed
         return false;
     }
 

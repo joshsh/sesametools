@@ -288,8 +288,10 @@ public class StatementComparatorTest {
      */
     @Test
     public void testCompareEquivalentOneNullOneBNodeContext() {
-        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, null);
-        statement2 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, testContextBNode1);
+        statement1 = valueFactory.createStatement(
+                testSubjectUri1, testPredicateUri1, testObjectUri1, null);
+        statement2 = valueFactory.createStatement(
+                testSubjectUri1, testPredicateUri1, testObjectUri1, testContextBNode1);
 
         assertTrue(testComparator.compare(statement1, statement2) < 0);
         assertTrue(testComparator.compare(statement2, statement1) > 0);
@@ -301,8 +303,10 @@ public class StatementComparatorTest {
      */
     @Test
     public void testCompareEquivalentBNodeAndUriContext() {
-        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, testContextBNode1);
-        statement2 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, testContextUri1);
+        statement1 = valueFactory.createStatement(
+                testSubjectUri1, testPredicateUri1, testObjectUri1, testContextBNode1);
+        statement2 = valueFactory.createStatement(
+                testSubjectUri1, testPredicateUri1, testObjectUri1, testContextUri1);
 
         assertTrue(testComparator.compare(statement1, statement2) < 0);
         assertTrue(testComparator.compare(statement2, statement1) > 0);
@@ -454,8 +458,10 @@ public class StatementComparatorTest {
         statement5 = valueFactory.createStatement(testSubjectBNode1, testPredicateUri1, testObjectTypedLiteral1Integer);
         statement6 = valueFactory.createStatement(testSubjectBNode1, testPredicateUri1, testObjectTypedLiteral2Integer);
 
-        statement7 = valueFactory.createStatement(testSubjectBNode1, testPredicateUri1, testObjectTypedLiteral1IntegerString);
-        statement8 = valueFactory.createStatement(testSubjectBNode1, testPredicateUri1, testObjectTypedLiteral2IntegerString);
+        statement7 = valueFactory.createStatement(
+                testSubjectBNode1, testPredicateUri1, testObjectTypedLiteral1IntegerString);
+        statement8 = valueFactory.createStatement(
+                testSubjectBNode1, testPredicateUri1, testObjectTypedLiteral2IntegerString);
 
         assertTrue(testComparator.compare(statement1, statement1) == 0);
         assertTrue(testComparator.compare(statement2, statement2) == 0);
@@ -579,8 +585,10 @@ public class StatementComparatorTest {
         statement8 = valueFactory.createStatement(testSubjectBNode1, testPredicateUri1, testObjectTypedLiteral1Integer);
         statement9 = valueFactory.createStatement(testSubjectBNode1, testPredicateUri1, testObjectTypedLiteral2Integer);
 
-        statement10 = valueFactory.createStatement(testSubjectBNode1, testPredicateUri1, testObjectTypedLiteral1IntegerString);
-        statement11 = valueFactory.createStatement(testSubjectBNode1, testPredicateUri1, testObjectTypedLiteral2IntegerString);
+        statement10 = valueFactory.createStatement(
+                testSubjectBNode1, testPredicateUri1, testObjectTypedLiteral1IntegerString);
+        statement11 = valueFactory.createStatement(
+                testSubjectBNode1, testPredicateUri1, testObjectTypedLiteral2IntegerString);
 
         assertTrue(testComparator.compare(statement1, statement1) == 0);
         assertTrue(testComparator.compare(statement2, statement2) == 0);

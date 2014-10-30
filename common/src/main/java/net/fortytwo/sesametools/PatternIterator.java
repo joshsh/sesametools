@@ -9,7 +9,8 @@ import org.openrdf.util.iterators.FilterIterator;
 import java.util.Iterator;
 
 /**
- * A <code>FilterIterator</code> which matches statements against a given subject, predicate, object, and optional context(s).
+ * A <code>FilterIterator</code> which matches statements against a given
+ * subject, predicate, object, and optional context(s).
  */
 public class PatternIterator extends FilterIterator<Statement> {
 

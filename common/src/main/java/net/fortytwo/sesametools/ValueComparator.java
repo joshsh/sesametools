@@ -61,7 +61,8 @@ public class ValueComparator implements Comparator<Value> {
                 return BEFORE;
             }
         } else if (second == null) {
-            // always sort null Values before others, so if the second is null, but the first wasn't, sort the first after the second
+            // always sort null Values before others, so if the second is null,
+            // but the first wasn't, sort the first after the second
             return AFTER;
         }
 

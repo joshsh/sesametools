@@ -17,8 +17,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A <code>Sail</code> which caches statements retrieved from a base <code>Sail</code> in an internal <code>MemoryStore</code>,
- * speeding up subsequent queries for the same data.
+ * A <code>Sail</code> which caches statements retrieved from a base <code>Sail</code>
+ * in an internal <code>MemoryStore</code>, speeding up subsequent queries for the same data.
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
@@ -108,8 +108,6 @@ public class CachingSail extends SailBase implements StackableSail {
     public void setBaseSail(final Sail sail) {
         baseSail = sail;
     }
-
-    ////////////////////////////////////////////////////////////////////////////
 
     public long getCapacity() {
         return this.capacity;

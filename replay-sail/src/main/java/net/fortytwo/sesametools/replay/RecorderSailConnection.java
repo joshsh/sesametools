@@ -149,12 +149,14 @@ public class RecorderSailConnection extends SailConnectionBase {
     }
 
     protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(
-            final Resource subj, final URI pred, final Value obj, final boolean includeInferred, final Resource... contexts)
-            throws SailException {
+            final Resource subj, final URI pred, final Value obj, final boolean includeInferred,
+            final Resource... contexts) throws SailException {
+
         if (config.logReadOperations) {
             queryHandler.handle(new GetStatementsCall(id, subj, pred, obj, includeInferred, contexts));
             return new RecorderIteration<Statement, SailException>(
-                    (CloseableIteration<Statement, SailException>) baseSailConnection.getStatements(subj, pred, obj, includeInferred, contexts),
+                    (CloseableIteration<Statement, SailException>) baseSailConnection.getStatements(
+                            subj, pred, obj, includeInferred, contexts),
                     nextIterationId(),
                     queryHandler);
         } else {

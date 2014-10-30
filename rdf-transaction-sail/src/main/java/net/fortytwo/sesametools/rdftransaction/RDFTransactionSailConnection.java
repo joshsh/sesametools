@@ -1,6 +1,7 @@
 package net.fortytwo.sesametools.rdftransaction;
 
 import org.openrdf.http.protocol.transaction.operations.AddStatementOperation;
+import org.openrdf.http.protocol.transaction.operations.ClearNamespacesOperation;
 import org.openrdf.http.protocol.transaction.operations.ClearOperation;
 import org.openrdf.http.protocol.transaction.operations.RemoveNamespaceOperation;
 import org.openrdf.http.protocol.transaction.operations.RemoveStatementsOperation;
@@ -74,14 +75,18 @@ public class RDFTransactionSailConnection extends SailConnectionWrapper {
     }
 
     @Override
-    public void addStatement(Resource subject, URI predicate, Value object, Resource... contexts) throws SailException {
+    public void addStatement(Resource subject, URI predicate, Value object, Resource... contexts)
+            throws SailException {
+
         this.getWrappedConnection().addStatement(subject, predicate, object, contexts);
 
         operations.add(new AddStatementOperation(subject, predicate, object, contexts));
     }
 
     @Override
-    public void removeStatements(Resource subject, URI predicate, Value object, Resource... contexts) throws SailException {
+    public void removeStatements(Resource subject, URI predicate, Value object, Resource... contexts)
+            throws SailException {
+
         this.getWrappedConnection().removeStatements(subject, predicate, object, contexts);
 
         operations.add(new RemoveStatementsOperation(subject, predicate, object, contexts));
@@ -112,8 +117,7 @@ public class RDFTransactionSailConnection extends SailConnectionWrapper {
     public void clearNamespaces() throws SailException {
         this.getWrappedConnection().clearNamespaces();
 
-        // FIXME: this should be restored.  It is temporarily disabled due to an AllegroGraph bug.
-        //operations.add(new ClearNamespacesOperation());
+        operations.add(new ClearNamespacesOperation());
     }
 
     @Override

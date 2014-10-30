@@ -29,9 +29,11 @@ import java.util.logging.Logger;
 /**
  * Information and non-information resources are distinguished by the suffix of the resource's URI:
  * information resource URIs end in .rdf or .trig,
- * while non-information resources have no such suffix (and LinkedDataServer will not make statements about such URIs).
+ * while non-information resources have no such suffix
+ * (and LinkedDataServer will not make statements about such URIs).
  * A request for an information resource is fulfilled with the resource itself.  No content negotiation occurs.
- * A request for a non-information resource is fulfilled with a 303-redirect to an information resource of the appropriate media type.
+ * A request for a non-information resource is fulfilled with a 303-redirect
+ * to an information resource of the appropriate media type.
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
@@ -275,7 +277,8 @@ public class WebResource extends ServerResource {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             t.printStackTrace(new PrintStream(bos));
 
-            LOGGER.log(Level.WARNING, "failed to create RDF representation (stack trace follows)\n" + bos.toString(), t);
+            LOGGER.log(Level.WARNING,
+                    "failed to create RDF representation (stack trace follows)\n" + bos.toString(), t);
             return null;
         }
     }

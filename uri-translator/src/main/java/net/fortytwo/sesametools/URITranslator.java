@@ -38,11 +38,13 @@ public class URITranslator {
      * @throws RepositoryException      If the repository threw an exception during the course of the method.
      * @throws MalformedQueryException  If any of the translation queries could not be executed due to an error in the
      *                                  queries or a lack of understanding of the query by the repository.
-     * @throws UpdateExecutionException If the SPARQL Update queries used by this method were not able to be successfully
-     *                                  executed on the given repository for some reason.
+     * @throws UpdateExecutionException If the SPARQL Update queries used by this method were not able
+     *                                  to be successfully executed on the given repository for some reason.
      */
     public static void doTranslation(Repository repository, final String inputUriPrefix, final String outputUriPrefix,
-                                     Resource... contexts) throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+                                     Resource... contexts)
+            throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+
         Collection<URI> subjectMappingPredicates = Collections.emptyList();
         Collection<URI> predicateMappingPredicates = Collections.emptyList();
         Collection<URI> objectMappingPredicates = Collections.emptyList();
@@ -60,27 +62,31 @@ public class URITranslator {
      * NOTE: The results for queries with deleteTranslatedTriples set to false may not be consistent
      * with what you expect.
      *
-     * @param repository                     The repository containing the input triples, and which will contain the output
-     *                                       triples
+     * @param repository                     The repository containing the input triples,
+     *                                       and which will contain the output triples
      * @param inputUriPrefix                 The string defining the start of any URIs to look for.
-     * @param outputUriPrefix                The string defining the start of the URIs which matched the inputUriPrefix, after
-     *                                       the translation is complete.
+     * @param outputUriPrefix                The string defining the start of the URIs which matched the inputUriPrefix,
+     *                                       after the translation is complete.
      * @param nextSubjectMappingPredicates   The predicates used to map subject URIs that are translated.
      * @param nextPredicateMappingPredicates The predicates used to map predicate URIs that are translated.
      * @param nextObjectMappingPredicates    The predicates used to map object URIs that are translated.
-     * @param deleteTranslatedTriples        If this is true, then any triples which contained translated URIs will be deleted.
-     *                                       Mapping triples will still exist if any mapping predicates were utilised.
+     * @param deleteTranslatedTriples        If this is true, then any triples which contained translated URIs
+     *                                       will be deleted. Mapping triples will still exist if any mapping
+     *                                       predicates were utilised.
      * @param contexts                       The contexts in the repository that are relevant to the mapping
      * @throws RepositoryException      If the repository threw an exception during the course of the method.
      * @throws MalformedQueryException  If any of the translation queries could not be executed due to an error in the
      *                                  queries or a lack of understanding of the query by the repository.
-     * @throws UpdateExecutionException If the SPARQL Update queries used by this method were not able to be successfully
-     *                                  executed on the given repository for some reason.
+     * @throws UpdateExecutionException If the SPARQL Update queries used by this method were not able
+     *                                  to be successfully executed on the given repository for some reason.
      */
     public static void doTranslation(Repository repository, final String inputUriPrefix, final String outputUriPrefix,
-                                     final Collection<URI> nextSubjectMappingPredicates, final Collection<URI> nextPredicateMappingPredicates,
-                                     final Collection<URI> nextObjectMappingPredicates, boolean deleteTranslatedTriples, Resource... contexts)
+                                     final Collection<URI> nextSubjectMappingPredicates,
+                                     final Collection<URI> nextPredicateMappingPredicates,
+                                     final Collection<URI> nextObjectMappingPredicates,
+                                     boolean deleteTranslatedTriples, Resource... contexts)
             throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+
         doTranslation(repository, inputUriPrefix, outputUriPrefix, nextSubjectMappingPredicates, true, false,
                 nextPredicateMappingPredicates, true, false, nextObjectMappingPredicates, true, false, deleteTranslatedTriples,
                 contexts);
@@ -95,38 +101,43 @@ public class URITranslator {
      * NOTE: The results for queries with deleteTranslatedTriples set to false may not be consistent
      * with what you expect.
      *
-     * @param repository                     The repository containing the input triples, and which will contain the output
-     *                                       triples
+     * @param repository                     The repository containing the input triples, and which will contain
+     *                                       the output triples
      * @param inputUriPrefix                 The string defining the start of any URIs to look for.
-     * @param outputUriPrefix                The string defining the start of the URIs which matched the inputUriPrefix, after
-     *                                       the translation is complete.
+     * @param outputUriPrefix                The string defining the start of the URIs which matched the inputUriPrefix,
+     *                                       after the translation is complete.
      * @param nextSubjectMappingPredicates   The predicates used to map subject URIs that are translated.
      * @param translateSubjectUris           True to translate subject URIs and false otherwise.
-     * @param exactSubjectMatchRequired      True to indicate that translation should only occur if the subject URI matched the
-     *                                       inputUriPrefix exactly.
+     * @param exactSubjectMatchRequired      True to indicate that translation should only occur if the subject URI
+     *                                       matched the inputUriPrefix exactly.
      * @param nextPredicateMappingPredicates The predicates used to map predicate URIs that are translated.
      * @param translatePredicateUris         True to translate predicate URIs and false otherwise.
-     * @param exactPredicateMatchRequired    True to indicate that translation should only occur if the predicate URI matched the
-     *                                       inputUriPrefix exactly.
+     * @param exactPredicateMatchRequired    True to indicate that translation should only occur if the predicate URI
+     *                                       matched the inputUriPrefix exactly.
      * @param nextObjectMappingPredicates    The predicates used to map object URIs that are translated.
      * @param translateObjectUris            True to translate object URIs and false otherwise.
-     * @param exactObjectMatchRequired       True to indicate that translation should only occur if the object URI matched the
-     *                                       inputUriPrefix exactly.
-     * @param deleteTranslatedTriples        If this is true, then any triples which contained translated URIs will be deleted.
-     *                                       Mapping triples will still exist if any mapping predicates were utilised.
+     * @param exactObjectMatchRequired       True to indicate that translation should only occur if the object URI
+     *                                       matched the inputUriPrefix exactly.
+     * @param deleteTranslatedTriples        If this is true, then any triples which contained translated URIs
+     *                                       will be deleted. Mapping triples will still exist if any mapping
+     *                                       predicates were utilised.
      * @param contexts                       The contexts in the repository that are relevant to the mapping
      * @throws RepositoryException      If the repository threw an exception during the course of the method.
      * @throws MalformedQueryException  If any of the translation queries could not be executed due to an error in the
      *                                  queries or a lack of understanding of the query by the repository.
-     * @throws UpdateExecutionException If the SPARQL Update queries used by this method were not able to be successfully
-     *                                  executed on the given repository for some reason.
+     * @throws UpdateExecutionException If the SPARQL Update queries used by this method were not able
+     *                                  to be successfully executed on the given repository for some reason.
      */
     public static void doTranslation(Repository repository, final String inputUriPrefix, final String outputUriPrefix,
-                                     final Collection<URI> nextSubjectMappingPredicates, boolean translateSubjectUris, boolean exactSubjectMatchRequired,
-                                     final Collection<URI> nextPredicateMappingPredicates, boolean translatePredicateUris, boolean exactPredicateMatchRequired,
-                                     final Collection<URI> nextObjectMappingPredicates, boolean translateObjectUris, boolean exactObjectMatchRequired,
-                                     boolean deleteTranslatedTriples, Resource... contexts) throws RepositoryException, MalformedQueryException,
-            UpdateExecutionException {
+                                     final Collection<URI> nextSubjectMappingPredicates, boolean translateSubjectUris,
+                                     boolean exactSubjectMatchRequired,
+                                     final Collection<URI> nextPredicateMappingPredicates,
+                                     boolean translatePredicateUris, boolean exactPredicateMatchRequired,
+                                     final Collection<URI> nextObjectMappingPredicates, boolean translateObjectUris,
+                                     boolean exactObjectMatchRequired, boolean deleteTranslatedTriples,
+                                     Resource... contexts)
+            throws RepositoryException, MalformedQueryException, UpdateExecutionException {
+
         RepositoryConnection repositoryConnection = null;
 
         try {
@@ -167,7 +178,8 @@ public class URITranslator {
                     objectTemplateWhereBuilder.append(" ?subjectUri ?predicateUri ?objectUri . ");
 
                     if (!exactObjectMatchRequired) {
-                        objectTemplateWhereBuilder.append("filter(isIRI(?objectUri) && strStarts(str(?objectUri), \"" + inputUriPrefix + "\")");
+                        objectTemplateWhereBuilder.append("filter(isIRI(?objectUri) && strStarts(str(?objectUri), \""
+                                + inputUriPrefix + "\")");
                         objectTemplateWhereBuilder.append(") . ");
                         objectTemplateWhereBuilder.append("bind(iri(concat(\"");
                         objectTemplateWhereBuilder.append(outputUriPrefix);
@@ -175,9 +187,13 @@ public class URITranslator {
                         objectTemplateWhereBuilder.append((inputUriPrefix.length() + 1));
                         objectTemplateWhereBuilder.append(")))) AS ?normalisedObjectUri) ");
                     } else {
-                        // the following should be more efficient on large queries for exact matching, as it contains constants that can be compiled down to IRIs
-                        // In addition, the branch above will work with exact matching, but is prone to collisions if the IRI is used as the base of a longer IRI
-                        objectTemplateWhereBuilder.append("filter(isIRI(?objectUri) && sameTerm(?objectUri, IRI(\"" + inputUriPrefix + "\"))). bind(iri(\"" + outputUriPrefix + "\") AS ?normalisedObjectUri) . ");
+                        // the following should be more efficient on large queries for exact matching,
+                        // as it contains constants that can be compiled down to IRIs
+                        // In addition, the branch above will work with exact matching,
+                        // but is prone to collisions if the IRI is used as the base of a longer IRI
+                        objectTemplateWhereBuilder.append("filter(isIRI(?objectUri) && sameTerm(?objectUri, IRI(\""
+                                + inputUriPrefix + "\"))). bind(iri(\""
+                                + outputUriPrefix + "\") AS ?normalisedObjectUri) . ");
                     }
 
                     String deleteObjectTemplate;
@@ -191,7 +207,8 @@ public class URITranslator {
                     final String objectTemplate =
                             nextWithClause + " " + deleteObjectTemplate
                                     + " INSERT { ?subjectUri ?predicateUri ?normalisedObjectUri . "
-                                    + objectConstructBuilder.toString() + " } " + " WHERE { " + objectTemplateWhereBuilder.toString()
+                                    + objectConstructBuilder.toString() + " } " + " WHERE { "
+                                    + objectTemplateWhereBuilder.toString()
                                     + " } ; ";
 
                     LOGGER.debug("objectTemplate=" + objectTemplate);
@@ -221,7 +238,8 @@ public class URITranslator {
                     subjectTemplateWhereBuilder.append(" ?subjectUri ?predicateUri ?objectUri . ");
 
                     if (!exactObjectMatchRequired) {
-                        subjectTemplateWhereBuilder.append("filter(isIRI(?subjectUri) && strStarts(str(?subjectUri), \"" + inputUriPrefix + "\")");
+                        subjectTemplateWhereBuilder.append("filter(isIRI(?subjectUri) && strStarts(str(?subjectUri), \""
+                                + inputUriPrefix + "\")");
                         subjectTemplateWhereBuilder.append(") . ");
                         subjectTemplateWhereBuilder.append("bind(iri(concat(\"");
                         subjectTemplateWhereBuilder.append(outputUriPrefix);
@@ -229,9 +247,13 @@ public class URITranslator {
                         subjectTemplateWhereBuilder.append((inputUriPrefix.length() + 1));
                         subjectTemplateWhereBuilder.append(")))) AS ?normalisedSubjectUri) ");
                     } else {
-                        // the following should be more efficient on large queries for exact matching, as it contains constants that can be compiled down to IRIs
-                        // In addition, the branch above will work with exact matching, but is prone to collisions if the IRI is used as the base of a longer IRI
-                        subjectTemplateWhereBuilder.append("filter(isIRI(?subjectUri) && sameTerm(?subjectUri, IRI(\"" + inputUriPrefix + "\"))). bind(iri(\"" + outputUriPrefix + "\") AS ?normalisedSubjectUri) . ");
+                        // the following should be more efficient on large queries for exact matching,
+                        // as it contains constants that can be compiled down to IRIs
+                        // In addition, the branch above will work with exact matching,
+                        // but is prone to collisions if the IRI is used as the base of a longer IRI
+                        subjectTemplateWhereBuilder.append("filter(isIRI(?subjectUri) && sameTerm(?subjectUri, IRI(\""
+                                + inputUriPrefix + "\"))). bind(iri(\""
+                                + outputUriPrefix + "\") AS ?normalisedSubjectUri) . ");
                     }
 
                     String deleteSubjectTemplate;
@@ -245,7 +267,8 @@ public class URITranslator {
                     final String subjectTemplate =
                             nextWithClause + " " + deleteSubjectTemplate
                                     + " INSERT { ?normalisedSubjectUri ?predicateUri ?objectUri . "
-                                    + subjectConstructBuilder.toString() + " } " + " WHERE { " + subjectTemplateWhereBuilder.toString()
+                                    + subjectConstructBuilder.toString() + " } " + " WHERE { "
+                                    + subjectTemplateWhereBuilder.toString()
                                     + " } ; ";
 
                     // allQueries.add(subjectTemplate);
@@ -272,7 +295,9 @@ public class URITranslator {
                     predicateTemplateWhereBuilder.append(" ?subjectUri ?predicateUri ?objectUri . ");
 
                     if (!exactObjectMatchRequired) {
-                        predicateTemplateWhereBuilder.append("filter(isIRI(?predicateUri) && strStarts(str(?predicateUri), \"" + inputUriPrefix + "\")");
+                        predicateTemplateWhereBuilder.append(
+                                "filter(isIRI(?predicateUri) && strStarts(str(?predicateUri), \""
+                                        + inputUriPrefix + "\")");
                         predicateTemplateWhereBuilder.append(") . ");
                         predicateTemplateWhereBuilder.append("bind(iri(concat(\"");
                         predicateTemplateWhereBuilder.append(outputUriPrefix);
@@ -280,9 +305,14 @@ public class URITranslator {
                         predicateTemplateWhereBuilder.append((inputUriPrefix.length() + 1));
                         predicateTemplateWhereBuilder.append(")))) AS ?normalisedPredicateUri) ");
                     } else {
-                        // the following should be more efficient on large queries for exact matching, as it contains constants that can be compiled down to IRIs
-                        // In addition, the branch above will work with exact matching, but is prone to collisions if the IRI is used as the base of a longer IRI
-                        predicateTemplateWhereBuilder.append("filter(isIRI(?predicateUri) && sameTerm(?predicateUri, IRI(\"" + inputUriPrefix + "\"))). bind(iri(\"" + outputUriPrefix + "\") AS ?normalisedPredicateUri) . ");
+                        // the following should be more efficient on large queries for exact matching,
+                        // as it contains constants that can be compiled down to IRIs
+                        // In addition, the branch above will work with exact matching,
+                        // but is prone to collisions if the IRI is used as the base of a longer IRI
+                        predicateTemplateWhereBuilder.append(
+                                "filter(isIRI(?predicateUri) && sameTerm(?predicateUri, IRI(\""
+                                        + inputUriPrefix + "\"))). bind(iri(\""
+                                        + outputUriPrefix + "\") AS ?normalisedPredicateUri) . ");
                     }
 
                     String deletePredicateTemplate;

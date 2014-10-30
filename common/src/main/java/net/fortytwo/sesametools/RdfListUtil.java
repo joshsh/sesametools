@@ -47,7 +47,8 @@ public class RdfListUtil {
     /**
      * If enabled, this causes the getLists method to throw RuntimeExceptions if cyclic lists are found.
      * <p/>
-     * Disabling this property should not cause infinite loops, as otherwise simple cyclic loops would always cause OutOfMemoryExceptions or StackOverflowExceptions.
+     * Disabling this property should not cause infinite loops,
+     * as otherwise simple cyclic loops would always cause OutOfMemoryExceptions or StackOverflowExceptions.
      * <p/>
      * Disabling this property may result in missing lists from results.
      * <p/>
@@ -58,14 +59,16 @@ public class RdfListUtil {
     private final boolean checkCycles;
 
     /**
-     * If enabled, this causes the getLists method to throw RuntimeExceptions when incomplete or invalid lists are found.
+     * If enabled, this causes the getLists method to throw RuntimeExceptions
+     * when incomplete or invalid lists are found.
      * <p/>
      * Some of the cases checked include:
      * <p/>
      * <ul>
      * <li>whether RDF.REST predicates all map to Resource Objects</li>
      * <li>whether all of the given heads are Resources</li>
-     * <li>whether RDF.REST predicates map to Resource objects that contain both RDF.FIRST and valid RDF.REST statements</li>
+     * <li>whether RDF.REST predicates map to Resource objects
+     * that contain both RDF.FIRST and valid RDF.REST statements</li>
      * </ul>
      * <p/>
      * Disabling this check may cause unexpected results, including incomplete and missing lists.
@@ -288,7 +291,7 @@ public class RdfListUtil {
             completedPointerTrails.clear();
         }
 
-//		results = getValuesForPointerTrails(
+//      results = getValuesForPointerTrails(
 //                graphToSearch, completedPointerTrails, contexts);
 
         return results;
@@ -378,7 +381,8 @@ public class RdfListUtil {
 
                     if (r instanceof Resource) {
                         if ((i + 1) >= buffer.length) {
-                            throw new RuntimeException(String.format("List was too long, maximum is %d elements long", buffer.length));
+                            throw new RuntimeException(String.format(
+                                    "List was too long, maximum is %d elements long", buffer.length));
                         }
                         matchLists((Resource) r, graph, matches, prev, buffer, i + 1);
                     } else if (this.getCheckIncomplete()) {
@@ -442,7 +446,8 @@ public class RdfListUtil {
                                     + errorValueMatch);
 
                             throw new RuntimeException(
-                                    "List structure cannot contain multiple values for rdf:first items for a given subject resource");
+                                    "List structure cannot contain multiple values" +
+                                            " for rdf:first items for a given subject resource");
                         }
                     }
 

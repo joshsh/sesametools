@@ -34,7 +34,9 @@ public class WriteOnlySailConnection extends SailConnectionBase {
         this.valueFactory = valueFactory;
     }
 
-    protected void addStatementInternal(final Resource subj, final URI pred, final Value obj, final Resource... contexts) throws SailException {
+    protected void addStatementInternal(
+            final Resource subj, final URI pred, final Value obj, final Resource... contexts) throws SailException {
+
         if (null == contexts || 0 == contexts.length) {
             Statement st = valueFactory.createStatement(subj, pred, obj);
             try {

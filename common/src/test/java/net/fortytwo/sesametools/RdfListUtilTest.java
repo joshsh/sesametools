@@ -128,24 +128,28 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
      * .
      */
     @Test
     public void testAddListAtNodeEmptyNoContext() {
-        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesEmpty, this.testGraph);
+        this.testRdfListUtilDefaults.addListAtNode(
+                this.testSubjectUri1, this.testPredicateUri1, this.testValuesEmpty, this.testGraph);
 
         assertEquals(0, this.testGraph.size());
     }
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
      * .
      */
     @Test
     public void testAddListAtNodeMultipleElementsNoContext() {
-        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
+        this.testRdfListUtilDefaults.addListAtNode(
+                this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
                 this.testGraph);
 
         assertEquals(7, this.testGraph.size());
@@ -259,13 +263,14 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
      * .
      */
     @Test
     public void testAddListAtNodeSingleElementNoContext() {
-        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri,
-                this.testGraph);
+        this.testRdfListUtilDefaults.addListAtNode(
+                this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri, this.testGraph);
 
         assertEquals(3, this.testGraph.size());
 
@@ -318,7 +323,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -330,7 +336,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -434,7 +441,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -477,7 +485,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -489,7 +498,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -593,7 +603,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -636,13 +647,14 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}
+     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
      * .
      */
     @Test
     public void testGetListAfterAddListAtNodeMultipleElementsNullContext() {
-        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
-                this.testGraph);
+        this.testRdfListUtilDefaults.addListAtNode(
+                this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements, this.testGraph);
 
         assertEquals(7, this.testGraph.size());
 
@@ -661,7 +673,8 @@ public class RdfListUtilTest {
         Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
 
         final List<Value> results =
-                this.testRdfListUtilDefaults.getList((BNode) matchedStatement.getObject(), this.testGraph, (Resource) null);
+                this.testRdfListUtilDefaults.getList(
+                        (BNode) matchedStatement.getObject(), this.testGraph, (Resource) null);
 
         assertEquals(3, results.size());
 
@@ -673,13 +686,14 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}
+     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
      * .
      */
     @Test
     public void testGetListAtNodeAfterInvalidGraphOperation() {
-        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
-                this.testGraph);
+        this.testRdfListUtilDefaults.addListAtNode(
+                this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements, this.testGraph);
 
         assertEquals(7, this.testGraph.size());
 
@@ -698,8 +712,8 @@ public class RdfListUtilTest {
 
         try {
             final List<Value> results =
-                    this.testRdfListUtilDefaults.getListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testGraph,
-                            (Resource) null);
+                    this.testRdfListUtilDefaults.getListAtNode(
+                            this.testSubjectUri1, this.testPredicateUri1, this.testGraph, (Resource) null);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
@@ -710,18 +724,20 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}
+     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
      * .
      */
     @Test
     public void testGetListAtNodeMultipleElementsNullContext() {
-        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
-                this.testGraph);
+        this.testRdfListUtilDefaults.addListAtNode(
+                this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements, this.testGraph);
 
         assertEquals(7, this.testGraph.size());
 
         final List<Value> results =
-                this.testRdfListUtilDefaults.getListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testGraph, (Resource) null);
+                this.testRdfListUtilDefaults.getListAtNode(
+                        this.testSubjectUri1, this.testPredicateUri1, this.testGraph, (Resource) null);
 
         assertEquals(3, results.size());
 
@@ -733,7 +749,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}
+     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
      * .
      */
     @Test
@@ -756,7 +773,8 @@ public class RdfListUtilTest {
         Assert.assertFalse(this.testGraph.contains(matchedStatement));
 
         try {
-            final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph, (Resource) null);
+            final List<Value> results = this.testRdfListUtilDefaults.getList(
+                    this.testListHeadBNode1, this.testGraph, (Resource) null);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
@@ -767,7 +785,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}
+     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
      * .
      */
     @Test
@@ -789,12 +808,14 @@ public class RdfListUtilTest {
 
         Assert.assertFalse(this.testGraph.contains(matchedStatement));
 
-        Statement literalRdfRest = this.vf.createStatement(matchedStatement.getSubject(), RDF.REST, this.vf.createLiteral("InvalidRdfRestLiteral"));
+        Statement literalRdfRest = this.vf.createStatement(
+                matchedStatement.getSubject(), RDF.REST, this.vf.createLiteral("InvalidRdfRestLiteral"));
 
         this.testGraph.add(literalRdfRest);
 
         try {
-            final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph, (Resource) null);
+            final List<Value> results = this.testRdfListUtilDefaults.getList(
+                    this.testListHeadBNode1, this.testGraph, (Resource) null);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
@@ -805,7 +826,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}
+     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
      * .
      */
     @Test
@@ -814,7 +836,8 @@ public class RdfListUtilTest {
 
         assertEquals(6, this.testGraph.size());
 
-        final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph, (Resource) null);
+        final List<Value> results = this.testRdfListUtilDefaults.getList(
+                this.testListHeadBNode1, this.testGraph, (Resource) null);
 
         assertEquals(3, results.size());
 
@@ -826,8 +849,8 @@ public class RdfListUtilTest {
 
     @Test
     public void testGetListsAtNodeSingleNullContext() {
-        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri,
-                this.testGraph);
+        this.testRdfListUtilDefaults.addListAtNode(
+                this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri, this.testGraph);
 
         assertEquals(3, this.testGraph.size());
 
@@ -861,8 +884,8 @@ public class RdfListUtilTest {
 
     @Test
     public void testGetListsAfterAddListAtNodeSingleNullContext() {
-        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri,
-                this.testGraph);
+        this.testRdfListUtilDefaults.addListAtNode(
+                this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri, this.testGraph);
 
         assertEquals(3, this.testGraph.size());
 
@@ -935,8 +958,8 @@ public class RdfListUtilTest {
 
     @Test
     public void testGetListsSingleNullContext() {
-        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri,
-                this.testGraph);
+        this.testRdfListUtilDefaults.addListAtNode(
+                this.testSubjectUri1, this.testPredicateUri1, this.testValuesSingleUri, this.testGraph);
 
         assertEquals(3, this.testGraph.size());
 
@@ -974,7 +997,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI, org.openrdf.model.Graph, org.openrdf.model.Resource)}
+     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
+     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
      * .
      */
     @Test
@@ -997,7 +1021,8 @@ public class RdfListUtilTest {
         Assert.assertFalse(this.testGraph.contains(matchedStatement));
 
         try {
-            final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadUri1, this.testGraph, (Resource) null);
+            final List<Value> results = this.testRdfListUtilDefaults.getList(
+                    this.testListHeadUri1, this.testGraph, (Resource) null);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Did not find expected exception");
@@ -1076,7 +1101,8 @@ public class RdfListUtilTest {
             BNode nextRestBNode = nextHeadBNode;
             for (int j = 0; j < jCount; j++) {
                 BNode nextTreeBNode = vf.createBNode("i-" + i + "_j-" + j);
-                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_j-" + j));
+                Statement nextTestStatement1 = vf.createStatement(
+                        nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_j-" + j));
                 this.testGraph.add(nextTestStatement1);
                 Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode);
                 this.testGraph.add(nextTestStatement2);
@@ -1084,7 +1110,8 @@ public class RdfListUtilTest {
                 nextRestBNode = nextTreeBNode;
             }
 
-            Statement nextTestNilStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("terminating i-" + i));
+            Statement nextTestNilStatement1 = vf.createStatement(
+                    nextRestBNode, RDF.FIRST, vf.createLiteral("terminating i-" + i));
             this.testGraph.add(nextTestNilStatement1);
 
             Statement nextTestNilStatement2 = vf.createStatement(nextRestBNode, RDF.REST, RDF.NIL);
@@ -1128,7 +1155,8 @@ public class RdfListUtilTest {
             BNode nextRestBNode = nextHeadBNode;
             for (int j = 0; j < jCount; j++) {
                 BNode nextTreeBNode = vf.createBNode("i-" + i + "_j-" + j);
-                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_j-" + j));
+                Statement nextTestStatement1 = vf.createStatement(
+                        nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_j-" + j));
                 this.testGraph.add(nextTestStatement1);
                 Statement nextTestStatement2 = vf.createStatement(nextRestBNode, RDF.REST, nextTreeBNode);
                 this.testGraph.add(nextTestStatement2);
@@ -1136,7 +1164,8 @@ public class RdfListUtilTest {
                 nextRestBNode = nextTreeBNode;
             }
 
-            Statement nextTestNilStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("terminating i-" + i));
+            Statement nextTestNilStatement1 = vf.createStatement(
+                    nextRestBNode, RDF.FIRST, vf.createLiteral("terminating i-" + i));
             this.testGraph.add(nextTestNilStatement1);
 
             Statement nextTestNilStatement2 = vf.createStatement(nextRestBNode, RDF.REST, RDF.NIL);
@@ -1183,7 +1212,8 @@ public class RdfListUtilTest {
                 BNode nextTreeBNode1 = vf.createBNode("i-" + i + "_k-" + k + "_a");
                 BNode nextTreeBNode2 = vf.createBNode("i-" + i + "_k-" + k + "_b");
 
-                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_k-" + k));
+                Statement nextTestStatement1 = vf.createStatement(
+                        nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_k-" + k));
                 this.testGraph.add(nextTestStatement1);
 
                 // Fork the list in two
@@ -1193,14 +1223,17 @@ public class RdfListUtilTest {
                 this.testGraph.add(nextTestStatement3);
 
                 // Generate a terminating element for one of the arms
-                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_b"));
+                Statement nextTestNilStatement1 = vf.createStatement(
+                        nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_b"));
                 this.testGraph.add(nextTestNilStatement1);
 
-                Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
+                Statement nextTestNilStatement2 = vf.createStatement(
+                        nextTreeBNode2, RDF.REST, RDF.NIL);
                 this.testGraph.add(nextTestNilStatement2);
 
                 if (k == kCount - 1) {
-                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_a"));
+                    Statement nextTestNilStatement3 = vf.createStatement(
+                            nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_a"));
                     this.testGraph.add(nextTestNilStatement3);
 
                     Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
@@ -1260,7 +1293,8 @@ public class RdfListUtilTest {
                 BNode nextTreeBNode1 = vf.createBNode("i-" + i + "_k-" + k + "_a");
                 BNode nextTreeBNode2 = vf.createBNode("i-" + i + "_k-" + k + "_b");
 
-                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_k-" + k));
+                Statement nextTestStatement1 = vf.createStatement(
+                        nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_k-" + k));
                 this.testGraph.add(nextTestStatement1);
 
                 // Fork the list in two
@@ -1270,14 +1304,17 @@ public class RdfListUtilTest {
                 this.testGraph.add(nextTestStatement3);
 
                 // Generate a terminating element for one of the arms
-                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_b"));
+                Statement nextTestNilStatement1 = vf.createStatement(
+                        nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_b"));
                 this.testGraph.add(nextTestNilStatement1);
 
-                Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
+                Statement nextTestNilStatement2 = vf.createStatement(
+                        nextTreeBNode2, RDF.REST, RDF.NIL);
                 this.testGraph.add(nextTestNilStatement2);
 
                 if (k == kDepthCount - 1) {
-                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_a"));
+                    Statement nextTestNilStatement3 = vf.createStatement(
+                            nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_a"));
                     this.testGraph.add(nextTestNilStatement3);
 
                     Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
@@ -1299,7 +1336,8 @@ public class RdfListUtilTest {
                 BNode nextTreeBNode1 = vf.createBNode("m-" + m + "_n-" + n + "_a");
                 BNode nextTreeBNode2 = vf.createBNode("m-" + m + "_n-" + n + "_b");
 
-                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: m-" + m + "_n-" + n));
+                Statement nextTestStatement1 = vf.createStatement(
+                        nextRestBNode, RDF.FIRST, vf.createLiteral("literal: m-" + m + "_n-" + n));
                 this.testGraph.add(nextTestStatement1);
 
                 // Fork the list in two
@@ -1309,14 +1347,16 @@ public class RdfListUtilTest {
                 this.testGraph.add(nextTestStatement3);
 
                 // Generate a terminating element for one of the arms
-                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating m-" + m + "_n-" + n + "_b"));
+                Statement nextTestNilStatement1 = vf.createStatement(
+                        nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating m-" + m + "_n-" + n + "_b"));
                 this.testGraph.add(nextTestNilStatement1);
 
                 Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
                 this.testGraph.add(nextTestNilStatement2);
 
                 if (n == nDepthCount - 1) {
-                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating m-" + m + "_n-" + n + "_a"));
+                    Statement nextTestNilStatement3 = vf.createStatement(
+                            nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating m-" + m + "_n-" + n + "_a"));
                     this.testGraph.add(nextTestNilStatement3);
 
                     Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
@@ -1385,7 +1425,8 @@ public class RdfListUtilTest {
                 BNode nextTreeBNode1 = vf.createBNode("i-" + i + "_k-" + k + "_a");
                 BNode nextTreeBNode2 = vf.createBNode("i-" + i + "_k-" + k + "_b");
 
-                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_k-" + k));
+                Statement nextTestStatement1 = vf.createStatement(
+                        nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_k-" + k));
                 this.testGraph.add(nextTestStatement1);
 
                 // Fork the list in two
@@ -1395,14 +1436,16 @@ public class RdfListUtilTest {
                 this.testGraph.add(nextTestStatement3);
 
                 // Generate a terminating element for one of the arms
-                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_b"));
+                Statement nextTestNilStatement1 = vf.createStatement(
+                        nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_b"));
                 this.testGraph.add(nextTestNilStatement1);
 
                 Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
                 this.testGraph.add(nextTestNilStatement2);
 
                 if (k == kDepthCount - 1) {
-                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_a"));
+                    Statement nextTestNilStatement3 = vf.createStatement(
+                            nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_a"));
                     this.testGraph.add(nextTestNilStatement3);
 
                     Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
@@ -1424,7 +1467,8 @@ public class RdfListUtilTest {
                 BNode nextTreeBNode1 = vf.createBNode("m-" + m + "_n-" + n + "_a");
                 BNode nextTreeBNode2 = vf.createBNode("m-" + m + "_n-" + n + "_b");
 
-                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: m-" + m + "_n-" + n));
+                Statement nextTestStatement1 = vf.createStatement(
+                        nextRestBNode, RDF.FIRST, vf.createLiteral("literal: m-" + m + "_n-" + n));
                 this.testGraph.add(nextTestStatement1);
 
                 // Fork the list in two
@@ -1434,14 +1478,16 @@ public class RdfListUtilTest {
                 this.testGraph.add(nextTestStatement3);
 
                 // Generate a terminating element for one of the arms
-                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating m-" + m + "_n-" + n + "_b"));
+                Statement nextTestNilStatement1 = vf.createStatement(
+                        nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating m-" + m + "_n-" + n + "_b"));
                 this.testGraph.add(nextTestNilStatement1);
 
                 Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
                 this.testGraph.add(nextTestNilStatement2);
 
                 if (n == nDepthCount - 1) {
-                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating m-" + m + "_n-" + n + "_a"));
+                    Statement nextTestNilStatement3 = vf.createStatement(
+                            nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating m-" + m + "_n-" + n + "_a"));
                     this.testGraph.add(nextTestNilStatement3);
 
                     Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
@@ -1514,7 +1560,8 @@ public class RdfListUtilTest {
                 BNode nextTreeBNode1 = vf.createBNode("i-" + i + "_k-" + k + "_a");
                 BNode nextTreeBNode2 = vf.createBNode("i-" + i + "_k-" + k + "_b");
 
-                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_k-" + k));
+                Statement nextTestStatement1 = vf.createStatement(
+                        nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_k-" + k));
                 this.testGraph.add(nextTestStatement1);
 
                 // Fork the list in two
@@ -1524,14 +1571,16 @@ public class RdfListUtilTest {
                 this.testGraph.add(nextTestStatement3);
 
                 // Generate a terminating element for one of the arms
-                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_b"));
+                Statement nextTestNilStatement1 = vf.createStatement(
+                        nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_b"));
                 this.testGraph.add(nextTestNilStatement1);
 
                 Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
                 this.testGraph.add(nextTestNilStatement2);
 
                 if (k == kCount - 1) {
-                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_a"));
+                    Statement nextTestNilStatement3 = vf.createStatement(
+                            nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_a"));
                     this.testGraph.add(nextTestNilStatement3);
 
                     Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
@@ -1590,7 +1639,8 @@ public class RdfListUtilTest {
                 BNode nextTreeBNode1 = vf.createBNode("i-" + i + "_k-" + k + "_a");
                 BNode nextTreeBNode2 = vf.createBNode("i-" + i + "_k-" + k + "_b");
 
-                Statement nextTestStatement1 = vf.createStatement(nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_k-" + k));
+                Statement nextTestStatement1 = vf.createStatement(
+                        nextRestBNode, RDF.FIRST, vf.createLiteral("literal: i-" + i + "_k-" + k));
                 this.testGraph.add(nextTestStatement1);
 
                 // Fork the list in two
@@ -1600,14 +1650,16 @@ public class RdfListUtilTest {
                 this.testGraph.add(nextTestStatement3);
 
                 // Generate a terminating element for one of the arms
-                Statement nextTestNilStatement1 = vf.createStatement(nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_b"));
+                Statement nextTestNilStatement1 = vf.createStatement(
+                        nextTreeBNode2, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_b"));
                 this.testGraph.add(nextTestNilStatement1);
 
                 Statement nextTestNilStatement2 = vf.createStatement(nextTreeBNode2, RDF.REST, RDF.NIL);
                 this.testGraph.add(nextTestNilStatement2);
 
                 if (k == kCount - 1) {
-                    Statement nextTestNilStatement3 = vf.createStatement(nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_a"));
+                    Statement nextTestNilStatement3 = vf.createStatement(
+                            nextTreeBNode1, RDF.FIRST, vf.createLiteral("terminating i-" + i + "_k-" + k + "_a"));
                     this.testGraph.add(nextTestNilStatement3);
 
                     Statement nextTestNilStatement4 = vf.createStatement(nextTreeBNode1, RDF.REST, RDF.NIL);
@@ -1632,7 +1684,8 @@ public class RdfListUtilTest {
 
         log.info("start");
         try {
-            final Collection<List<Value>> results = this.testRdfListUtilNoChecksOrRecursion.getLists(heads, this.testGraph);
+            final Collection<List<Value>> results
+                    = this.testRdfListUtilNoChecksOrRecursion.getLists(heads, this.testGraph);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
             Assert.fail("Expected exception not found");
@@ -1715,7 +1768,8 @@ public class RdfListUtilTest {
     }
 
     /**
-     * Tests for cases where a forked list ends in RDF.NIL in one fork, but a runtime exception should be thrown due to the incomplete structure on the other fork
+     * Tests for cases where a forked list ends in RDF.NIL in one fork,
+     * but a runtime exception should be thrown due to the incomplete structure on the other fork
      */
     @Test
     public void testGetListForkedInvalidPartial() {
@@ -1763,8 +1817,8 @@ public class RdfListUtilTest {
         repo.initialize();
         RepositoryConnection rc = repo.getConnection();
         RepositoryGraph g = new RepositoryGraph(rc);
-        this.testRdfListUtilDefaults.addListAtNode(this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements,
-                this.testGraph);
+        this.testRdfListUtilDefaults.addListAtNode(
+                this.testSubjectUri1, this.testPredicateUri1, this.testValuesMultipleElements, this.testGraph);
         for (Statement s : this.testGraph) {
             g.add(s);
         }

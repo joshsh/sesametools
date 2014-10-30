@@ -185,7 +185,8 @@ public class Sesamize {
             fileInput = new FileInputStream(qFile);
             String query = IOUtils.toString(fileInput, "UTF-8");
 
-            translateRDFDocumentUseingConstructQuery(query, inputFile, System.out, inputFormat, outputFormat, getBaseURI(args));
+            translateRDFDocumentUseingConstructQuery(
+                    query, inputFile, System.out, inputFormat, outputFormat, getBaseURI(args));
         } finally {
             if (fileInput != null) {
                 fileInput.close();
@@ -299,7 +300,10 @@ public class Sesamize {
                                                                 final OutputStream out,
                                                                 final RDFFormat inFormat,
                                                                 final RDFFormat outFormat,
-                                                                final String baseURI) throws SailException, IOException, RDFHandlerException, RDFParseException, RepositoryException, MalformedQueryException, QueryEvaluationException {
+                                                                final String baseURI)
+            throws SailException, IOException, RDFHandlerException, RDFParseException, RepositoryException,
+            MalformedQueryException, QueryEvaluationException {
+
         Sail sail = new MemoryStore();
         sail.initialize();
 
@@ -325,7 +329,9 @@ public class Sesamize {
                                             final OutputStream out,
                                             final RDFFormat inFormat,
                                             final RDFFormat outFormat,
-                                            final String baseURI) throws SailException, IOException, RDFHandlerException, RDFParseException {
+                                            final String baseURI)
+            throws SailException, IOException, RDFHandlerException, RDFParseException {
+
         InputStream in = null;
         try {
             in = new FileInputStream(inputFile);
@@ -341,7 +347,8 @@ public class Sesamize {
                                             final OutputStream out,
                                             final RDFFormat inFormat,
                                             final RDFFormat outFormat,
-                                            final String baseURI) throws SailException, IOException, RDFHandlerException, RDFParseException {
+                                            final String baseURI)
+            throws SailException, IOException, RDFHandlerException, RDFParseException {
 
         RDFParser p = Rio.createParser(inFormat);
         RDFWriter w = Rio.createWriter(outFormat, out);
@@ -354,7 +361,9 @@ public class Sesamize {
     public static void dumpNativeStoreToRDFDocument(final File nativeStoreDirectory,
                                                     final File dumpFile,
                                                     final RDFFormat format,
-                                                    final Resource... contexts) throws SailException, RepositoryException, IOException, RDFHandlerException {
+                                                    final Resource... contexts)
+            throws SailException, RepositoryException, IOException, RDFHandlerException {
+
         System.out.println("dumping store at " + nativeStoreDirectory + " to file " + dumpFile);
 
         Sail sail = new NativeStore(nativeStoreDirectory);
@@ -383,7 +392,9 @@ public class Sesamize {
     public static void importRDFDocumentIntoNativeStore(final File nativeStoreDirectory,
                                                         final File dumpFile,
                                                         final RDFFormat format,
-                                                        final Resource... contexts) throws SailException, RepositoryException, IOException, RDFParseException {
+                                                        final Resource... contexts)
+            throws SailException, RepositoryException, IOException, RDFParseException {
+
         System.out.println("importing file " + dumpFile + " into store at " + nativeStoreDirectory);
         Sail sail = new NativeStore(nativeStoreDirectory);
         sail.initialize();
