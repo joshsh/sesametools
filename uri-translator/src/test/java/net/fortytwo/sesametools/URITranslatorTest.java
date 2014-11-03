@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public class URITranslatorTest
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(URITranslatorTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(URITranslatorTest.class);
     
     private Repository testRepository;
     private ValueFactory testValueFactory;
@@ -109,7 +109,7 @@ public class URITranslatorTest
             }
             catch(RepositoryException e)
             {
-                LOGGER.error("Found unexpected exception while closing test repository connection");
+                logger.error("Found unexpected exception while closing test repository connection");
             }
         }
         
@@ -123,7 +123,7 @@ public class URITranslatorTest
             }
             catch(RepositoryException e)
             {
-                LOGGER.error("Repository did not shut down correctly in test tearDown", e);
+                logger.error("Repository did not shut down correctly in test tearDown", e);
             }
         }
         
@@ -163,7 +163,7 @@ public class URITranslatorTest
         for(Statement nextBeforeStatement : testRepositoryConnection.getStatements(null, null, null, false,
                 testContext1).asList())
         {
-            LOGGER.info("nextBeforeStatement: " + nextBeforeStatement.toString());
+            logger.info("nextBeforeStatement: " + nextBeforeStatement.toString());
         }
         
         URITranslator.doTranslation(testRepository, testInputUriPrefix1, testOutputUriPrefix1,
@@ -173,7 +173,7 @@ public class URITranslatorTest
         for(Statement nextAfterStatement : testRepositoryConnection
                 .getStatements(null, null, null, false, testContext1).asList())
         {
-            LOGGER.info("nextAfterStatement: " + nextAfterStatement.toString());
+            logger.info("nextAfterStatement: " + nextAfterStatement.toString());
         }
         
         Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
@@ -201,7 +201,7 @@ public class URITranslatorTest
         for(Statement nextBeforeStatement : testRepositoryConnection.getStatements(null, null, null, false,
                 testContext1).asList())
         {
-            LOGGER.info("nextBeforeStatement: " + nextBeforeStatement.toString());
+            logger.info("nextBeforeStatement: " + nextBeforeStatement.toString());
         }
         
         URITranslator.doTranslation(
@@ -212,7 +212,7 @@ public class URITranslatorTest
         for(Statement nextAfterStatement : testRepositoryConnection
                 .getStatements(null, null, null, false, testContext1).asList())
         {
-            LOGGER.info("nextAfterStatement: " + nextAfterStatement.toString());
+            logger.info("nextAfterStatement: " + nextAfterStatement.toString());
         }
         
         Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
@@ -240,7 +240,7 @@ public class URITranslatorTest
         for(Statement nextBeforeStatement : testRepositoryConnection.getStatements(null, null, null, false,
                 testContext1).asList())
         {
-            LOGGER.info("nextBeforeStatement: " + nextBeforeStatement.toString());
+            logger.info("nextBeforeStatement: " + nextBeforeStatement.toString());
         }
         
         URITranslator.doTranslation(
@@ -251,7 +251,7 @@ public class URITranslatorTest
         for(Statement nextAfterStatement : testRepositoryConnection
                 .getStatements(null, null, null, false, testContext1).asList())
         {
-            LOGGER.info("nextAfterStatement: " + nextAfterStatement.toString());
+            logger.info("nextAfterStatement: " + nextAfterStatement.toString());
         }
         
         Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
@@ -279,7 +279,7 @@ public class URITranslatorTest
         for(Statement nextBeforeStatement : testRepositoryConnection.getStatements(null, null, null, false,
                 testContext1).asList())
         {
-            LOGGER.info("nextBeforeStatement: " + nextBeforeStatement.toString());
+            logger.info("nextBeforeStatement: " + nextBeforeStatement.toString());
         }
         
         URITranslator.doTranslation(
@@ -290,7 +290,7 @@ public class URITranslatorTest
         for(Statement nextAfterStatement : testRepositoryConnection
                 .getStatements(null, null, null, false, testContext1).asList())
         {
-            LOGGER.info("nextAfterStatement: " + nextAfterStatement.toString());
+            logger.info("nextAfterStatement: " + nextAfterStatement.toString());
         }
         
         Assert.assertEquals(1, testRepositoryConnection.size(testContext1));

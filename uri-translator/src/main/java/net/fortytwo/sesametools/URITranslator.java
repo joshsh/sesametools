@@ -23,7 +23,7 @@ import java.util.List;
  * @author Peter Ansell p_ansell@yahoo.com
  */
 public class URITranslator {
-    private final static Logger LOGGER = LoggerFactory.getLogger(URITranslator.class);
+    private final static Logger logger = LoggerFactory.getLogger(URITranslator.class);
 
     /**
      * Maps URIs for all triples in the given contexts in the given repository, between the input
@@ -152,7 +152,7 @@ public class URITranslator {
                     if (nextResource != null && nextResource instanceof URI) {
                         withClauses.add(" WITH <" + nextResource.stringValue() + "> ");
                     } else {
-                        LOGGER.error("Did not recognise (and ignoring) the context: " + nextResource);
+                        logger.error("Did not recognise (and ignoring) the context: " + nextResource);
                     }
                 }
             }
@@ -211,7 +211,7 @@ public class URITranslator {
                                     + objectTemplateWhereBuilder.toString()
                                     + " } ; ";
 
-                    LOGGER.debug("objectTemplate=" + objectTemplate);
+                    logger.debug("objectTemplate=" + objectTemplate);
 
                     // allQueries.add(objectTemplate);
 
@@ -361,7 +361,7 @@ public class URITranslator {
                 try {
                     repositoryConnection.close();
                 } catch (RepositoryException rex) {
-                    LOGGER.error("Found repository exception while trying to close repository connection", rex);
+                    logger.error("Found repository exception while trying to close repository connection", rex);
                 }
             }
         }
@@ -393,7 +393,7 @@ public class URITranslator {
     private static void executeSparqlUpdateQueries(RepositoryConnection repositoryConnection, List<String> nextQueries)
             throws RepositoryException, MalformedQueryException, UpdateExecutionException {
         for (String nextQuery : nextQueries) {
-            LOGGER.info("nextQuery=" + nextQuery);
+            logger.info("nextQuery=" + nextQuery);
 
             Update preparedUpdate = repositoryConnection.prepareUpdate(QueryLanguage.SPARQL, nextQuery);
 

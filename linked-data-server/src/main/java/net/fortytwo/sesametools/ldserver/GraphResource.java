@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class GraphResource extends ServerResource {
-    private static final Logger LOGGER = Logger.getLogger(GraphResource.class.getName());
+    private static final Logger logger = Logger.getLogger(GraphResource.class.getName());
 
     protected String selfURI;
 
@@ -112,7 +112,7 @@ public class GraphResource extends ServerResource {
             return new RDFRepresentation(statements, namespaces, format);
 
         } catch (Throwable t) {
-            LOGGER.log(Level.WARNING, "failed to create RDF representation", t);
+            logger.log(Level.WARNING, "failed to create RDF representation", t);
             t.printStackTrace(System.err);
 
             return null;

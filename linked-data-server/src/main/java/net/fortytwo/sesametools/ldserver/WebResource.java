@@ -38,7 +38,7 @@ import java.util.logging.Logger;
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class WebResource extends ServerResource {
-    private static final Logger LOGGER = Logger.getLogger(WebResource.class.getName());
+    private static final Logger logger = Logger.getLogger(WebResource.class.getName());
 
     enum WebResourceCategory {
         InformationResource, NonInformationResource
@@ -277,7 +277,7 @@ public class WebResource extends ServerResource {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             t.printStackTrace(new PrintStream(bos));
 
-            LOGGER.log(Level.WARNING,
+            logger.log(Level.WARNING,
                     "failed to create RDF representation (stack trace follows)\n" + bos.toString(), t);
             return null;
         }
