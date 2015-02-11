@@ -27,7 +27,7 @@ For projects which use Maven, SesameTools snapshots and release packages can be 
         <dependency>
             <groupId>net.fortytwo.sesametools</groupId>
             <artifactId>linked-data-server</artifactId>
-            <version>1.8</version>
+            <version>1.9</version>
         </dependency>
 ```
 
