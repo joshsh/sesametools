@@ -38,7 +38,7 @@ class SingleContextSailConnection extends SailConnectionBase {
     }
 
     protected void addStatementInternal(final Resource subj, final URI pred, final Value obj,
-                             final Resource... contexts) throws SailException {
+                                        final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
             baseSailConnection.addStatement(subj, pred, obj, singleContext);
         } else {
@@ -81,8 +81,11 @@ class SingleContextSailConnection extends SailConnectionBase {
     }
 
     protected CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateInternal(
-            final TupleExpr tupleExpr, final Dataset dataSet, final BindingSet bindingSet, final boolean includeInferred)
-            throws SailException {
+            final TupleExpr tupleExpr,
+            final Dataset dataSet,
+            final BindingSet bindingSet,
+            final boolean includeInferred) throws SailException {
+
         // ignore the given dataset and restrict everything to the single context we have been setup with
         DatasetImpl singleContextDataset = new DatasetImpl();
         if (singleContext instanceof URI) {
@@ -125,8 +128,12 @@ class SingleContextSailConnection extends SailConnectionBase {
     }
 
     protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(
-            final Resource subj, final URI pred, final Value obj, final boolean includeInferred, final Resource... contexts)
-            throws SailException {
+            final Resource subj,
+            final URI pred,
+            final Value obj,
+            final boolean includeInferred,
+            final Resource... contexts) throws SailException {
+
         if (0 == contexts.length) {
             return baseSailConnection.getStatements(subj, pred, obj, includeInferred, singleContext);
         } else {
@@ -145,7 +152,7 @@ class SingleContextSailConnection extends SailConnectionBase {
     }
 
     protected void removeStatementsInternal(final Resource subj, final URI pred, final Value obj,
-                                 final Resource... contexts) throws SailException {
+                                            final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
             baseSailConnection.removeStatements(subj, pred, obj, singleContext);
         } else {
@@ -179,8 +186,6 @@ class SingleContextSailConnection extends SailConnectionBase {
             return 0;
         }
     }
-
-    ////////////////////////////////////////////////////////////////////////////
 
     private class SingleContextIteration implements CloseableIteration<Resource, SailException> {
         private Resource nextContext;

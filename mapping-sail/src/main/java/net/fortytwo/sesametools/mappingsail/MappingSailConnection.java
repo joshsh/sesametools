@@ -26,25 +26,29 @@ class MappingSailConnection extends SailConnectionWrapper {
     }
 
     @Override
-    public CloseableIteration<? extends Statement, SailException> getStatements(Resource subj,
-                                                                                URI pred,
-                                                                                Value obj,
-                                                                                final boolean includeInferred,
-                                                                                Resource... contexts) throws SailException {
+    public CloseableIteration<? extends Statement, SailException> getStatements(
+            Resource subj, URI pred, Value obj, final boolean includeInferred, Resource... contexts)
+            throws SailException {
+
         if (subj instanceof URI) {
-            subj = rewriters.getRewriter(MappingSchema.PartOfSpeech.SUBJECT, MappingSchema.Direction.INBOUND).rewrite((URI) subj);
+            subj = rewriters.getRewriter(
+                    MappingSchema.PartOfSpeech.SUBJECT, MappingSchema.Direction.INBOUND).rewrite((URI) subj);
         }
-        pred = rewriters.getRewriter(MappingSchema.PartOfSpeech.PREDICATE, MappingSchema.Direction.INBOUND).rewrite(pred);
+        pred = rewriters.getRewriter(
+                MappingSchema.PartOfSpeech.PREDICATE, MappingSchema.Direction.INBOUND).rewrite(pred);
         if (obj instanceof URI) {
-            obj = rewriters.getRewriter(MappingSchema.PartOfSpeech.OBJECT, MappingSchema.Direction.INBOUND).rewrite((URI) obj);
+            obj = rewriters.getRewriter(
+                    MappingSchema.PartOfSpeech.OBJECT, MappingSchema.Direction.INBOUND).rewrite((URI) obj);
         }
         for (int i = 0; i < contexts.length; i++) {
             if (contexts[i] instanceof URI) {
-                contexts[i] = rewriters.getRewriter(MappingSchema.PartOfSpeech.CONTEXT, MappingSchema.Direction.INBOUND).rewrite((URI) contexts[i]);
+                contexts[i] = rewriters.getRewriter(
+                        MappingSchema.PartOfSpeech.CONTEXT, MappingSchema.Direction.INBOUND).rewrite((URI) contexts[i]);
             }
         }
 
-        return new RewritingStatementIteration(this.getWrappedConnection().getStatements(subj, pred, obj, includeInferred, contexts));
+        return new RewritingStatementIteration(
+                this.getWrappedConnection().getStatements(subj, pred, obj, includeInferred, contexts));
     }
 
     private class RewritingStatementIteration implements CloseableIteration<Statement, SailException> {

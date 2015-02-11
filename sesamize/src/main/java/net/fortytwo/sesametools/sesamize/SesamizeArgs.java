@@ -73,7 +73,8 @@ class SesamizeArgs {
                                   final String... alternatives) {
         String s = getOption(null, alternatives);
 
-        // If they specified an option, try to find it out of the non-standard list of descriptors in Sesamize.rdfFormatByName
+        // If they specified an option, try to find it out of the non-standard
+        // list of descriptors in Sesamize.rdfFormatByName
         if (null != s) {
             return findRDFFormat(s);
         } else { // otherwise return the default value
@@ -87,10 +88,13 @@ class SesamizeArgs {
         String s = getOption(null, alternatives);
         RDFFormat f = null;
 
-        // If they specified an option, try to find it out of the non-standard list of descriptors in Sesamize.rdfFormatByName
+        // If they specified an option, try to find it out of the non-standard
+        // list of descriptors in Sesamize.rdfFormatByName
         if (null != s) {
             f = findRDFFormat(s);
-        } else { // otherwise try to find the format based on the file name extension, using the specified default value as a fallback
+        } else {
+            // otherwise try to find the format based on the file name extension,
+            // using the specified default value as a fallback
             f = RDFFormat.forFileName(file.getName(), defaultValue);
         }
 

@@ -1,4 +1,3 @@
-
 package net.fortytwo.sesametools;
 
 import org.openrdf.model.BNode;
@@ -12,7 +11,6 @@ import org.openrdf.model.vocabulary.XMLSchema;
 
 import java.util.Random;
 import java.util.UUID;
-
 
 /**
  * A utility for generating random values and statements
@@ -116,8 +114,6 @@ public class RandomValueFactory {
         return l;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-
     private ValueType randomValueType() {
         return ValueType.values()[rand.nextInt(MAXINT) % ValueType.values().length];
     }
@@ -128,9 +124,9 @@ public class RandomValueFactory {
             case Uri:
                 v = randomURI();
                 break;
-                //case Bnode:
-                //    v = randomBNode();
-                //    break;
+            //case Bnode:
+            //    v = randomBNode();
+            //    break;
             case Literal:
                 v = randomLiteral();
                 break;
@@ -144,7 +140,7 @@ public class RandomValueFactory {
 
     private String randomLabel(final int minlen, final int maxlen) {
         int n = minlen + rand.nextInt(maxlen - minlen);
-        byte b[] = new byte[n];
+        byte[] b = new byte[n];
         int range = '~' - ' ';
 
         // For now, use only "safe" characters.

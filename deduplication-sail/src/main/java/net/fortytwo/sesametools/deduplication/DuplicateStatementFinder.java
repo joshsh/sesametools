@@ -36,13 +36,15 @@ public class DuplicateStatementFinder {
                             Statement st = stmts.next();
 
                             CloseableIteration<? extends Statement, SailException> dups
-                                    = sc.getStatements(st.getSubject(), st.getPredicate(), st.getObject(), includeInferred);
+                                    = sc.getStatements(
+                                    st.getSubject(), st.getPredicate(), st.getObject(), includeInferred);
                             try {
                                 int count = 0;
                                 while (dups.hasNext()) {
                                     count++;
                                     if (2 == count) {
-                                        Statement dup = new StatementImpl(st.getSubject(), st.getPredicate(), st.getObject());
+                                        Statement dup = new StatementImpl(
+                                                st.getSubject(), st.getPredicate(), st.getObject());
                                         results.add(dup);
                                         break;
                                     }

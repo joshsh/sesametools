@@ -1,5 +1,6 @@
 package net.fortytwo.sesametools.ldserver;
 
+import net.fortytwo.sesametools.SesameTools;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFFormat;
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class RDFRepresentation extends OutputRepresentation {
-    private static final Logger LOGGER
+    private static final Logger logger
             = Logger.getLogger(RDFRepresentation.class.getName());
 
     private final Collection<Statement> statements;
@@ -48,17 +49,17 @@ public class RDFRepresentation extends OutputRepresentation {
                 for (Statement st : statements) {
                     writer.handleStatement(st);
                 }
-                writer.handleComment("created by TwitLogic using the Sesame 2 RDF framework");
+                writer.handleComment("created by LinkedDataServer "
+                        + SesameTools.getProperties().getProperty(SesameTools.VERSION_PROP)
+                        + " using the Sesame 2 RDF framework");
             } finally {
                 writer.endRDF();
             }
-        }
-
-        catch (Throwable t) {
+        } catch (Throwable t) {
             if (t instanceof IOException) {
                 throw (IOException) t;
             } else {
-                LOGGER.log(Level.WARNING, "failed to write RDF representation", t);
+                logger.log(Level.WARNING, "failed to write RDF representation", t);
                 throw new IOException(t.getMessage());
             }
         }

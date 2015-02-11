@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public abstract class QueryResource extends Restlet {
-    private static final Logger LOGGER = Logger.getLogger(QueryResource.class.getName());
+    private static final Logger logger = Logger.getLogger(QueryResource.class.getName());
 
     private static final String UTF_8 = "UTF-8";
 
@@ -96,7 +96,7 @@ public abstract class QueryResource extends Restlet {
                     limit = DEFAULT_LIMIT;
                 }
             } catch (NumberFormatException e) {
-                LOGGER.warning("bad limit value: " + l);
+                logger.warning("bad limit value: " + l);
                 limit = DEFAULT_LIMIT;
             }
         }

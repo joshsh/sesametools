@@ -18,13 +18,16 @@ import java.io.File;
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class RepositorySail extends SailBase {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RepositorySail.class);
 
     private Repository repository;
     private boolean inferenceDisabled = false;
 
     public RepositorySail(final Repository repo) {
         this.repository = repo;
+    }
+
+    public Repository getRepository() {
+        return repository;
     }
 
     public void disableInference() {
@@ -41,11 +44,6 @@ public class RepositorySail extends SailBase {
         }
 
         return new RepositorySailConnection(this, rc, inferenceDisabled, this.getValueFactory());
-    }
-
-    @Override
-    public File getDataDir() {
-        return repository.getDataDir();
     }
 
     public ValueFactory getValueFactory() {
@@ -66,11 +64,6 @@ public class RepositorySail extends SailBase {
         } catch (RepositoryException e) {
             throw new SailException(e);
         }
-    }
-
-    @Override
-    public void setDataDir(File file) {
-        repository.setDataDir(file);
     }
 
     protected void shutDownInternal() throws SailException {

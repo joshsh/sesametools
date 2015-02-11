@@ -139,7 +139,9 @@ public class CachingSailTest {
         return baseSail.getValueFactory().createURI(NS + localName);
     }
 
-    private int countStatements(final CloseableIteration<? extends Statement, SailException> iter) throws SailException {
+    private int countStatements(final CloseableIteration<? extends Statement, SailException> iter)
+            throws SailException {
+
         int count = 0;
         while (iter.hasNext()) {
             count++;

@@ -10,6 +10,7 @@ import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
+import org.restlet.representation.Variant;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
@@ -28,14 +29,25 @@ import java.util.logging.Logger;
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class GraphResource extends ServerResource {
-    private static final Logger LOGGER = Logger.getLogger(GraphResource.class.getName());
+    private static final Logger logger = Logger.getLogger(GraphResource.class.getName());
 
-    protected final String selfURI;
+    protected String selfURI;
 
     protected Sail sail;
 
     public GraphResource() {
+        super();
 
+        getVariants().addAll(RDFMediaTypes.getRDFVariants());
+
+        sail = LinkedDataServer.getInstance().getSail();
+    }
+
+    @Override
+    @Get
+    public Representation get(final Variant entity) {
+        MediaType type = entity.getMediaType();
+        RDFFormat format = RDFMediaTypes.findRdfFormat(type);
         selfURI = this.getRequest().getResourceRef().toString();
 
         /*
@@ -46,16 +58,6 @@ public class GraphResource extends ServerResource {
         System.out.println("hierarchical part = " + request.getResourceRef().getHierarchicalPart());
         System.out.println("host ref = " + request.getHostRef().toString());
         //*/
-
-        getVariants().addAll(RDFMediaTypes.getRDFVariants());
-
-        sail = LinkedDataServer.getInstance().getSail();
-    }
-
-    @Get
-    private Representation representInformationResource(final Representation entity) {
-        MediaType type = entity.getMediaType();
-        RDFFormat format = RDFMediaTypes.findRdfFormat(type);
 
         try {
             URI subject = sail.getValueFactory().createURI(selfURI);
@@ -110,10 +112,9 @@ public class GraphResource extends ServerResource {
             return new RDFRepresentation(statements, namespaces, format);
 
         } catch (Throwable t) {
-            // TODO: put this in the logger message
-            t.printStackTrace();
+            logger.log(Level.WARNING, "failed to create RDF representation", t);
+            t.printStackTrace(System.err);
 
-            LOGGER.log(Level.WARNING, "failed to create RDF representation", t);
             return null;
         }
     }

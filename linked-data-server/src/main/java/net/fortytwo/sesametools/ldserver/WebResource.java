@@ -17,6 +17,8 @@ import org.restlet.representation.Variant;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -26,17 +28,17 @@ import java.util.logging.Logger;
 
 /**
  * Information and non-information resources are distinguished by the suffix of the resource's URI:
- * 1) information resource URIs end in .rdf or .trig
- * 2) non-information resources have no such suffix (and TwitLogic will not make statements about such URIs)
- * <p/>
+ * information resource URIs end in .rdf or .trig,
+ * while non-information resources have no such suffix
+ * (and LinkedDataServer will not make statements about such URIs).
  * A request for an information resource is fulfilled with the resource itself.  No content negotiation occurs.
- * <p/>
- * A request for a non-information resource is fulfilled with a 303-redirect to an information resource of the appropriate media type.
+ * A request for a non-information resource is fulfilled with a 303-redirect
+ * to an information resource of the appropriate media type.
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class WebResource extends ServerResource {
-    private static final Logger LOGGER = Logger.getLogger(WebResource.class.getName());
+    private static final Logger logger = Logger.getLogger(WebResource.class.getName());
 
     enum WebResourceCategory {
         InformationResource, NonInformationResource
@@ -44,19 +46,27 @@ public class WebResource extends ServerResource {
 
     protected String selfURI;
 
-    private String hostIdentifier;
-    private String baseRef;
-    private String subjectResourceURI;
-    private String typeSpecificId;
+    protected String hostIdentifier;
+    protected String baseRef;
+    protected String subjectResourceURI;
+    protected String typeSpecificId;
     protected WebResourceCategory webResourceCategory;
     protected Sail sail;
-    private RDFFormat format = null;
-    private URI datasetURI;
+    protected RDFFormat format = null;
+    protected URI datasetURI;
 
     public WebResource() throws Exception {
         super();
 
         getVariants().addAll(RDFMediaTypes.getRDFVariants());
+    }
+
+    public void preprocessingHook() throws Exception {
+        // Do nothing unless overridden
+    }
+
+    public void postProcessingHook() throws Exception {
+        // Do nothing unless overridden
     }
 
     @Get
@@ -76,8 +86,7 @@ public class WebResource extends ServerResource {
 
         int i = selfURI.lastIndexOf(".");
         if (i > 0) {
-            String suffix = selfURI.substring(i + 1);
-            format = RDFMediaTypes.findFormat(suffix);
+            format = RDFFormat.forFileName(selfURI);
         }
 
         if (null == format) {
@@ -109,8 +118,11 @@ public class WebResource extends ServerResource {
 
     private Representation representInformationResource() {
         try {
+            preprocessingHook();
             URI subject = sail.getValueFactory().createURI(subjectResourceURI);
-            return getRDFRepresentation(subject, format);
+            Representation result = getRDFRepresentation(subject, format);
+            postProcessingHook();
+            return result;
         } catch (Throwable t) {
             t.printStackTrace();
             return null;
@@ -122,7 +134,7 @@ public class WebResource extends ServerResource {
         if (null == format) {
             throw new IllegalStateException("no RDF format for media type " + type);
         }
-        String suffix = RDFMediaTypes.findSuffix(format);
+        String suffix = format.getDefaultFileExtension();
         if (null == suffix) {
             throw new IllegalStateException("no suffix for RDF format " + type);
         }
@@ -130,19 +142,11 @@ public class WebResource extends ServerResource {
         getResponse().redirectSeeOther(selfURI + "." + suffix);
 
         return null;
-        //return new StringRepresentation("see the indicated URI for an associated RDF description of this resource");
     }
 
     private void addIncidentStatements(final org.openrdf.model.Resource vertex,
                                        final Collection<Statement> statements,
                                        final SailConnection c) throws SailException {
-        // Note: filtering on context (rather than using context in the getStatements queries) was found to be
-        // necessary for efficient operation when using NativeStore.
-
-        // Only get statements in the default graph.
-        //org.openrdf.model.Resource [] contexts = new org.openrdf.model.Resource[]{null};
-
-        //System.out.println("finding outbound statements");
         // Select outbound statements
         CloseableIteration<? extends Statement, SailException> stIter
                 = c.getStatements(vertex, null, null, false);
@@ -157,7 +161,6 @@ public class WebResource extends ServerResource {
             stIter.close();
         }
 
-        //System.out.println("finding inbound statements");
         // Select inbound statements
         stIter = c.getStatements(null, null, vertex, false);
         try {
@@ -172,12 +175,11 @@ public class WebResource extends ServerResource {
         }
     }
 
-    // Note: a SPARQL query might be more efficient (in applications other than TwitLogic)
+    // Note: a SPARQL query might be more efficient in some applications
     private void addSeeAlsoStatements(final org.openrdf.model.Resource subject,
                                       final Collection<Statement> statements,
                                       final SailConnection c,
                                       final ValueFactory vf) throws SailException {
-        //System.out.println("finding seeAlso statements");
         Set<URI> contexts = new HashSet<URI>();
         CloseableIteration<? extends Statement, SailException> iter
                 = c.getStatements(subject, null, null, false);
@@ -223,8 +225,8 @@ public class WebResource extends ServerResource {
         URI docURI = vf.createURI(selfURI);
         statements.add(vf.createStatement(docURI, RDF.TYPE, vf.createURI("http://xmlns.com/foaf/0.1/Document")));
         statements.add(vf.createStatement(docURI, RDFS.LABEL,
-                vf.createLiteral("" + format.getName() + " description of "
-                        + resourceDescriptor() + " '" + typeSpecificId + "'")));
+                vf.createLiteral("" + format.getName() + " description of resource '"
+                        + typeSpecificId + "'")));
 
         // Note: we go to the trouble of special-casing the dataset URI, so that
         // it is properly rewritten, along with all other TwitLogic resource
@@ -235,12 +237,6 @@ public class WebResource extends ServerResource {
     }
 
     private String resourceDescriptor() {
-        /*for (TwitLogic.ResourceType t : TwitLogic.ResourceType.values()) {
-            if (baseRef.contains(t.getUriPath())) {
-                return t.getName();
-            }
-        }*/
-
         return "resource";
     }
 
@@ -261,25 +257,6 @@ public class WebResource extends ServerResource {
                 // Add virtual statements about the document.
                 addDocumentMetadata(statements, sail.getValueFactory());
 
-                /*
-                // Due to the nature of the TwitLogic data set, we also need
-                // some key statements about the graphs the above statements
-                // are in.
-                Set<org.openrdf.model.Resource> graphs = new HashSet<org.openrdf.model.Resource>();
-                for (Statement st : statements) {
-                    org.openrdf.model.Resource graph = st.getContext();
-                    if (null != graph) {
-                        graphs.add(graph);
-                    }
-                }
-                // Note: self will not be in this set, as graphs don't
-                // describe themselves in TwitLogic.
-                for (org.openrdf.model.Resource graph : graphs) {
-                    addIncidentStatements(graph, statements, sc);
-                }
-                */
-
-                //System.out.println("adding namespaces");
                 // Select namespaces, for human-friendliness
                 CloseableIteration<? extends Namespace, SailException> nsIter
                         = c.getNamespaces();
@@ -293,14 +270,15 @@ public class WebResource extends ServerResource {
             } finally {
                 c.close();
             }
-            //System.out.println("done");
+
             return new RDFRepresentation(statements, namespaces, format);
 
         } catch (Throwable t) {
-            // TODO: put this in the logger message
-            t.printStackTrace();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            t.printStackTrace(new PrintStream(bos));
 
-            LOGGER.log(Level.WARNING, "failed to create RDF representation", t);
+            logger.log(Level.WARNING,
+                    "failed to create RDF representation (stack trace follows)\n" + bos.toString(), t);
             return null;
         }
     }

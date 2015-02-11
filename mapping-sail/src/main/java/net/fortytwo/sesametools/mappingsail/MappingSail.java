@@ -6,7 +6,8 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.helpers.SailWrapper;
 
 /**
- * A <code>Sail</code> which maps between the internal URI space of a lower-level data store, and an externally visible URI space
+ * A <code>Sail</code> which maps between the internal URI space of a lower-level data store,
+ * and an externally visible URI space
  * (for example, published Linked Data).
  *
  * @author Joshua Shinavier (http://fortytwo.net)

@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public class URITranslatorTest
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(URITranslatorTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(URITranslatorTest.class);
     
     private Repository testRepository;
     private ValueFactory testValueFactory;
@@ -73,14 +73,20 @@ public class URITranslatorTest
         testInputUriPrefix1 = "urn:temp:";
         testOutputUriPrefix1 = "http://test.example.org/after/translation/";
         
-        testInputSubjectUri1 = testValueFactory.createURI("urn:temp:testInputSubjectUri1");
-        testOutputSubjectUri1 = testValueFactory.createURI("http://test.example.org/after/translation/testInputSubjectUri1");
+        testInputSubjectUri1 = testValueFactory.createURI(
+                "urn:temp:testInputSubjectUri1");
+        testOutputSubjectUri1 = testValueFactory.createURI(
+                "http://test.example.org/after/translation/testInputSubjectUri1");
         
-        testInputPredicateUri1 = testValueFactory.createURI("urn:temp:testInputPredicateUri1");
-        testOutputPredicateUri1 = testValueFactory.createURI("http://test.example.org/after/translation/testInputPredicateUri1");
+        testInputPredicateUri1 = testValueFactory.createURI(
+                "urn:temp:testInputPredicateUri1");
+        testOutputPredicateUri1 = testValueFactory.createURI(
+                "http://test.example.org/after/translation/testInputPredicateUri1");
         
-        testInputObjectUri1 = testValueFactory.createURI("urn:temp:testInputObjectUri1");
-        testOutputObjectUri1 = testValueFactory.createURI("http://test.example.org/after/translation/testInputObjectUri1");
+        testInputObjectUri1 = testValueFactory.createURI(
+                "urn:temp:testInputObjectUri1");
+        testOutputObjectUri1 = testValueFactory.createURI(
+                "http://test.example.org/after/translation/testInputObjectUri1");
         
         testSubjectMappingPredicatesEmpty = Collections.emptyList();
         testPredicateMappingPredicatesEmpty = Collections.emptyList();
@@ -103,7 +109,7 @@ public class URITranslatorTest
             }
             catch(RepositoryException e)
             {
-                LOGGER.error("Found unexpected exception while closing test repository connection");
+                logger.error("Found unexpected exception while closing test repository connection");
             }
         }
         
@@ -117,7 +123,7 @@ public class URITranslatorTest
             }
             catch(RepositoryException e)
             {
-                LOGGER.error("Repository did not shut down correctly in test tearDown", e);
+                logger.error("Repository did not shut down correctly in test tearDown", e);
             }
         }
         
@@ -157,7 +163,7 @@ public class URITranslatorTest
         for(Statement nextBeforeStatement : testRepositoryConnection.getStatements(null, null, null, false,
                 testContext1).asList())
         {
-            LOGGER.info("nextBeforeStatement: " + nextBeforeStatement.toString());
+            logger.info("nextBeforeStatement: " + nextBeforeStatement.toString());
         }
         
         URITranslator.doTranslation(testRepository, testInputUriPrefix1, testOutputUriPrefix1,
@@ -167,13 +173,14 @@ public class URITranslatorTest
         for(Statement nextAfterStatement : testRepositoryConnection
                 .getStatements(null, null, null, false, testContext1).asList())
         {
-            LOGGER.info("nextAfterStatement: " + nextAfterStatement.toString());
+            logger.info("nextAfterStatement: " + nextAfterStatement.toString());
         }
         
         Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
         Assert.assertEquals(1, testRepositoryConnection.size());
 
-        Assert.assertTrue(testRepositoryConnection.hasStatement(testOutputSubjectUri1, testOutputPredicateUri1, testOutputObjectUri1, false, testContext1));
+        Assert.assertTrue(testRepositoryConnection.hasStatement(
+                testOutputSubjectUri1, testOutputPredicateUri1, testOutputObjectUri1, false, testContext1));
     }
     
     /**
@@ -183,8 +190,8 @@ public class URITranslatorTest
      * @throws RepositoryException
      */
     @Test
-    public void testDoTranslationNoMappingExactSubjectOnlyOneContext() throws RepositoryException, MalformedQueryException,
-        UpdateExecutionException
+    public void testDoTranslationNoMappingExactSubjectOnlyOneContext()
+            throws RepositoryException, MalformedQueryException, UpdateExecutionException
     {
         testRepositoryConnection.add(testInputSubjectUri1, testInputPredicateUri1, testInputObjectUri1, testContext1);
         
@@ -194,23 +201,25 @@ public class URITranslatorTest
         for(Statement nextBeforeStatement : testRepositoryConnection.getStatements(null, null, null, false,
                 testContext1).asList())
         {
-            LOGGER.info("nextBeforeStatement: " + nextBeforeStatement.toString());
+            logger.info("nextBeforeStatement: " + nextBeforeStatement.toString());
         }
         
-        URITranslator.doTranslation(testRepository, testInputSubjectUri1.stringValue(), testOutputSubjectUri1.stringValue(),
+        URITranslator.doTranslation(
+                testRepository, testInputSubjectUri1.stringValue(), testOutputSubjectUri1.stringValue(),
                 testSubjectMappingPredicatesEmpty, true, true, testPredicateMappingPredicatesEmpty, true, true,
                 testObjectMappingPredicatesEmpty, true, true, testDeleteTranslatedTriplesTrue, testContext1);
         
         for(Statement nextAfterStatement : testRepositoryConnection
                 .getStatements(null, null, null, false, testContext1).asList())
         {
-            LOGGER.info("nextAfterStatement: " + nextAfterStatement.toString());
+            logger.info("nextAfterStatement: " + nextAfterStatement.toString());
         }
         
         Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
         Assert.assertEquals(1, testRepositoryConnection.size());
 
-        Assert.assertTrue(testRepositoryConnection.hasStatement(testOutputSubjectUri1, testInputPredicateUri1, testInputObjectUri1, false, testContext1));
+        Assert.assertTrue(testRepositoryConnection.hasStatement(
+                testOutputSubjectUri1, testInputPredicateUri1, testInputObjectUri1, false, testContext1));
     }
 
     /**
@@ -220,8 +229,8 @@ public class URITranslatorTest
      * @throws RepositoryException
      */
     @Test
-    public void testDoTranslationNoMappingExactPredicateOnlyOneContext() throws RepositoryException, MalformedQueryException,
-        UpdateExecutionException
+    public void testDoTranslationNoMappingExactPredicateOnlyOneContext()
+            throws RepositoryException, MalformedQueryException, UpdateExecutionException
     {
         testRepositoryConnection.add(testInputSubjectUri1, testInputPredicateUri1, testInputObjectUri1, testContext1);
         
@@ -231,23 +240,25 @@ public class URITranslatorTest
         for(Statement nextBeforeStatement : testRepositoryConnection.getStatements(null, null, null, false,
                 testContext1).asList())
         {
-            LOGGER.info("nextBeforeStatement: " + nextBeforeStatement.toString());
+            logger.info("nextBeforeStatement: " + nextBeforeStatement.toString());
         }
         
-        URITranslator.doTranslation(testRepository, testInputPredicateUri1.stringValue(), testOutputPredicateUri1.stringValue(),
+        URITranslator.doTranslation(
+                testRepository, testInputPredicateUri1.stringValue(), testOutputPredicateUri1.stringValue(),
                 testSubjectMappingPredicatesEmpty, true, true, testPredicateMappingPredicatesEmpty, true, true,
                 testObjectMappingPredicatesEmpty, true, true, testDeleteTranslatedTriplesTrue, testContext1);
         
         for(Statement nextAfterStatement : testRepositoryConnection
                 .getStatements(null, null, null, false, testContext1).asList())
         {
-            LOGGER.info("nextAfterStatement: " + nextAfterStatement.toString());
+            logger.info("nextAfterStatement: " + nextAfterStatement.toString());
         }
         
         Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
         Assert.assertEquals(1, testRepositoryConnection.size());
 
-        Assert.assertTrue(testRepositoryConnection.hasStatement(testInputSubjectUri1, testOutputPredicateUri1, testInputObjectUri1, false, testContext1));
+        Assert.assertTrue(testRepositoryConnection.hasStatement(
+                testInputSubjectUri1, testOutputPredicateUri1, testInputObjectUri1, false, testContext1));
     }
 
     /**
@@ -257,8 +268,8 @@ public class URITranslatorTest
      * @throws RepositoryException
      */
     @Test
-    public void testDoTranslationNoMappingExactObjectOnlyOneContext() throws RepositoryException, MalformedQueryException,
-        UpdateExecutionException
+    public void testDoTranslationNoMappingExactObjectOnlyOneContext()
+            throws RepositoryException, MalformedQueryException, UpdateExecutionException
     {
         testRepositoryConnection.add(testInputSubjectUri1, testInputPredicateUri1, testInputObjectUri1, testContext1);
         
@@ -268,22 +279,24 @@ public class URITranslatorTest
         for(Statement nextBeforeStatement : testRepositoryConnection.getStatements(null, null, null, false,
                 testContext1).asList())
         {
-            LOGGER.info("nextBeforeStatement: " + nextBeforeStatement.toString());
+            logger.info("nextBeforeStatement: " + nextBeforeStatement.toString());
         }
         
-        URITranslator.doTranslation(testRepository, testInputObjectUri1.stringValue(), testOutputObjectUri1.stringValue(),
+        URITranslator.doTranslation(
+                testRepository, testInputObjectUri1.stringValue(), testOutputObjectUri1.stringValue(),
                 testSubjectMappingPredicatesEmpty, true, true, testPredicateMappingPredicatesEmpty, true, true,
                 testObjectMappingPredicatesEmpty, true, true, testDeleteTranslatedTriplesTrue, testContext1);
         
         for(Statement nextAfterStatement : testRepositoryConnection
                 .getStatements(null, null, null, false, testContext1).asList())
         {
-            LOGGER.info("nextAfterStatement: " + nextAfterStatement.toString());
+            logger.info("nextAfterStatement: " + nextAfterStatement.toString());
         }
         
         Assert.assertEquals(1, testRepositoryConnection.size(testContext1));
         Assert.assertEquals(1, testRepositoryConnection.size());
         
-        Assert.assertTrue(testRepositoryConnection.hasStatement(testInputSubjectUri1, testInputPredicateUri1, testOutputObjectUri1, false, testContext1));
+        Assert.assertTrue(testRepositoryConnection.hasStatement(
+                testInputSubjectUri1, testInputPredicateUri1, testOutputObjectUri1, false, testContext1));
     }
 }

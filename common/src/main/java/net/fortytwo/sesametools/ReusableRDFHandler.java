@@ -1,14 +1,16 @@
 
 package net.fortytwo.sesametools;
 
-import org.openrdf.model.*;
+import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 
 /**
- * An <code>RDFHandler</code> which wraps another handler and ignores calls to <code>startRDF</code> and <code>endRDF</code>,
+ * An <code>RDFHandler</code> which wraps another handler and ignores calls
+ * to <code>startRDF</code> and <code>endRDF</code>,
  * allowing the base handler to be used multiple times.
- * For example, there may be several distinct operations which push RDF statements into a wrapped RDFWriter before the document is terminated.
+ * For example, there may be several distinct operations which push RDF statements
+ * into a wrapped RDFWriter before the document is terminated.
  * To actually call the base handler's <code>startRDF</code> and <code>endRDF</code> methods,
  * use <code>reallyStartRDF</code> and <code>reallyEndRDF</code>, respectively.
  *

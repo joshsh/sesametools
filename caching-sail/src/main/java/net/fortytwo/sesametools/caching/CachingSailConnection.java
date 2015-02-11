@@ -103,8 +103,10 @@ public class CachingSailConnection extends SailConnectionBase {
     }
 
     protected CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateInternal(
-            final TupleExpr tupleExpr, final Dataset dataSet, final BindingSet bindingSet, final boolean includeInferred)
-            throws SailException {
+            final TupleExpr tupleExpr,
+            final Dataset dataSet,
+            final BindingSet bindingSet,
+            final boolean includeInferred) throws SailException {
         try {
             TripleSource tripleSource = new SailConnectionTripleSource(this, valueFactory, includeInferred);
             EvaluationStrategyImpl strategy = new EvaluationStrategyImpl(tripleSource, dataSet);
@@ -141,8 +143,12 @@ public class CachingSailConnection extends SailConnectionBase {
     }
 
     protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(
-            final Resource subj, final URI pred, final Value obj, final boolean includeInferred, final Resource... context)
-            throws SailException {
+            final Resource subj,
+            final URI pred,
+            final Value obj,
+            final boolean includeInferred,
+            final Resource... context) throws SailException {
+
         if (null != subj && cacheSubject) {
             if (!cachedSubjects.contains(subj)) {
                 cacheStatements(subj, null, null);

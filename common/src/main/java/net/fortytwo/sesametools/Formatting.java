@@ -84,7 +84,8 @@ public class Formatting {
                         i += EIGHT;
                         break;
                     default:
-                        throw new IllegalArgumentException("bad escape sequence: \\" + s.charAt(i) + " at character " + (i - 1));
+                        throw new IllegalArgumentException("bad escape sequence: \\"
+                                + s.charAt(i) + " at character " + (i - 1));
                 }
             } else {
                 sb.append(c);

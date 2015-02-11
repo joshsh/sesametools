@@ -2,11 +2,13 @@ package net.fortytwo.sesametools.replay;
 
 import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.sesametools.replay.calls.AddStatementCall;
+import net.fortytwo.sesametools.replay.calls.BeginCall;
 import net.fortytwo.sesametools.replay.calls.ClearCall;
 import net.fortytwo.sesametools.replay.calls.ClearNamespacesCall;
 import net.fortytwo.sesametools.replay.calls.CloseConnectionCall;
 import net.fortytwo.sesametools.replay.calls.CommitCall;
 import net.fortytwo.sesametools.replay.calls.ConstructorCall;
+import net.fortytwo.sesametools.replay.calls.EvaluateCall;
 import net.fortytwo.sesametools.replay.calls.GetContextIDsCall;
 import net.fortytwo.sesametools.replay.calls.GetNamespaceCall;
 import net.fortytwo.sesametools.replay.calls.GetNamespacesCall;
@@ -101,7 +103,10 @@ public class RecorderSailConnection extends SailConnectionBase {
     protected CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateInternal(
             final TupleExpr tupleExpr, final Dataset dataSet, final BindingSet bindingSet, final boolean includeInferred)
             throws SailException {
-        // Note: there is no EvaluateCall, nor is there a recording iterator for evaluate() results
+        // Note: there is no recording iterator for evaluate() results
+        if (config.logReadOperations) {
+            queryHandler.handle(new EvaluateCall(id, includeInferred));
+        }
         return baseSailConnection.evaluate(tupleExpr, dataSet, bindingSet, includeInferred);
     }
 
@@ -144,12 +149,14 @@ public class RecorderSailConnection extends SailConnectionBase {
     }
 
     protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(
-            final Resource subj, final URI pred, final Value obj, final boolean includeInferred, final Resource... contexts)
-            throws SailException {
+            final Resource subj, final URI pred, final Value obj, final boolean includeInferred,
+            final Resource... contexts) throws SailException {
+
         if (config.logReadOperations) {
             queryHandler.handle(new GetStatementsCall(id, subj, pred, obj, includeInferred, contexts));
             return new RecorderIteration<Statement, SailException>(
-                    (CloseableIteration<Statement, SailException>) baseSailConnection.getStatements(subj, pred, obj, includeInferred, contexts),
+                    (CloseableIteration<Statement, SailException>) baseSailConnection.getStatements(
+                            subj, pred, obj, includeInferred, contexts),
                     nextIterationId(),
                     queryHandler);
         } else {
@@ -196,6 +203,9 @@ public class RecorderSailConnection extends SailConnectionBase {
     }
 
     protected void startTransactionInternal() throws SailException {
+        if (config.logTransactions) {
+            queryHandler.handle(new BeginCall(id));
+        }
         baseSailConnection.begin();
     }
 }

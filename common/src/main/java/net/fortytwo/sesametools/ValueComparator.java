@@ -8,49 +8,49 @@ import org.openrdf.model.Value;
 import java.util.Comparator;
 
 /**
- * Implements a Comparator for OpenRDF Value objects where:
- * <p/>
+ * Implements a Comparator for OpenRDF Value objects where
  * the order for Values is:
- * * Blank Node's
- * * URI's
- * * Literals
+ * <ol>
+ * <li> Blank Node's </li>
+ * <li> URI's </li>
+ * <li> Literals </li>
+ * </ol>
  * <p/>
  * with null Values sorted before others
  *
  * @author Peter Ansell p_ansell@yahoo.com
  */
 public class ValueComparator implements Comparator<Value> {
-	
-	/**
-	 * A thread-safe pre-instantiated instance of ValueComparator.
-	 */
-	private final static ValueComparator INSTANCE = new ValueComparator();
-	
-	/**
-	 * A thread-safe pre-instantiated instance of ValueComparator.
-	 */
-	public final static ValueComparator getInstance() {
-		return INSTANCE;
-	}
-	
+
+    /**
+     * A thread-safe pre-instantiated instance of ValueComparator.
+     */
+    private final static ValueComparator INSTANCE = new ValueComparator();
+
+    /**
+     * A thread-safe pre-instantiated instance of ValueComparator.
+     */
+    public final static ValueComparator getInstance() {
+        return INSTANCE;
+    }
+
     public final static int BEFORE = -1;
     public final static int EQUALS = 0;
     public final static int AFTER = 1;
 
     /**
-     * Sorts in the order nulls>BNodes>URIs>Literals
-     * <p/>
+     * Sorts in the order nulls&gt;BNodes&gt;URIs&gt;Literals
+     * <p>
      * This is due to the fact that nulls are only applicable to contexts,
      * and according to the OpenRDF documentation, the type of the null
      * cannot be sufficiently distinguished from any other Value to make
-     * an intelligent comparison to other Values
-     * <p/>
-     * http://www.openrdf.org/doc/sesame2/api/org/openrdf/OpenRDFUtil.html#verifyContextNotNull(org.openrdf.model.Resource...)
-     * <p/>
+     * an intelligent comparison to other Values:
+     * </p>
+     * <p>
      * BNodes are sorted according to the lexical compare of their identifiers,
      * which provides a way to sort statements with the same BNodes in the same positions, near each other
-     * <p/>
      * BNode sorting is not specified across sessions
+     * </p>
      */
     @Override
     public int compare(Value first, Value second) {
@@ -61,7 +61,8 @@ public class ValueComparator implements Comparator<Value> {
                 return BEFORE;
             }
         } else if (second == null) {
-            // always sort null Values before others, so if the second is null, but the first wasn't, sort the first after the second
+            // always sort null Values before others, so if the second is null,
+            // but the first wasn't, sort the first after the second
             return AFTER;
         }
 
@@ -94,8 +95,8 @@ public class ValueComparator implements Comparator<Value> {
         }
         // they must both be Literal's, so sort based on the lexical value of the Literal
         else {
-        	Literal firstLiteral = (Literal)first;
-        	Literal secondLiteral = (Literal)second;
+            Literal firstLiteral = (Literal) first;
+            Literal secondLiteral = (Literal) second;
             int cmp = firstLiteral.getLabel().compareTo(secondLiteral.getLabel());
 
             if (EQUALS == cmp) {
@@ -110,16 +111,16 @@ public class ValueComparator implements Comparator<Value> {
                 } else if (null != secondLang) {
                     return BEFORE;
                 }
-                
+
                 URI firstType = firstLiteral.getDatatype();
                 URI secondType = secondLiteral.getDatatype();
-            	if (null == firstType) {
-            		if (null == secondType) {
-            			return EQUALS;
-            		} else {
-            			return BEFORE;
-            		}
-            	} else if (null == secondType) {
+                if (null == firstType) {
+                    if (null == secondType) {
+                        return EQUALS;
+                    } else {
+                        return BEFORE;
+                    }
+                } else if (null == secondType) {
                     return AFTER;
                 } else {
                     return firstType.stringValue().compareTo(secondType.stringValue());

@@ -10,7 +10,7 @@
     <parent>
         <groupId>net.fortytwo.sesametools</groupId>
         <artifactId>sesametools-all</artifactId>
-        <version>1.8</version>
+        <version>1.9</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -90,6 +90,35 @@
         <dependency>
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.httpclient</artifactId>
+            <exclusions>
+                <!-- conflict with Sesame -->
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+                <!-- self-conflict -->
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpcore</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- necessary to resolve org.restlet.ext.httpclient self-conflict above -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.1</version>
+            <exclusions>
+                <!-- conflict with Sesame -->
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
