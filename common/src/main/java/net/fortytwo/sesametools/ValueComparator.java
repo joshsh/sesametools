@@ -15,7 +15,7 @@ import java.util.Comparator;
  * <li> URI's </li>
  * <li> Literals </li>
  * </ol>
- * <p/>
+ * <p>
  * with null Values sorted before others
  *
  * @author Peter Ansell p_ansell@yahoo.com
