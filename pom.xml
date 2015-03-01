@@ -10,7 +10,7 @@
 
     <groupId>net.fortytwo.sesametools</groupId>
     <artifactId>sesametools-all</artifactId>
-    <version>1.9</version>
+    <version>1.9.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>SesameTools</name>
     <description>Miscellaneous utilities for use with OpenRDF Sesame</description>
