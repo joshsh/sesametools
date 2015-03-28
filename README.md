@@ -2,6 +2,8 @@
 
 ![SesameTools logo|width=322px|height=60px](https://github.com/joshsh/sesametools/wiki/graphics/SesameTools-logo.png)
 
+[![Build Status](https://travis-ci.org/joshsh/sesametools.svg?branch=develop)](https://travis-ci.org/joshsh/sesametools) [![Coverage Status](https://coveralls.io/repos/joshsh/sesametools/badge.svg?branch=develop)](https://coveralls.io/r/joshsh/sesametools?branch=develop)
+
 Welcome to the SesameTools wiki!
 SesameTools is a collection of general-purpose components for use with the [Sesame](http://openrdf.org) RDF framework.  It includes:
 

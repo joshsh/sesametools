@@ -56,9 +56,9 @@ public class URITranslator {
     /**
      * Maps URIs for all triples in the given contexts in the given repository, between the input
      * URI prefix and the output URI prefix.
-     * <p/>
+     * <p>
      * The mapping predicates are used to define extra triples to link the input and output URIs.
-     * <p/>
+     * <p>
      * NOTE: The results for queries with deleteTranslatedTriples set to false may not be consistent
      * with what you expect.
      *
@@ -95,9 +95,9 @@ public class URITranslator {
     /**
      * Maps URIs for all triples in the given contexts in the given repository, between the input
      * URI prefix and the output URI prefix.
-     * <p/>
+     * <p>
      * The mapping predicates are used to define extra triples to link the input and output URIs.
-     * <p/>
+     * <p>
      * NOTE: The results for queries with deleteTranslatedTriples set to false may not be consistent
      * with what you expect.
      *
