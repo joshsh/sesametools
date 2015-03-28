@@ -2,6 +2,7 @@
 package net.fortytwo.sesametools.replay;
 
 import info.aduna.iteration.CloseableIteration;
+import org.openrdf.IsolationLevel;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
@@ -44,14 +45,17 @@ public class PlaybackSail implements StackableSail {
         this.idToIterationsMap = new HashMap<String, List<CloseableIteration>>();
     }
 
+    @Override
     public void setDataDir(final File file) {
         baseSail.setDataDir(file);
     }
 
+    @Override
     public File getDataDir() {
         return baseSail.getDataDir();
     }
 
+    @Override
     public void initialize() throws SailException {
 //        baseSail.initialize();
 
@@ -129,6 +133,7 @@ public class PlaybackSail implements StackableSail {
         iters.add(iter);
     }
 
+    @Override
     public void shutDown() throws SailException {
         // Close any remaining open SailConnections
         for (SailConnection sc : idToConnectionMap.values()) {
@@ -138,22 +143,37 @@ public class PlaybackSail implements StackableSail {
 //        baseSail.shutDown();
     }
 
+    @Override
     public boolean isWritable() throws SailException {
         return baseSail.isWritable();
     }
 
+    @Override
     public SailConnection getConnection() throws SailException {
         return baseSail.getConnection();
     }
 
+    @Override
     public ValueFactory getValueFactory() {
         return baseSail.getValueFactory();
     }
 
+    @Override
+    public List<IsolationLevel> getSupportedIsolationLevels() {
+        return baseSail.getSupportedIsolationLevels();
+    }
+
+    @Override
+    public IsolationLevel getDefaultIsolationLevel() {
+        return baseSail.getDefaultIsolationLevel();
+    }
+
+    @Override
     public void setBaseSail(final Sail sail) {
         // Do nothing -- base Sail is final
     }
 
+    @Override
     public Sail getBaseSail() {
         return baseSail;
     }

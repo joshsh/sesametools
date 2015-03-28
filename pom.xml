@@ -54,7 +54,7 @@
         <junit.version>4.12</junit.version>
         <log4j.version>1.2.17</log4j.version>
         <restlet.version>2.2.2</restlet.version>
-        <sesame.version>2.7.14</sesame.version>
+        <sesame.version>2.8.1</sesame.version>
         <slf4j.version>1.7.10</slf4j.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

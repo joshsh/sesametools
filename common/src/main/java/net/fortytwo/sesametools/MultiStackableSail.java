@@ -1,6 +1,7 @@
 
 package net.fortytwo.sesametools;
 
+import org.openrdf.IsolationLevel;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
@@ -8,6 +9,7 @@ import org.openrdf.sail.SailException;
 import org.openrdf.sail.StackableSail;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * A StackableSail which allows multiple Sails to be stacked upon the same base
@@ -23,39 +25,58 @@ public class MultiStackableSail implements StackableSail {
         setBaseSail(baseSail);
     }
 
+    @Override
     public void setBaseSail(Sail sail) {
         this.baseSail = sail;
     }
 
+    @Override
     public Sail getBaseSail() {
         return baseSail;
     }
 
+    @Override
     public void setDataDir(File file) {
         baseSail.setDataDir(file);
     }
 
+    @Override
     public File getDataDir() {
         return baseSail.getDataDir();
     }
 
+    @Override
     public void initialize() throws SailException {
         // Do nothing -- assume that the base Sail is initialized elsewhere
     }
 
+    @Override
     public void shutDown() throws SailException {
         // Do nothing -- assume that the base Sail will be shut down elsewhere
     }
 
+    @Override
     public boolean isWritable() throws SailException {
         return baseSail.isWritable();
     }
 
+    @Override
     public SailConnection getConnection() throws SailException {
         return baseSail.getConnection();
     }
 
+    @Override
     public ValueFactory getValueFactory() {
         return baseSail.getValueFactory();
+    }
+
+    @Override
+    public List<IsolationLevel> getSupportedIsolationLevels() {
+        return baseSail.getSupportedIsolationLevels();
+    }
+
+    @Override
+    public IsolationLevel getDefaultIsolationLevel() {
+        return baseSail.getDefaultIsolationLevel();
     }
 }

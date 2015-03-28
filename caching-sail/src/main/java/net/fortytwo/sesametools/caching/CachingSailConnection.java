@@ -13,6 +13,7 @@ import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
 import org.openrdf.query.algebra.evaluation.TripleSource;
+import org.openrdf.query.algebra.evaluation.federation.FederatedServiceResolverImpl;
 import org.openrdf.query.algebra.evaluation.impl.EvaluationStrategyImpl;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
@@ -109,7 +110,8 @@ public class CachingSailConnection extends SailConnectionBase {
             final boolean includeInferred) throws SailException {
         try {
             TripleSource tripleSource = new SailConnectionTripleSource(this, valueFactory, includeInferred);
-            EvaluationStrategyImpl strategy = new EvaluationStrategyImpl(tripleSource, dataSet);
+            EvaluationStrategyImpl strategy
+                    = new EvaluationStrategyImpl(tripleSource, dataSet, new FederatedServiceResolverImpl());
 
             return strategy.evaluate(tupleExpr, bindingSet);
         } catch (QueryEvaluationException e) {

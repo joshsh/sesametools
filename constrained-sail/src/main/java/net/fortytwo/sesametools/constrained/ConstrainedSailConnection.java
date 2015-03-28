@@ -16,6 +16,7 @@ import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
 import org.openrdf.query.algebra.evaluation.TripleSource;
+import org.openrdf.query.algebra.evaluation.federation.FederatedServiceResolverImpl;
 import org.openrdf.query.algebra.evaluation.impl.EvaluationStrategyImpl;
 import org.openrdf.query.impl.DatasetImpl;
 import org.openrdf.sail.SailConnection;
@@ -207,7 +208,8 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
             final boolean includeInferred) throws SailException {
         try {
             TripleSource tripleSource = new SailConnectionTripleSource(this, valueFactory, includeInferred);
-            EvaluationStrategyImpl strategy = new EvaluationStrategyImpl(tripleSource, dataset);
+            EvaluationStrategyImpl strategy
+                    = new EvaluationStrategyImpl(tripleSource, dataset, new FederatedServiceResolverImpl());
 
             return strategy.evaluate(tupleExpr, bindings);
         } catch (QueryEvaluationException e) {

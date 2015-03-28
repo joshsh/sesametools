@@ -96,6 +96,10 @@
                     <groupId>commons-codec</groupId>
                     <artifactId>commons-codec</artifactId>
                 </exclusion>
+                <exclusion>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+            </exclusion>
                 <!-- self-conflict -->
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
@@ -111,7 +115,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.3.1</version>
+            <version>4.4</version>
             <exclusions>
                 <!-- conflict with Sesame -->
                 <exclusion>
