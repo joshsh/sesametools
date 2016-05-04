@@ -24,12 +24,12 @@ import net.fortytwo.sesametools.replay.calls.RollbackCall;
 import net.fortytwo.sesametools.replay.calls.SetNamespaceCall;
 import net.fortytwo.sesametools.replay.calls.SizeCall;
 import org.openrdf.model.BNode;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.rio.ntriples.NTriplesUtil;
 import org.openrdf.sail.SailException;
 
@@ -44,7 +44,7 @@ public abstract class SailConnectionCall<T, R> {
     // Use a comma instead of whitespace so that lists of named graphs appear as a single token.
     private static final String COMMA = ",";
 
-    private static ValueFactory valueFactory = new ValueFactoryImpl();
+    private static ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     public enum Type {
         ADD_STATEMENT,
@@ -140,7 +140,7 @@ public abstract class SailConnectionCall<T, R> {
         }
     }
 
-    protected URI parseURI(final String s) {
+    protected IRI parseIRI(final String s) {
         if (s.equals("null")) {
             return null;
         }
@@ -223,12 +223,12 @@ public abstract class SailConnectionCall<T, R> {
             return "null";
         }
 
-        return (v instanceof URI)
-                ? toString((URI) v)
+        return (v instanceof IRI)
+                ? toString((IRI) v)
                 : toString((BNode) v);
     }
 
-    protected String toString(final URI v) {
+    protected String toString(final IRI v) {
         if (null == v) {
             return "null";
         }

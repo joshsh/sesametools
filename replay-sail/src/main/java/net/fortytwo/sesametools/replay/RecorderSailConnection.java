@@ -18,10 +18,10 @@ import net.fortytwo.sesametools.replay.calls.RemoveStatementsCall;
 import net.fortytwo.sesametools.replay.calls.RollbackCall;
 import net.fortytwo.sesametools.replay.calls.SetNamespaceCall;
 import net.fortytwo.sesametools.replay.calls.SizeCall;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
@@ -30,22 +30,22 @@ import org.openrdf.query.algebra.TupleExpr;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
-import org.openrdf.sail.helpers.SailBase;
-import org.openrdf.sail.helpers.SailConnectionBase;
+import org.openrdf.sail.helpers.AbstractSail;
+import org.openrdf.sail.helpers.AbstractSailConnection;
 
 import java.util.Random;
 
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-public class RecorderSailConnection extends SailConnectionBase {
+public class RecorderSailConnection extends AbstractSailConnection {
     private final String id = "" + new Random().nextInt(0xFFFF);
     private final Handler<SailConnectionCall, SailException> queryHandler;
     private final SailConnection baseSailConnection;
     private final ReplayConfiguration config;
     private int iterationCount = 0;
 
-    public RecorderSailConnection(final SailBase sail,
+    public RecorderSailConnection(final AbstractSail sail,
                                   final Sail baseSail,
                                   final ReplayConfiguration config,
                                   final Handler<SailConnectionCall, SailException> queryHandler) throws SailException {
@@ -61,7 +61,7 @@ public class RecorderSailConnection extends SailConnectionBase {
     // Note: adding statements does not change the configuration of cached
     // values.
     protected void addStatementInternal(final Resource subj,
-                             final URI pred,
+                             final IRI pred,
                              final Value obj,
                              final Resource... contexts) throws SailException {
         if (config.logWriteOperations) {
@@ -114,7 +114,7 @@ public class RecorderSailConnection extends SailConnectionBase {
             throws SailException {
         if (config.logReadOperations) {
             queryHandler.handle(new GetContextIDsCall(id));
-            return new RecorderIteration<Resource, SailException>(
+            return new RecorderIteration<>(
                     (CloseableIteration<Resource, SailException>) baseSailConnection.getContextIDs(),
                     nextIterationId(),
                     queryHandler);
@@ -139,7 +139,7 @@ public class RecorderSailConnection extends SailConnectionBase {
             throws SailException {
         if (config.logReadOperations) {
             queryHandler.handle(new GetNamespacesCall(id));
-            return new RecorderIteration<Namespace, SailException>(
+            return new RecorderIteration<>(
                     (CloseableIteration<Namespace, SailException>) baseSailConnection.getNamespaces(),
                     nextIterationId(),
                     queryHandler);
@@ -149,12 +149,12 @@ public class RecorderSailConnection extends SailConnectionBase {
     }
 
     protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(
-            final Resource subj, final URI pred, final Value obj, final boolean includeInferred,
+            final Resource subj, final IRI pred, final Value obj, final boolean includeInferred,
             final Resource... contexts) throws SailException {
 
         if (config.logReadOperations) {
             queryHandler.handle(new GetStatementsCall(id, subj, pred, obj, includeInferred, contexts));
-            return new RecorderIteration<Statement, SailException>(
+            return new RecorderIteration<>(
                     (CloseableIteration<Statement, SailException>) baseSailConnection.getStatements(
                             subj, pred, obj, includeInferred, contexts),
                     nextIterationId(),
@@ -172,7 +172,7 @@ public class RecorderSailConnection extends SailConnectionBase {
     }
 
     protected void removeStatementsInternal(final Resource subj,
-                                 final URI pred,
+                                 final IRI pred,
                                  final Value obj,
                                  final Resource... contexts) throws SailException {
         if (config.logWriteOperations) {

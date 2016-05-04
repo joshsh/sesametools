@@ -26,15 +26,19 @@ public class SparqlAskTest {
     private static final URI ENDPOINT_URL = URI.create("http://localhost:8001/sparql");
     private static final String DATA_FILE = "demoApp.trig";
 
-    private static final Sail SAIL = new MemoryStore();
-    private static final LinkedDataServer SERVER = new LinkedDataServer(SAIL, "", "");
+    private static final Sail sail;
+    private static final LinkedDataServer server;
+
+    static {
+        sail = new MemoryStore();
+        sail.initialize();
+        server = new LinkedDataServer(sail, "", "");
+    }
 
     @BeforeClass
     public static void setUp() throws Exception {
-        SAIL.initialize();
-
         // add test data
-        final Repository repo = new SailRepository(SAIL);
+        final Repository repo = new SailRepository(sail);
         final RepositoryConnection con = repo.getConnection();
         try {
             con.add(SparqlAskTest.class.getResourceAsStream(DATA_FILE), "", RDFFormat.TRIG);
@@ -49,14 +53,14 @@ public class SparqlAskTest {
         final Component component = new Component();
         component.getServers().add(Protocol.HTTP, ENDPOINT_URL.getPort());
         component.getDefaultHost().attach(ENDPOINT_URL.getPath(), new SparqlResource());
-        SERVER.setInboundRoot(component);
-        SERVER.start();
+        server.setInboundRoot(component);
+        server.start();
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        SERVER.stop();
-        SAIL.shutDown();
+        server.stop();
+        sail.shutDown();
     }
 
     @Test
@@ -69,20 +73,16 @@ public class SparqlAskTest {
         Assert.assertFalse(executeAskQuery(ENDPOINT_URL, "ASK { [] ?p <http://ex.com> }"));
     }
 
-    private final Boolean executeAskQuery(final URI endpoint, final String query)
-            throws Exception {
+    private Boolean executeAskQuery(final URI endpoint, final String query) {
         
         final SPARQLRepository repo = new SPARQLRepository(endpoint.toString());
         try {
             repo.initialize();
-            final RepositoryConnection con = repo.getConnection();
 
-            try {
+            try (RepositoryConnection con = repo.getConnection()) {
                 return con.prepareBooleanQuery(QueryLanguage.SPARQL, query).evaluate();
             } catch (Exception e) {
                 Assert.fail(e.getMessage());
-            } finally {
-                con.close();
             }
 
         } catch (Exception e) {

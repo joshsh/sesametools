@@ -1,9 +1,9 @@
 package net.fortytwo.sesametools.mappingsail;
 
 import info.aduna.iteration.CloseableIteration;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.SailConnection;
@@ -27,23 +27,23 @@ class MappingSailConnection extends SailConnectionWrapper {
 
     @Override
     public CloseableIteration<? extends Statement, SailException> getStatements(
-            Resource subj, URI pred, Value obj, final boolean includeInferred, Resource... contexts)
+            Resource subj, IRI pred, Value obj, final boolean includeInferred, Resource... contexts)
             throws SailException {
 
-        if (subj instanceof URI) {
+        if (subj instanceof IRI) {
             subj = rewriters.getRewriter(
-                    MappingSchema.PartOfSpeech.SUBJECT, MappingSchema.Direction.INBOUND).rewrite((URI) subj);
+                    MappingSchema.PartOfSpeech.SUBJECT, MappingSchema.Direction.INBOUND).rewrite((IRI) subj);
         }
         pred = rewriters.getRewriter(
                 MappingSchema.PartOfSpeech.PREDICATE, MappingSchema.Direction.INBOUND).rewrite(pred);
-        if (obj instanceof URI) {
+        if (obj instanceof IRI) {
             obj = rewriters.getRewriter(
-                    MappingSchema.PartOfSpeech.OBJECT, MappingSchema.Direction.INBOUND).rewrite((URI) obj);
+                    MappingSchema.PartOfSpeech.OBJECT, MappingSchema.Direction.INBOUND).rewrite((IRI) obj);
         }
         for (int i = 0; i < contexts.length; i++) {
-            if (contexts[i] instanceof URI) {
+            if (contexts[i] instanceof IRI) {
                 contexts[i] = rewriters.getRewriter(
-                        MappingSchema.PartOfSpeech.CONTEXT, MappingSchema.Direction.INBOUND).rewrite((URI) contexts[i]);
+                        MappingSchema.PartOfSpeech.CONTEXT, MappingSchema.Direction.INBOUND).rewrite((IRI) contexts[i]);
             }
         }
 
@@ -70,27 +70,27 @@ class MappingSailConnection extends SailConnectionWrapper {
             Statement st = baseIteration.next();
 
             Resource subject = st.getSubject();
-            URI predicate = st.getPredicate();
+            IRI predicate = st.getPredicate();
             Value object = st.getObject();
             Resource context = st.getContext();
 
-            if (subject instanceof URI) {
+            if (subject instanceof IRI) {
                 subject = rewriters.getRewriter(
                         MappingSchema.PartOfSpeech.SUBJECT, MappingSchema.Direction.OUTBOUND)
-                        .rewrite((URI) subject);
+                        .rewrite((IRI) subject);
             }
             predicate = rewriters.getRewriter(
                     MappingSchema.PartOfSpeech.PREDICATE, MappingSchema.Direction.OUTBOUND)
                     .rewrite(predicate);
-            if (object instanceof URI) {
+            if (object instanceof IRI) {
                 object = rewriters.getRewriter(
                         MappingSchema.PartOfSpeech.OBJECT, MappingSchema.Direction.OUTBOUND)
-                        .rewrite((URI) object);
+                        .rewrite((IRI) object);
             }
-            if (null != context && context instanceof URI) {
+            if (null != context && context instanceof IRI) {
                 context = rewriters.getRewriter(
                         MappingSchema.PartOfSpeech.CONTEXT, MappingSchema.Direction.OUTBOUND)
-                        .rewrite((URI) context);
+                        .rewrite((IRI) context);
             }
 
             return valueFactory.createStatement(subject, predicate, object, context);

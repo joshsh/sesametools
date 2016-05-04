@@ -2,7 +2,7 @@ package net.fortytwo.sesametools.deduplication;
 
 import junit.framework.TestCase;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
@@ -35,8 +35,8 @@ public class DuplicateStatementFinderTest extends TestCase {
         SailConnection sc = sail.getConnection();
         sc.begin();
 
-        URI ctx1 = valueFactory.createURI(NS + "ctx1");
-        URI ctx2 = valueFactory.createURI(NS + "ctx2");
+        IRI ctx1 = valueFactory.createIRI(NS + "ctx1");
+        IRI ctx2 = valueFactory.createIRI(NS + "ctx2");
 
         // Not a duplicate.
         sc.addStatement(RDF.NIL, RDF.TYPE, RDF.LIST, ctx1);

@@ -2,23 +2,24 @@ package net.fortytwo.sesametools.caching;
 
 import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.sesametools.SailConnectionTripleSource;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
+import org.openrdf.query.algebra.evaluation.EvaluationStrategy;
 import org.openrdf.query.algebra.evaluation.TripleSource;
-import org.openrdf.query.algebra.evaluation.impl.EvaluationStrategyImpl;
+import org.openrdf.query.algebra.evaluation.impl.SimpleEvaluationStrategy;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
-import org.openrdf.sail.helpers.SailBase;
-import org.openrdf.sail.helpers.SailConnectionBase;
+import org.openrdf.sail.helpers.AbstractSail;
+import org.openrdf.sail.helpers.AbstractSailConnection;
 
 import java.util.Set;
 
@@ -29,7 +30,7 @@ import java.util.Set;
 /**
  * @author Joshua Shinavier (http://fortytwo.net)
  */
-public class CachingSailConnection extends SailConnectionBase {
+public class CachingSailConnection extends AbstractSailConnection {
     private boolean cacheSubject, cachePredicate, cacheObject;
 
     private ValueFactory valueFactory;
@@ -38,19 +39,19 @@ public class CachingSailConnection extends SailConnectionBase {
     private SailConnection cacheConnection;
 
     private Set<Resource> cachedSubjects;
-    private Set<URI> cachedPredicates;
+    private Set<IRI> cachedPredicates;
     private Set<Value> cachedObjects;
 
     private boolean uncommittedChanges = false;
 
-    public CachingSailConnection(final SailBase sail,
+    public CachingSailConnection(final AbstractSail sail,
                                  final Sail baseSail,
                                  final Sail cache,
                                  final boolean cacheSubject,
                                  final boolean cachePredicate,
                                  final boolean cacheObject,
                                  final Set<Resource> cachedSubjects,
-                                 final Set<URI> cachedPredicates,
+                                 final Set<IRI> cachedPredicates,
                                  final Set<Value> cachedObjects) throws SailException {
         super(sail);
         this.cacheSubject = cacheSubject;
@@ -69,7 +70,7 @@ public class CachingSailConnection extends SailConnectionBase {
     // Note: adding statements does not change the configuration of cached
     // values.
     protected void addStatementInternal(final Resource subj,
-                                     final URI pred,
+                                     final IRI pred,
                                      final Value obj,
                                      final Resource... contexts) throws SailException {
         cacheConnection.addStatement(subj, pred, obj, contexts);
@@ -109,7 +110,7 @@ public class CachingSailConnection extends SailConnectionBase {
             final boolean includeInferred) throws SailException {
         try {
             TripleSource tripleSource = new SailConnectionTripleSource(this, valueFactory, includeInferred);
-            EvaluationStrategyImpl strategy = new EvaluationStrategyImpl(tripleSource, dataSet);
+            EvaluationStrategy strategy = new SimpleEvaluationStrategy(tripleSource, dataSet, null);
 
             return strategy.evaluate(tupleExpr, bindingSet);
         } catch (QueryEvaluationException e) {
@@ -142,9 +143,10 @@ public class CachingSailConnection extends SailConnectionBase {
         return baseSailConnection.getNamespaces();
     }
 
+    @Override
     protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(
             final Resource subj,
-            final URI pred,
+            final IRI pred,
             final Value obj,
             final boolean includeInferred,
             final Resource... context) throws SailException {
@@ -181,7 +183,7 @@ public class CachingSailConnection extends SailConnectionBase {
 
     // Note: removing statements does not change the configuration of cached
     // values.
-    protected void removeStatementsInternal(final Resource subj, final URI pred, final Value obj,
+    protected void removeStatementsInternal(final Resource subj, final IRI pred, final Value obj,
                                          final Resource... contexts) throws SailException {
         cacheConnection.removeStatements(subj, pred, obj, contexts);
         baseSailConnection.removeStatements(subj, pred, obj, contexts);
@@ -209,7 +211,7 @@ public class CachingSailConnection extends SailConnectionBase {
         cacheConnection.begin();
     }
 
-    private void cacheStatements(final Resource subj, final URI pred, final Value obj) throws SailException {
+    private void cacheStatements(final Resource subj, final IRI pred, final Value obj) throws SailException {
         boolean includeInferred = false;
 
         cacheConnection.begin();

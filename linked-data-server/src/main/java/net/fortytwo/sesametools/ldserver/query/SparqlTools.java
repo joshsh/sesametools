@@ -35,7 +35,7 @@ public class SparqlTools {
 
         private final MediaType mediaType;
 
-        private SparqlResultFormat(final String mimeType) {
+        SparqlResultFormat(final String mimeType) {
             mediaType = new MediaType(mimeType);
         }
 
@@ -55,7 +55,7 @@ public class SparqlTools {
 
         public static List<Variant> getVariants() {
             if (null == VARIANTS) {
-                VARIANTS = new LinkedList<Variant>();
+                VARIANTS = new LinkedList<>();
                 for (SparqlResultFormat f : SparqlResultFormat.values()) {
                     VARIANTS.add(new Variant(f.mediaType));
                 }
@@ -105,14 +105,12 @@ public class SparqlTools {
 
         try {
             final ParsedQuery query = parseQuery(queryStr);
-            final CloseableIteration<? extends BindingSet, QueryEvaluationException> iter =
-                    evaluateQuery(query, sc);
 
-            try {
+            try (CloseableIteration<? extends BindingSet, QueryEvaluationException> iter = evaluateQuery(query, sc)) {
                 if (query instanceof ParsedBooleanQuery) {
                     w.handleBoolean(iter.hasNext());
                 } else {
-                    final List<String> columnHeaders = new LinkedList<String>();
+                    final List<String> columnHeaders = new LinkedList<>();
                     columnHeaders.addAll(query.getTupleExpr().getBindingNames());
                     // FIXME: *do* specify the column headers
                     // columnHeaders.add("post");
@@ -128,16 +126,10 @@ public class SparqlTools {
                     w.endQueryResult();
                 }
 
-            } catch (QueryEvaluationException e) {
+            } catch (QueryEvaluationException | QueryResultHandlerException e) {
                 throw new QueryException(e);
-            } catch (QueryResultHandlerException e) {
-                throw new QueryException(e);
-            } finally {
-                iter.close();
             }
-        } catch (MalformedQueryException e) {
-            throw new QueryException(e);
-        } catch (QueryEvaluationException e) {
+        } catch (MalformedQueryException | QueryEvaluationException e) {
             throw new QueryException(e);
         }
     }

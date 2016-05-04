@@ -7,8 +7,8 @@ import org.openrdf.http.protocol.transaction.operations.RemoveNamespaceOperation
 import org.openrdf.http.protocol.transaction.operations.RemoveStatementsOperation;
 import org.openrdf.http.protocol.transaction.operations.SetNamespaceOperation;
 import org.openrdf.http.protocol.transaction.operations.TransactionOperation;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
@@ -39,8 +39,8 @@ public class RDFTransactionSailConnection extends SailConnectionWrapper {
                                         final int commitsPerUpload) {
         super(c);
         this.sail = sail;
-        this.operations = new LinkedList<TransactionOperation>();
-        this.buffer = new LinkedList<TransactionOperation>();
+        this.operations = new LinkedList<>();
+        this.buffer = new LinkedList<>();
         this.commitsPerUpload = commitsPerUpload;
     }
 
@@ -75,7 +75,7 @@ public class RDFTransactionSailConnection extends SailConnectionWrapper {
     }
 
     @Override
-    public void addStatement(Resource subject, URI predicate, Value object, Resource... contexts)
+    public void addStatement(Resource subject, IRI predicate, Value object, Resource... contexts)
             throws SailException {
 
         this.getWrappedConnection().addStatement(subject, predicate, object, contexts);
@@ -84,7 +84,7 @@ public class RDFTransactionSailConnection extends SailConnectionWrapper {
     }
 
     @Override
-    public void removeStatements(Resource subject, URI predicate, Value object, Resource... contexts)
+    public void removeStatements(Resource subject, IRI predicate, Value object, Resource... contexts)
             throws SailException {
 
         this.getWrappedConnection().removeStatements(subject, predicate, object, contexts);

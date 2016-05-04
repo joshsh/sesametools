@@ -6,7 +6,7 @@ import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.StackableSail;
-import org.openrdf.sail.helpers.SailBase;
+import org.openrdf.sail.helpers.AbstractSail;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -18,7 +18,7 @@ import java.io.PrintStream;
  *
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-public class RecorderSail extends SailBase implements StackableSail {
+public class RecorderSail extends AbstractSail implements StackableSail {
     private final Sail baseSail;
     private final ReplayConfiguration config;
     private final Handler<SailConnectionCall, SailException> queryHandler;

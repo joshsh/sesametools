@@ -5,7 +5,7 @@ import org.openrdf.model.ValueFactory;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
-import org.openrdf.sail.helpers.SailBase;
+import org.openrdf.sail.helpers.AbstractSail;
 
 /**
  * A <code>Sail</code> which can be written to, but not read from.
@@ -13,7 +13,7 @@ import org.openrdf.sail.helpers.SailBase;
  *
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-public class WriteOnlySail extends SailBase {
+public class WriteOnlySail extends AbstractSail {
     private RDFHandler handler;
     private ValueFactory valueFactory;
 

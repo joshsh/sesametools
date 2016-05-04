@@ -1,10 +1,10 @@
 package net.fortytwo.sesametools.readonly;
 
 import info.aduna.iteration.CloseableIteration;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
@@ -13,16 +13,16 @@ import org.openrdf.query.algebra.TupleExpr;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
-import org.openrdf.sail.helpers.SailBase;
-import org.openrdf.sail.helpers.SailConnectionBase;
+import org.openrdf.sail.helpers.AbstractSail;
+import org.openrdf.sail.helpers.AbstractSailConnection;
 
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-public class ReadOnlySailConnection extends SailConnectionBase {
+public class ReadOnlySailConnection extends AbstractSailConnection {
     private final SailConnection baseSailConnection;
 
-    public ReadOnlySailConnection(final SailBase sail,
+    public ReadOnlySailConnection(final AbstractSail sail,
                                   final Sail baseSail) throws SailException {
         super(sail);
         baseSailConnection = baseSail.getConnection();
@@ -44,7 +44,7 @@ public class ReadOnlySailConnection extends SailConnectionBase {
     }
 
     protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(
-            final Resource subject, final URI predicate, final Value object, final boolean includeInferred,
+            final Resource subject, final IRI predicate, final Value object, final boolean includeInferred,
             final Resource... contexts) throws SailException {
 
         return baseSailConnection.getStatements(subject, predicate, object, includeInferred, contexts);
@@ -63,14 +63,14 @@ public class ReadOnlySailConnection extends SailConnectionBase {
     }
 
     protected void addStatementInternal(final Resource subject,
-                                        final URI predicate,
+                                        final IRI predicate,
                                         final Value object,
                                         final Resource... contexts) throws SailException {
         // Do nothing.
     }
 
     protected void removeStatementsInternal(final Resource subject,
-                                            final URI predicate,
+                                            final IRI predicate,
                                             final Value object,
                                             final Resource... contexts) throws SailException {
         // Do nothing.

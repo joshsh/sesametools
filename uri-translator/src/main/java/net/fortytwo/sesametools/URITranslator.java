@@ -1,7 +1,7 @@
 package net.fortytwo.sesametools;
 
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.Update;
@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Translates between two URI prefixes for a given set of triples.
+ * Translates between two IRI prefixes for a given set of triples.
  *
  * @author Peter Ansell p_ansell@yahoo.com
  */
@@ -26,13 +26,13 @@ public class URITranslator {
     private final static Logger logger = LoggerFactory.getLogger(URITranslator.class);
 
     /**
-     * Maps URIs for all triples in the given contexts in the given repository, between the input
-     * URI prefix and the output URI prefix.
+     * Maps IRIs for all triples in the given contexts in the given repository, between the input
+     * IRI prefix and the output IRI prefix.
      *
      * @param repository      The repository containing the input triples, and which will contain the output
      *                        triples
-     * @param inputUriPrefix  The string defining the start of any URIs to look for.
-     * @param outputUriPrefix The string defining the start of the URIs which matched the inputUriPrefix, after
+     * @param inputUriPrefix  The string defining the start of any IRIs to look for.
+     * @param outputUriPrefix The string defining the start of the IRIs which matched the inputUriPrefix, after
      *                        the translation is complete.
      * @param contexts        The contexts in the repository that are relevant to the mapping
      * @throws RepositoryException      If the repository threw an exception during the course of the method.
@@ -45,32 +45,32 @@ public class URITranslator {
                                      Resource... contexts)
             throws RepositoryException, MalformedQueryException, UpdateExecutionException {
 
-        Collection<URI> subjectMappingPredicates = Collections.emptyList();
-        Collection<URI> predicateMappingPredicates = Collections.emptyList();
-        Collection<URI> objectMappingPredicates = Collections.emptyList();
+        Collection<IRI> subjectMappingPredicates = Collections.emptyList();
+        Collection<IRI> predicateMappingPredicates = Collections.emptyList();
+        Collection<IRI> objectMappingPredicates = Collections.emptyList();
 
         doTranslation(repository, inputUriPrefix, outputUriPrefix, subjectMappingPredicates,
                 predicateMappingPredicates, objectMappingPredicates, true, contexts);
     }
 
     /**
-     * Maps URIs for all triples in the given contexts in the given repository, between the input
-     * URI prefix and the output URI prefix.
+     * Maps IRIs for all triples in the given contexts in the given repository, between the input
+     * IRI prefix and the output IRI prefix.
      * <p>
-     * The mapping predicates are used to define extra triples to link the input and output URIs.
+     * The mapping predicates are used to define extra triples to link the input and output IRIs.
      * <p>
      * NOTE: The results for queries with deleteTranslatedTriples set to false may not be consistent
      * with what you expect.
      *
      * @param repository                     The repository containing the input triples,
      *                                       and which will contain the output triples
-     * @param inputUriPrefix                 The string defining the start of any URIs to look for.
-     * @param outputUriPrefix                The string defining the start of the URIs which matched the inputUriPrefix,
+     * @param inputUriPrefix                 The string defining the start of any IRIs to look for.
+     * @param outputUriPrefix                The string defining the start of the IRIs which matched the inputUriPrefix,
      *                                       after the translation is complete.
-     * @param nextSubjectMappingPredicates   The predicates used to map subject URIs that are translated.
-     * @param nextPredicateMappingPredicates The predicates used to map predicate URIs that are translated.
-     * @param nextObjectMappingPredicates    The predicates used to map object URIs that are translated.
-     * @param deleteTranslatedTriples        If this is true, then any triples which contained translated URIs
+     * @param nextSubjectMappingPredicates   The predicates used to map subject IRIs that are translated.
+     * @param nextPredicateMappingPredicates The predicates used to map predicate IRIs that are translated.
+     * @param nextObjectMappingPredicates    The predicates used to map object IRIs that are translated.
+     * @param deleteTranslatedTriples        If this is true, then any triples which contained translated IRIs
      *                                       will be deleted. Mapping triples will still exist if any mapping
      *                                       predicates were utilised.
      * @param contexts                       The contexts in the repository that are relevant to the mapping
@@ -81,9 +81,9 @@ public class URITranslator {
      *                                  to be successfully executed on the given repository for some reason.
      */
     public static void doTranslation(Repository repository, final String inputUriPrefix, final String outputUriPrefix,
-                                     final Collection<URI> nextSubjectMappingPredicates,
-                                     final Collection<URI> nextPredicateMappingPredicates,
-                                     final Collection<URI> nextObjectMappingPredicates,
+                                     final Collection<IRI> nextSubjectMappingPredicates,
+                                     final Collection<IRI> nextPredicateMappingPredicates,
+                                     final Collection<IRI> nextObjectMappingPredicates,
                                      boolean deleteTranslatedTriples, Resource... contexts)
             throws RepositoryException, MalformedQueryException, UpdateExecutionException {
 
@@ -93,32 +93,32 @@ public class URITranslator {
     }
 
     /**
-     * Maps URIs for all triples in the given contexts in the given repository, between the input
-     * URI prefix and the output URI prefix.
+     * Maps IRIs for all triples in the given contexts in the given repository, between the input
+     * IRI prefix and the output IRI prefix.
      * <p>
-     * The mapping predicates are used to define extra triples to link the input and output URIs.
+     * The mapping predicates are used to define extra triples to link the input and output IRIs.
      * <p>
      * NOTE: The results for queries with deleteTranslatedTriples set to false may not be consistent
      * with what you expect.
      *
      * @param repository                     The repository containing the input triples, and which will contain
      *                                       the output triples
-     * @param inputUriPrefix                 The string defining the start of any URIs to look for.
-     * @param outputUriPrefix                The string defining the start of the URIs which matched the inputUriPrefix,
+     * @param inputUriPrefix                 The string defining the start of any IRIs to look for.
+     * @param outputUriPrefix                The string defining the start of the IRIs which matched the inputUriPrefix,
      *                                       after the translation is complete.
-     * @param nextSubjectMappingPredicates   The predicates used to map subject URIs that are translated.
-     * @param translateSubjectUris           True to translate subject URIs and false otherwise.
-     * @param exactSubjectMatchRequired      True to indicate that translation should only occur if the subject URI
+     * @param nextSubjectMappingPredicates   The predicates used to map subject IRIs that are translated.
+     * @param translateSubjectUris           True to translate subject IRIs and false otherwise.
+     * @param exactSubjectMatchRequired      True to indicate that translation should only occur if the subject IRI
      *                                       matched the inputUriPrefix exactly.
-     * @param nextPredicateMappingPredicates The predicates used to map predicate URIs that are translated.
-     * @param translatePredicateUris         True to translate predicate URIs and false otherwise.
-     * @param exactPredicateMatchRequired    True to indicate that translation should only occur if the predicate URI
+     * @param nextPredicateMappingPredicates The predicates used to map predicate IRIs that are translated.
+     * @param translatePredicateUris         True to translate predicate IRIs and false otherwise.
+     * @param exactPredicateMatchRequired    True to indicate that translation should only occur if the predicate IRI
      *                                       matched the inputUriPrefix exactly.
-     * @param nextObjectMappingPredicates    The predicates used to map object URIs that are translated.
-     * @param translateObjectUris            True to translate object URIs and false otherwise.
-     * @param exactObjectMatchRequired       True to indicate that translation should only occur if the object URI
+     * @param nextObjectMappingPredicates    The predicates used to map object IRIs that are translated.
+     * @param translateObjectUris            True to translate object IRIs and false otherwise.
+     * @param exactObjectMatchRequired       True to indicate that translation should only occur if the object IRI
      *                                       matched the inputUriPrefix exactly.
-     * @param deleteTranslatedTriples        If this is true, then any triples which contained translated URIs
+     * @param deleteTranslatedTriples        If this is true, then any triples which contained translated IRIs
      *                                       will be deleted. Mapping triples will still exist if any mapping
      *                                       predicates were utilised.
      * @param contexts                       The contexts in the repository that are relevant to the mapping
@@ -129,11 +129,11 @@ public class URITranslator {
      *                                  to be successfully executed on the given repository for some reason.
      */
     public static void doTranslation(Repository repository, final String inputUriPrefix, final String outputUriPrefix,
-                                     final Collection<URI> nextSubjectMappingPredicates, boolean translateSubjectUris,
+                                     final Collection<IRI> nextSubjectMappingPredicates, boolean translateSubjectUris,
                                      boolean exactSubjectMatchRequired,
-                                     final Collection<URI> nextPredicateMappingPredicates,
+                                     final Collection<IRI> nextPredicateMappingPredicates,
                                      boolean translatePredicateUris, boolean exactPredicateMatchRequired,
-                                     final Collection<URI> nextObjectMappingPredicates, boolean translateObjectUris,
+                                     final Collection<IRI> nextObjectMappingPredicates, boolean translateObjectUris,
                                      boolean exactObjectMatchRequired, boolean deleteTranslatedTriples,
                                      Resource... contexts)
             throws RepositoryException, MalformedQueryException, UpdateExecutionException {
@@ -142,14 +142,12 @@ public class URITranslator {
 
         try {
             repositoryConnection = repository.getConnection();
-            repositoryConnection.setAutoCommit(false);
 
-            final List<String> withClauses = new ArrayList<String>();
-            final List<String> allQueries = new ArrayList<String>();
+            final List<String> withClauses = new ArrayList<>();
 
             if (contexts != null) {
                 for (Resource nextResource : contexts) {
-                    if (nextResource != null && nextResource instanceof URI) {
+                    if (nextResource != null && nextResource instanceof IRI) {
                         withClauses.add(" WITH <" + nextResource.stringValue() + "> ");
                     } else {
                         logger.error("Did not recognise (and ignoring) the context: " + nextResource);
@@ -157,7 +155,7 @@ public class URITranslator {
                 }
             }
 
-            // add a single empty with clause if they didn't include any URI resources as contexts
+            // add a single empty with clause if they didn't include any IRI resources as contexts
             // to make the rest of the code simpler
             if (withClauses.size() == 0) {
                 withClauses.add("");
@@ -168,7 +166,7 @@ public class URITranslator {
                     final StringBuilder objectConstructBuilder =
                             new StringBuilder(nextObjectMappingPredicates.size() * 120);
 
-                    for (final URI nextMappingPredicate : nextObjectMappingPredicates) {
+                    for (final IRI nextMappingPredicate : nextObjectMappingPredicates) {
                         objectConstructBuilder.append(" ?normalisedObjectUri <" + nextMappingPredicate.stringValue()
                                 + "> ?objectUri . ");
                     }
@@ -228,7 +226,7 @@ public class URITranslator {
                     final StringBuilder subjectConstructBuilder =
                             new StringBuilder(nextSubjectMappingPredicates.size() * 120);
 
-                    for (final URI nextMappingPredicate : nextSubjectMappingPredicates) {
+                    for (final IRI nextMappingPredicate : nextSubjectMappingPredicates) {
                         subjectConstructBuilder.append(" ?normalisedSubjectUri <" + nextMappingPredicate.stringValue()
                                 + "> ?subjectUri . ");
                     }
@@ -285,7 +283,7 @@ public class URITranslator {
                     final StringBuilder predicateConstructBuilder =
                             new StringBuilder(nextPredicateMappingPredicates.size() * 120);
 
-                    for (final URI nextMappingPredicate : nextPredicateMappingPredicates) {
+                    for (final IRI nextMappingPredicate : nextPredicateMappingPredicates) {
                         predicateConstructBuilder.append(" ?normalisedPredicateUri <"
                                 + nextMappingPredicate.stringValue() + "> ?predicateUri . ");
                     }

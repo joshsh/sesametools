@@ -1,9 +1,9 @@
 package net.fortytwo.sesametools.ldserver;
 
 import info.aduna.iteration.CloseableIteration;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
@@ -22,6 +22,7 @@ import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,20 +53,20 @@ public class WebResource extends ServerResource {
     protected String typeSpecificId;
     protected WebResourceCategory webResourceCategory;
     protected Sail sail;
-    protected RDFFormat format = null;
-    protected URI datasetURI;
+    protected IRI datasetURI;
+    protected Optional<RDFFormat> format;
 
-    public WebResource() throws Exception {
+    public WebResource() {
         super();
 
         getVariants().addAll(RDFMediaTypes.getRDFVariants());
     }
 
-    public void preprocessingHook() throws Exception {
+    public void preprocessingHook() {
         // Do nothing unless overridden
     }
 
-    public void postProcessingHook() throws Exception {
+    public void postProcessingHook() {
         // Do nothing unless overridden
     }
 
@@ -86,15 +87,15 @@ public class WebResource extends ServerResource {
 
         int i = selfURI.lastIndexOf(".");
         if (i > 0) {
-            format = RDFFormat.forFileName(selfURI);
+            format = RDFFormat.matchFileName(selfURI, null);
         }
 
-        if (null == format) {
+        if (!format.isPresent()) {
             webResourceCategory = WebResourceCategory.NonInformationResource;
             getVariants().addAll(RDFMediaTypes.getRDFVariants());
         } else {
             webResourceCategory = WebResourceCategory.InformationResource;
-            getVariants().add(RDFMediaTypes.findVariant(format));
+            getVariants().add(RDFMediaTypes.findVariant(format.get()));
 
             hostIdentifier = this.getRequest().getResourceRef().getHostIdentifier();
             baseRef = this.getRequest().getResourceRef().getBaseRef().toString();
@@ -119,8 +120,8 @@ public class WebResource extends ServerResource {
     private Representation representInformationResource() {
         try {
             preprocessingHook();
-            URI subject = sail.getValueFactory().createURI(subjectResourceURI);
-            Representation result = getRDFRepresentation(subject, format);
+            IRI subject = sail.getValueFactory().createIRI(subjectResourceURI);
+            Representation result = getRDFRepresentation(subject, format.get());
             postProcessingHook();
             return result;
         } catch (Throwable t) {
@@ -180,7 +181,7 @@ public class WebResource extends ServerResource {
                                       final Collection<Statement> statements,
                                       final SailConnection c,
                                       final ValueFactory vf) throws SailException {
-        Set<URI> contexts = new HashSet<URI>();
+        Set<IRI> contexts = new HashSet<>();
         CloseableIteration<? extends Statement, SailException> iter
                 = c.getStatements(subject, null, null, false);
         try {
@@ -189,8 +190,8 @@ public class WebResource extends ServerResource {
                 org.openrdf.model.Resource context = st.getContext();
 
                 if (null != context) {
-                    if (context instanceof URI && context.toString().startsWith(hostIdentifier)) {
-                        contexts.add((URI) context);
+                    if (context instanceof IRI && context.toString().startsWith(hostIdentifier)) {
+                        contexts.add((IRI) context);
                     }
                 }
             }
@@ -205,8 +206,8 @@ public class WebResource extends ServerResource {
                 org.openrdf.model.Resource context = st.getContext();
 
                 if (null != context) {
-                    if (context instanceof URI && context.toString().startsWith(hostIdentifier)) {
-                        contexts.add((URI) context);
+                    if (context instanceof IRI && context.toString().startsWith(hostIdentifier)) {
+                        contexts.add((IRI) context);
                     }
                 }
             }
@@ -214,7 +215,7 @@ public class WebResource extends ServerResource {
             iter.close();
         }
 
-        for (URI r : contexts) {
+        for (IRI r : contexts) {
             statements.add(vf.createStatement(subject, RDFS.SEEALSO, r));
         }
     }
@@ -222,10 +223,10 @@ public class WebResource extends ServerResource {
     private void addDocumentMetadata(final Collection<Statement> statements,
                                      final ValueFactory vf) throws SailException {
         // Metadata about the document itself
-        URI docURI = vf.createURI(selfURI);
-        statements.add(vf.createStatement(docURI, RDF.TYPE, vf.createURI("http://xmlns.com/foaf/0.1/Document")));
+        IRI docURI = vf.createIRI(selfURI);
+        statements.add(vf.createStatement(docURI, RDF.TYPE, vf.createIRI("http://xmlns.com/foaf/0.1/Document")));
         statements.add(vf.createStatement(docURI, RDFS.LABEL,
-                vf.createLiteral("" + format.getName() + " description of resource '"
+                vf.createLiteral("" + format.get().getName() + " description of resource '"
                         + typeSpecificId + "'")));
 
         // Note: we go to the trouble of special-casing the dataset URI, so that
@@ -240,11 +241,11 @@ public class WebResource extends ServerResource {
         return "resource";
     }
 
-    private Representation getRDFRepresentation(final URI subject,
+    private Representation getRDFRepresentation(final IRI subject,
                                                 final RDFFormat format) {
         try {
-            Collection<Namespace> namespaces = new LinkedList<Namespace>();
-            Collection<Statement> statements = new LinkedList<Statement>();
+            Collection<Namespace> namespaces = new LinkedList<>();
+            Collection<Statement> statements = new LinkedList<>();
 
             SailConnection c = sail.getConnection();
             try {

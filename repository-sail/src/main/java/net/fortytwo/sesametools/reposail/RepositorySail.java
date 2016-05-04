@@ -6,18 +6,14 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
-import org.openrdf.sail.helpers.SailBase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
+import org.openrdf.sail.helpers.AbstractSail;
 
 /**
  * A <code>Sail</code> which wraps a <code>Repository</code>
  *
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-public class RepositorySail extends SailBase {
+public class RepositorySail extends AbstractSail {
 
     private Repository repository;
     private boolean inferenceDisabled = false;

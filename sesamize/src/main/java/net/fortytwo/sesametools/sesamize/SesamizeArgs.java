@@ -1,6 +1,7 @@
 package net.fortytwo.sesametools.sesamize;
 
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFParserRegistry;
 
 import java.io.File;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -19,9 +21,9 @@ class SesamizeArgs {
     public final List<String> nonOptions;
 
     public SesamizeArgs(final String[] args) {
-        flags = new HashSet<String>();
-        pairs = new HashMap<String, String>();
-        nonOptions = new LinkedList<String>();
+        flags = new HashSet<>();
+        pairs = new HashMap<>();
+        nonOptions = new LinkedList<>();
 
         boolean inOption = false;
         for (int i = 0; i < args.length; i++) {
@@ -86,35 +88,36 @@ class SesamizeArgs {
                                   final RDFFormat defaultValue,
                                   final String... alternatives) {
         String s = getOption(null, alternatives);
-        RDFFormat f = null;
+        RDFFormat format;
 
         // If they specified an option, try to find it out of the non-standard
         // list of descriptors in Sesamize.rdfFormatByName
         if (null != s) {
-            f = findRDFFormat(s);
+            format = findRDFFormat(s);
         } else {
             // otherwise try to find the format based on the file name extension,
             // using the specified default value as a fallback
-            f = RDFFormat.forFileName(file.getName(), defaultValue);
+            Optional<RDFFormat> f = RDFFormat.matchFileName(file.getName(), null);
+            format = f.isPresent() ? f.get() : defaultValue;
         }
 
-        return f;
+        return format;
     }
 
     private RDFFormat findRDFFormat(final String s) {
-        RDFFormat f;
+        Optional<RDFFormat> f;
 
-        f = RDFFormat.forMIMEType(s);
+        f = RDFParserRegistry.getInstance().getFileFormatForMIMEType(s);
 
-        if (null == f) {
-            f = RDFFormat.forFileName("example." + s);
+        if (!f.isPresent()) {
+            f = RDFParserRegistry.getInstance().getFileFormatForFileName("example." + s);
         }
         
-        if (null == f) {
+        if (!f.isPresent()) {
             throw new IllegalArgumentException("no matching RDF format for '" + s + "'");
         }
 
-        return f;
+        return f.get();
     }
 
     private String getOptionName(final String option) {

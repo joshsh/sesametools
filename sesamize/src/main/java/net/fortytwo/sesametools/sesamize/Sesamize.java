@@ -5,7 +5,7 @@ import net.fortytwo.sesametools.SesameTools;
 import org.apache.commons.io.IOUtils;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
@@ -62,7 +62,7 @@ public class Sesamize {
 
         private final String name;
 
-        private Subcommand(final String name) {
+        Subcommand(final String name) {
             this.name = name;
         }
 
@@ -201,7 +201,7 @@ public class Sesamize {
         OutputStream os = System.out;
 
         RandomValueFactory rvf = new RandomValueFactory(
-                new ValueFactoryImpl());
+                SimpleValueFactory.getInstance());
 
         RDFWriter writer = Rio.createWriter(outputFormat, os);
         writer.startRDF();
@@ -268,7 +268,7 @@ public class Sesamize {
                 rc.commit();
 
                 TupleQuery tq = rc.prepareTupleQuery(QueryLanguage.SPARQL, query);
-                List<String> columnHeaders = new LinkedList<String>();
+                List<String> columnHeaders = new LinkedList<>();
                 columnHeaders.addAll(tq.getBindings().getBindingNames());
 
                 w.startQueryResult(columnHeaders);

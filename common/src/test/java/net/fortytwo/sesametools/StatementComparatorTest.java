@@ -4,12 +4,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.model.BNode;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.ValueFactoryImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.XMLSchema;
 
 import static org.junit.Assert.assertEquals;
@@ -39,21 +39,21 @@ public class StatementComparatorTest {
     /**
      * testSubjectUri1 needs to be constructed to sort before testSubjectUri2
      */
-    private URI testSubjectUri1;
-    private URI testSubjectUri2;
+    private IRI testSubjectUri1;
+    private IRI testSubjectUri2;
 
     /**
      * testPredicateUri1 needs to be constructed to sort before testPredicateUri2
      */
-    private URI testPredicateUri1;
-    private URI testPredicateUri2;
+    private IRI testPredicateUri1;
+    private IRI testPredicateUri2;
 
     private BNode testObjectBNode1;
     /**
      * testObjectUri1 needs to be constructed to sort before testObjectUri2
      */
-    private URI testObjectUri1;
-    private URI testObjectUri2;
+    private IRI testObjectUri1;
+    private IRI testObjectUri2;
     /**
      * testObjectLiteral1 needs to be constructed to sort before testObjectLiteral2
      */
@@ -75,8 +75,8 @@ public class StatementComparatorTest {
     /**
      * testContextUri1 needs to be constructed to sort before testContextUri2
      */
-    private URI testContextUri1;
-    private URI testContextUri2;
+    private IRI testContextUri1;
+    private IRI testContextUri2;
 
     private Statement statement1;
     private Statement statement2;
@@ -98,18 +98,18 @@ public class StatementComparatorTest {
     @Before
     public void setUp() throws Exception {
         testComparator = new StatementComparator();
-        valueFactory = new ValueFactoryImpl();
+        valueFactory = SimpleValueFactory.getInstance();
 
         testSubjectBNode1 = valueFactory.createBNode("SubjectBNode1");
-        testSubjectUri1 = valueFactory.createURI("urn:test:statementcomparator:", "subject1");
-        testSubjectUri2 = valueFactory.createURI("urn:test:statementcomparator:", "subject2");
+        testSubjectUri1 = valueFactory.createIRI("urn:test:statementcomparator:", "subject1");
+        testSubjectUri2 = valueFactory.createIRI("urn:test:statementcomparator:", "subject2");
 
-        testPredicateUri1 = valueFactory.createURI("urn:test:statementcomparator:", "predicate1");
-        testPredicateUri2 = valueFactory.createURI("urn:test:statementcomparator:", "predicate2");
+        testPredicateUri1 = valueFactory.createIRI("urn:test:statementcomparator:", "predicate1");
+        testPredicateUri2 = valueFactory.createIRI("urn:test:statementcomparator:", "predicate2");
 
         testObjectBNode1 = valueFactory.createBNode("ObjectBNode1");
-        testObjectUri1 = valueFactory.createURI("urn:test:statementcomparator:", "object1");
-        testObjectUri2 = valueFactory.createURI("urn:test:statementcomparator:", "object2");
+        testObjectUri1 = valueFactory.createIRI("urn:test:statementcomparator:", "object1");
+        testObjectUri2 = valueFactory.createIRI("urn:test:statementcomparator:", "object2");
         testObjectLiteral1 = valueFactory.createLiteral("test object literal 1");
         testObjectLiteral2 = valueFactory.createLiteral("test object literal 2");
         testObjectLangLiteral1EN = valueFactory.createLiteral("test object literal 1", "en");
@@ -123,8 +123,8 @@ public class StatementComparatorTest {
         testObjectTypedLiteral2Integer = valueFactory.createLiteral("2", XMLSchema.INTEGER);
 
         testContextBNode1 = valueFactory.createBNode("ContextBNode1");
-        testContextUri1 = valueFactory.createURI("urn:test:statementcomparator:", "context1");
-        testContextUri2 = valueFactory.createURI("urn:test:statementcomparator:", "context2");
+        testContextUri1 = valueFactory.createIRI("urn:test:statementcomparator:", "context1");
+        testContextUri2 = valueFactory.createIRI("urn:test:statementcomparator:", "context2");
     }
 
     /**
@@ -223,7 +223,7 @@ public class StatementComparatorTest {
      */
     @Test
     public void testCompareEquivalentBothNullContextsTyped3() {
-        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (URI) null);
+        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (IRI) null);
         statement2 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (BNode) null);
 
         assertEquals(0, testComparator.compare(statement1, statement2));
@@ -236,7 +236,7 @@ public class StatementComparatorTest {
      */
     @Test
     public void testCompareEquivalentBothNullContextsTyped4() {
-        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (URI) null);
+        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (IRI) null);
         statement2 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (Resource) null);
 
         assertEquals(0, testComparator.compare(statement1, statement2));
@@ -271,7 +271,7 @@ public class StatementComparatorTest {
 
     /**
      * Tests whether two equivalent statements (same subject/predicate/object)
-     * with one null context and one with a URI defined is sorted as BEFORE
+     * with one null context and one with a IRI defined is sorted as BEFORE
      */
     @Test
     public void testCompareEquivalentOneNullOneURIContext() {
@@ -284,7 +284,7 @@ public class StatementComparatorTest {
 
     /**
      * Tests whether two equivalent statements (same subject/predicate/object)
-     * with one null context and one with a URI defined is sorted as BEFORE
+     * with one null context and one with a IRI defined is sorted as BEFORE
      */
     @Test
     public void testCompareEquivalentOneNullOneBNodeContext() {
@@ -299,7 +299,7 @@ public class StatementComparatorTest {
 
     /**
      * Tests whether two equivalent statements (same subject/predicate/object)
-     * with a BNode context and one with a URI defined is sorted as BEFORE
+     * with a BNode context and one with a IRI defined is sorted as BEFORE
      */
     @Test
     public void testCompareEquivalentBNodeAndUriContext() {
@@ -327,7 +327,7 @@ public class StatementComparatorTest {
 
     /**
      * Tests whether two equivalent statements (same subject/predicate/object)
-     * with the same context URI are sorted as EQUALS
+     * with the same context IRI are sorted as EQUALS
      */
     @Test
     public void testCompareEquivalentSameUriContext() {
@@ -340,7 +340,7 @@ public class StatementComparatorTest {
 
     /**
      * Tests whether a Statement with a Blank Node subject is sorted BEFORE a
-     * similar statement with a URI subject
+     * similar statement with a IRI subject
      */
     @Test
     public void testCompareBNodeSubject() {
@@ -353,7 +353,7 @@ public class StatementComparatorTest {
 
     /**
      * Tests whether a statement with a BNode object is sorted before a
-     * statement with a URI object
+     * statement with a IRI object
      */
     @Test
     public void testCompareBNodeAndUriObjects() {
@@ -476,9 +476,9 @@ public class StatementComparatorTest {
         assertTrue(testComparator.compare(statement1, statement2) < 0);
         assertTrue(testComparator.compare(statement2, statement1) > 0);
         // Same literal values sort one missing type, other xsd:string
-        // NOTE: This will start failing from Sesame-2.8/RDF-1.1 by switching to EQUALS in both cases
-        assertTrue(testComparator.compare(statement1, statement3) < 0);
-        assertTrue(testComparator.compare(statement3, statement1) > 0);
+        // NOTE: prior to Sesame-2.8/RDF-1.1, these statements were unequal
+        assertTrue(testComparator.compare(statement1, statement3) == 0);
+        assertTrue(testComparator.compare(statement3, statement1) == 0);
         // Different literal values sort
         assertTrue(testComparator.compare(statement1, statement4) < 0);
         assertTrue(testComparator.compare(statement4, statement1) > 0);
@@ -499,9 +499,9 @@ public class StatementComparatorTest {
         assertTrue(testComparator.compare(statement3, statement2) < 0);
         assertTrue(testComparator.compare(statement2, statement3) > 0);
         // Same literal values sort one missing type, other xsd:string
-        // NOTE: This will start failing from Sesame-2.8/RDF-1.1 by switching to EQUALS in both cases
-        assertTrue(testComparator.compare(statement2, statement4) < 0);
-        assertTrue(testComparator.compare(statement4, statement2) > 0);
+        // NOTE: prior to Sesame-2.8/RDF-1.1, these statements were unequal
+        assertTrue(testComparator.compare(statement2, statement4) == 0);
+        assertTrue(testComparator.compare(statement4, statement2) == 0);
         // Different literal values sort
         assertTrue(testComparator.compare(statement5, statement2) < 0);
         assertTrue(testComparator.compare(statement2, statement5) > 0);
@@ -614,9 +614,9 @@ public class StatementComparatorTest {
         assertTrue(testComparator.compare(statement1, statement5) < 0);
         assertTrue(testComparator.compare(statement5, statement1) > 0);
         // Same literal values sort one missing type, other xsd:string
-        // NOTE: This will start failing from Sesame-2.8/RDF-1.1 by switching to EQUALS in both cases
-        assertTrue(testComparator.compare(statement1, statement6) < 0);
-        assertTrue(testComparator.compare(statement6, statement1) > 0);
+        // NOTE: prior to Sesame-2.8/RDF-1.1, these statements were unequal
+        assertTrue(testComparator.compare(statement1, statement6) == 0);
+        assertTrue(testComparator.compare(statement6, statement1) == 0);
         // Different literal values sort
         assertTrue(testComparator.compare(statement1, statement7) < 0);
         assertTrue(testComparator.compare(statement7, statement1) > 0);
@@ -647,9 +647,9 @@ public class StatementComparatorTest {
         assertTrue(testComparator.compare(statement6, statement2) < 0);
         assertTrue(testComparator.compare(statement2, statement6) > 0);
         // Same literal values sort one missing type, other xsd:string
-        // NOTE: This will start failing from Sesame-2.8/RDF-1.1 by switching to EQUALS in both cases
-        assertTrue(testComparator.compare(statement2, statement7) < 0);
-        assertTrue(testComparator.compare(statement7, statement2) > 0);
+        // NOTE: prior to Sesame-2.8/RDF-1.1, these statements were unequal
+        assertTrue(testComparator.compare(statement2, statement7) == 0);
+        assertTrue(testComparator.compare(statement7, statement2) == 0);
         // Different literal values sort
         assertTrue(testComparator.compare(statement8, statement2) < 0);
         assertTrue(testComparator.compare(statement2, statement8) > 0);
@@ -782,7 +782,7 @@ public class StatementComparatorTest {
 
     /**
      * Tests consistency of sorting between equivalent statements with
-     * different URI objects
+     * different IRI objects
      */
     @Test
     public void testCompareUriObjects() {
@@ -794,7 +794,7 @@ public class StatementComparatorTest {
     }
 
     /**
-     * Tests whether a statement with a URI object is sorted before a
+     * Tests whether a statement with a IRI object is sorted before a
      * statement with a Literal object
      */
     @Test
@@ -807,7 +807,7 @@ public class StatementComparatorTest {
     }
 
     /**
-     * Tests whether a statement with a URI object is sorted before a
+     * Tests whether a statement with a IRI object is sorted before a
      * statement with a Literal object
      */
     @Test

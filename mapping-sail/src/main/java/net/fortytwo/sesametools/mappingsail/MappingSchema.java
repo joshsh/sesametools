@@ -1,6 +1,6 @@
 package net.fortytwo.sesametools.mappingsail;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,13 +28,13 @@ public class MappingSchema {
     }
 
     private final RewriteRule defaultRewriter = new RewriteRule() {
-        public URI rewrite(final URI original) {
+        public IRI rewrite(final IRI original) {
             return original;
         }
     };
 
     private final Map<String, RewriteRule> rewriters
-            = new HashMap<String, RewriteRule>();
+            = new HashMap<>();
 
     /**
      * @param partOfSpeech the position in an RDF statement (subject, predicate, object or context)

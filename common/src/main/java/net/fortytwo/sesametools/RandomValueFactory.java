@@ -4,7 +4,7 @@ import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.XMLSchema;
@@ -50,7 +50,7 @@ public class RandomValueFactory {
 
     public Statement randomStatement(final Resource context) {
         Resource subj = randomResource();
-        URI pred = randomURI();
+        IRI pred = randomIRI();
         Value obj = randomValue();
         return valueFactory.createStatement(subj, pred, obj, context);
     }
@@ -68,8 +68,8 @@ public class RandomValueFactory {
         return randomValue(type);
     }
 
-    public URI randomURI() {
-        return valueFactory.createURI("urn:uuid:" + UUID.randomUUID().toString().replace("-", ""));
+    public IRI randomIRI() {
+        return valueFactory.createIRI("urn:uuid:" + UUID.randomUUID().toString().replace("-", ""));
     }
 
     public BNode randomBNode() {
@@ -122,7 +122,7 @@ public class RandomValueFactory {
         Value v = null;
         switch (type) {
             case Uri:
-                v = randomURI();
+                v = randomIRI();
                 break;
             //case Bnode:
             //    v = randomBNode();

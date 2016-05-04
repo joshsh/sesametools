@@ -49,7 +49,7 @@ public abstract class QueryResource extends Restlet {
         //getVariants().add(new Variant(MediaType.APPLICATION_JSON));
 
         int i = selfURI.lastIndexOf("?");
-        arguments = new HashMap<String, String>();
+        arguments = new HashMap<>();
         if (0 < i) {
             String args = selfURI.substring(i + 1);
             if (0 < args.length()) {
@@ -70,7 +70,7 @@ public abstract class QueryResource extends Restlet {
     }
 
     protected Map<String, String> parseParams(final String s) throws UnsupportedEncodingException {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
 
         String[] a = s.split("&");
         for (String p : a) {

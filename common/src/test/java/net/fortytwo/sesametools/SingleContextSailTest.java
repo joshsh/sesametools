@@ -4,11 +4,12 @@ import info.aduna.iteration.CloseableIteration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
@@ -20,12 +21,14 @@ import static junit.framework.Assert.assertEquals;
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class SingleContextSailTest {
-    private static final URI
-            SPECIAL_CONTEXT = new URIImpl("http://example.org/ns/special-context"),
-            OTHER_CONTEXT = new URIImpl("http://example.org/ns/other-context"),
-            THING1 = new URIImpl("http://example.org/ns/thing1"),
-            THING2 = new URIImpl("http://example.org/ns/thing2"),
-            RELATION1 = new URIImpl("http://example.org/ns/relation1");
+    private static final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+
+    private static final IRI
+            SPECIAL_CONTEXT = valueFactory.createIRI("http://example.org/ns/special-context"),
+            OTHER_CONTEXT = valueFactory.createIRI("http://example.org/ns/other-context"),
+            THING1 = valueFactory.createIRI("http://example.org/ns/thing1"),
+            THING2 = valueFactory.createIRI("http://example.org/ns/thing2"),
+            RELATION1 = valueFactory.createIRI("http://example.org/ns/relation1");
 
     private Sail baseSail;
     private Sail sail;
@@ -104,9 +107,9 @@ public class SingleContextSailTest {
     }
 
     private long countStatements(final Resource subject,
-                                 final URI predicate,
+                                 final IRI predicate,
                                  final Value object,
-                                 final Resource... contexts) throws Exception {
+                                 final Resource... contexts) {
         long count = 0;
 
         SailConnection c = sail.getConnection();

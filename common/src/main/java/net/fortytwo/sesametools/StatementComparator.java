@@ -19,7 +19,7 @@ public class StatementComparator implements Comparator<Statement> {
     /**
      * @return A thread-safe pre-instantiated instance of StatementComparator.
      */
-    public final static StatementComparator getInstance() {
+    public static StatementComparator getInstance() {
         return INSTANCE;
     }
 

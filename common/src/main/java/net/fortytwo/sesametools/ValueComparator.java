@@ -1,11 +1,12 @@
 package net.fortytwo.sesametools;
 
 import org.openrdf.model.BNode;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Literal;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * Implements a Comparator for OpenRDF Value objects where
@@ -30,7 +31,7 @@ public class ValueComparator implements Comparator<Value> {
     /**
      * A thread-safe pre-instantiated instance of ValueComparator.
      */
-    public final static ValueComparator getInstance() {
+    public static ValueComparator getInstance() {
         return INSTANCE;
     }
 
@@ -83,13 +84,13 @@ public class ValueComparator implements Comparator<Value> {
         } else if (second instanceof BNode) {
             // sort BNodes before other things, and first was not a BNode
             return AFTER;
-        } else if (first instanceof URI) {
-            if (second instanceof URI) {
-                return ((URI) first).stringValue().compareTo(((URI) second).stringValue());
+        } else if (first instanceof IRI) {
+            if (second instanceof IRI) {
+                return first.stringValue().compareTo(second.stringValue());
             } else {
                 return BEFORE;
             }
-        } else if (second instanceof URI) {
+        } else if (second instanceof IRI) {
             // sort URIs before Literals
             return AFTER;
         }
@@ -100,20 +101,20 @@ public class ValueComparator implements Comparator<Value> {
             int cmp = firstLiteral.getLabel().compareTo(secondLiteral.getLabel());
 
             if (EQUALS == cmp) {
-                String firstLang = firstLiteral.getLanguage();
-                String secondLang = secondLiteral.getLanguage();
-                if (null != firstLang) {
-                    if (null != secondLang) {
-                        return firstLang.compareTo(secondLang);
+                Optional<String> firstLang = firstLiteral.getLanguage();
+                Optional<String> secondLang = secondLiteral.getLanguage();
+                if (firstLang.isPresent()) {
+                    if (secondLang.isPresent()) {
+                        return firstLang.get().compareTo(secondLang.get());
                     } else {
                         return AFTER;
                     }
-                } else if (null != secondLang) {
+                } else if (secondLang.isPresent()) {
                     return BEFORE;
                 }
 
-                URI firstType = firstLiteral.getDatatype();
-                URI secondType = secondLiteral.getDatatype();
+                IRI firstType = firstLiteral.getDatatype();
+                IRI secondType = secondLiteral.getDatatype();
                 if (null == firstType) {
                     if (null == secondType) {
                         return EQUALS;

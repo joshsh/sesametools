@@ -5,7 +5,7 @@ import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.StackableSail;
-import org.openrdf.sail.helpers.SailBase;
+import org.openrdf.sail.helpers.AbstractSail;
 
 import java.io.File;
 
@@ -16,7 +16,7 @@ import java.io.File;
  *
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-public class ReadOnlySail extends SailBase implements StackableSail {
+public class ReadOnlySail extends AbstractSail implements StackableSail {
     private Sail baseSail;
 
     public ReadOnlySail(final Sail baseSail) {

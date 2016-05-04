@@ -12,8 +12,8 @@ public enum SparqlResultFormat {
     private final String mediaType;
     private final String[] nicknames;
 
-    private SparqlResultFormat(final String mimeType,
-                               final String... nicknames) {
+    SparqlResultFormat(final String mimeType,
+                       final String... nicknames) {
         mediaType = mimeType;
         this.nicknames = nicknames;
     }

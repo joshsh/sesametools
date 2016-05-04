@@ -3,10 +3,10 @@ package net.fortytwo.sesametools.writeonly;
 
 import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.sesametools.EmptyCloseableIteration;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.query.BindingSet;
@@ -16,17 +16,17 @@ import org.openrdf.query.algebra.TupleExpr;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.sail.SailException;
-import org.openrdf.sail.helpers.SailBase;
-import org.openrdf.sail.helpers.SailConnectionBase;
+import org.openrdf.sail.helpers.AbstractSail;
+import org.openrdf.sail.helpers.AbstractSailConnection;
 
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-public class WriteOnlySailConnection extends SailConnectionBase {
+public class WriteOnlySailConnection extends AbstractSailConnection {
     private RDFHandler handler;
     private ValueFactory valueFactory;
 
-    public WriteOnlySailConnection(final SailBase sail,
+    public WriteOnlySailConnection(final AbstractSail sail,
                                    final RDFHandler handler,
                                    final ValueFactory valueFactory) {
         super(sail);
@@ -35,7 +35,7 @@ public class WriteOnlySailConnection extends SailConnectionBase {
     }
 
     protected void addStatementInternal(
-            final Resource subj, final URI pred, final Value obj, final Resource... contexts) throws SailException {
+            final Resource subj, final IRI pred, final Value obj, final Resource... contexts) throws SailException {
 
         if (null == contexts || 0 == contexts.length) {
             Statement st = valueFactory.createStatement(subj, pred, obj);
@@ -73,12 +73,12 @@ public class WriteOnlySailConnection extends SailConnectionBase {
     protected CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateInternal(
             TupleExpr arg0, Dataset arg1, BindingSet arg2, boolean arg3)
             throws SailException {
-        return new EmptyCloseableIteration<BindingSet, QueryEvaluationException>();
+        return new EmptyCloseableIteration<>();
     }
 
     protected CloseableIteration<? extends Resource, SailException> getContextIDsInternal()
             throws SailException {
-        return new EmptyCloseableIteration<Resource, SailException>();
+        return new EmptyCloseableIteration<>();
     }
 
     protected String getNamespaceInternal(final String prefix) throws SailException {
@@ -87,20 +87,20 @@ public class WriteOnlySailConnection extends SailConnectionBase {
 
     protected CloseableIteration<? extends Namespace, SailException> getNamespacesInternal()
             throws SailException {
-        return new EmptyCloseableIteration<Namespace, SailException>();
+        return new EmptyCloseableIteration<>();
     }
 
     protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(
-            Resource arg0, URI arg1, Value arg2, boolean arg3, Resource... arg4)
+            Resource arg0, IRI arg1, Value arg2, boolean arg3, Resource... arg4)
             throws SailException {
-        return new EmptyCloseableIteration<Statement, SailException>();
+        return new EmptyCloseableIteration<>();
     }
 
     protected void removeNamespaceInternal(String arg0) throws SailException {
         // Does nothing.
     }
 
-    protected void removeStatementsInternal(Resource arg0, URI arg1, Value arg2,
+    protected void removeStatementsInternal(Resource arg0, IRI arg1, Value arg2,
                                  Resource... arg3) throws SailException {
         // Does nothing.
     }
