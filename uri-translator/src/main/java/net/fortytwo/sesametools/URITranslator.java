@@ -340,19 +340,25 @@ public class URITranslator {
             // rollback the connection and then throw the resulting exception
             // TODO: Will this get called before the repositoryConnection.close() in the finally
             // block?
-            repositoryConnection.rollback();
+            if (repositoryConnection != null){
+                repositoryConnection.rollback();
+            }
             throw rex;
         } catch (MalformedQueryException mqe) {
             // rollback the connection and then throw the resulting exception
             // TODO: Will this get called before the repositoryConnection.close() in the finally
             // block?
-            repositoryConnection.rollback();
+            if (repositoryConnection != null){
+                repositoryConnection.rollback();
+            }
             throw mqe;
         } catch (UpdateExecutionException uee) {
             // rollback the connection and then throw the resulting exception
             // TODO: Will this get called before the repositoryConnection.close() in the finally
             // block?
-            repositoryConnection.rollback();
+            if (repositoryConnection != null){
+                repositoryConnection.rollback();
+            }
             throw uee;
         } finally {
             if (repositoryConnection != null) {
