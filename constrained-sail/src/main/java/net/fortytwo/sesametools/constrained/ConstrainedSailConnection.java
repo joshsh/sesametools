@@ -228,7 +228,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
 
     @Override
     public String getNamespace(String prefix) throws SailException {
-        return (namespacesAreReadable)
+        return namespacesAreReadable
                 ? super.getNamespace(prefix)
                 : null;
     }
@@ -236,7 +236,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
     @Override
     public CloseableIteration<? extends Namespace, SailException> getNamespaces()
             throws SailException {
-        return (namespacesAreReadable)
+        return namespacesAreReadable
                 ? super.getNamespaces()
                 : new EmptyCloseableIteration<Namespace, SailException>();
     }
@@ -338,7 +338,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
     @Override
     public long size(final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
-            return (ALLOW_WILDCARD_SIZE)
+            return ALLOW_WILDCARD_SIZE
                     ? super.size()
                     : 0;
         } else {

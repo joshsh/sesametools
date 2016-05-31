@@ -182,7 +182,7 @@ public class URITranslator {
                         objectTemplateWhereBuilder.append("bind(iri(concat(\"");
                         objectTemplateWhereBuilder.append(outputUriPrefix);
                         objectTemplateWhereBuilder.append("\", encode_for_uri(substr(str(?objectUri), ");
-                        objectTemplateWhereBuilder.append((inputUriPrefix.length() + 1));
+                        objectTemplateWhereBuilder.append(inputUriPrefix.length() + 1);
                         objectTemplateWhereBuilder.append(")))) AS ?normalisedObjectUri) ");
                     } else {
                         // the following should be more efficient on large queries for exact matching,
@@ -242,7 +242,7 @@ public class URITranslator {
                         subjectTemplateWhereBuilder.append("bind(iri(concat(\"");
                         subjectTemplateWhereBuilder.append(outputUriPrefix);
                         subjectTemplateWhereBuilder.append("\", encode_for_uri(substr(str(?subjectUri), ");
-                        subjectTemplateWhereBuilder.append((inputUriPrefix.length() + 1));
+                        subjectTemplateWhereBuilder.append(inputUriPrefix.length() + 1);
                         subjectTemplateWhereBuilder.append(")))) AS ?normalisedSubjectUri) ");
                     } else {
                         // the following should be more efficient on large queries for exact matching,
@@ -300,7 +300,7 @@ public class URITranslator {
                         predicateTemplateWhereBuilder.append("bind(iri(concat(\"");
                         predicateTemplateWhereBuilder.append(outputUriPrefix);
                         predicateTemplateWhereBuilder.append("\", encode_for_uri(substr(str(?predicateUri), ");
-                        predicateTemplateWhereBuilder.append((inputUriPrefix.length() + 1));
+                        predicateTemplateWhereBuilder.append(inputUriPrefix.length() + 1);
                         predicateTemplateWhereBuilder.append(")))) AS ?normalisedPredicateUri) ");
                     } else {
                         // the following should be more efficient on large queries for exact matching,

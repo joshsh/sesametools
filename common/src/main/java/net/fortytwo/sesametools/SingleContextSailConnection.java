@@ -198,7 +198,7 @@ class SingleContextSailConnection extends AbstractSailConnection {
         }
 
         public boolean hasNext() throws SailException {
-            return (null != nextContext);
+            return null != nextContext;
         }
 
         public Resource next() throws SailException {
