@@ -157,7 +157,7 @@ public class URITranslator {
 
             // add a single empty with clause if they didn't include any IRI resources as contexts
             // to make the rest of the code simpler
-            if (withClauses.size() == 0) {
+            if (withClauses.isEmpty()) {
                 withClauses.add("");
             }
 

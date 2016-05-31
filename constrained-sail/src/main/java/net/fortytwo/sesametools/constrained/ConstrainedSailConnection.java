@@ -302,7 +302,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
                     }
                 }
 
-                if (0 < toRemove.size()) {
+                if (!toRemove.isEmpty()) {
                     Resource[] ctxArray = new Resource[toRemove.size()];
                     toRemove.toArray(ctxArray);
                     super.removeStatements(subj, pred, obj, ctxArray);
