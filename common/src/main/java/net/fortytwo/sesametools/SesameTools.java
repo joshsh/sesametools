@@ -23,6 +23,10 @@ public class SesameTools {
             throw new ExceptionInInitializerError(e);
         }
     }
+    
+    private SesameTools() {
+        
+    }
 
     public static Properties getProperties() {
         return PROPERTIES;

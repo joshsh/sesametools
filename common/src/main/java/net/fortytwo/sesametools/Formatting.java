@@ -8,6 +8,10 @@ package net.fortytwo.sesametools;
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class Formatting {
+    
+    private Formatting() {
+        
+    }
 
     private static final int
             FOUR = 4,
