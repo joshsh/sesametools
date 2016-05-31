@@ -178,19 +178,14 @@ public class Sesamize {
         RDFFormat inputFormat = args.getRDFFormat(inputFile, RDFFormat.RDFXML, "i", "inputFormat");
         RDFFormat outputFormat = args.getRDFFormat(RDFFormat.RDFXML, "o", "outputFormat");
 
-        String qFile = args.getOption(null, "query");
-        InputStream fileInput = null;
+        String qFile = args.getOption(null, "query");        
 
-        try {
-            fileInput = new FileInputStream(qFile);
+        try (InputStream fileInput = new FileInputStream(qFile)) {
+            
             String query = IOUtils.toString(fileInput, "UTF-8");
 
             translateRDFDocumentUseingConstructQuery(
                     query, inputFile, System.out, inputFormat, outputFormat, getBaseURI(args));
-        } finally {
-            if (fileInput != null) {
-                fileInput.close();
-            }
         }
     }
 
@@ -221,17 +216,11 @@ public class Sesamize {
         SparqlResultFormat outputFormat = args.getSparqlResultFormat(SparqlResultFormat.XML, "o", "outputFormat");
 
         String qFile = args.getOption(null, "query");
-        InputStream fileInput = null;
 
-        try {
-            fileInput = new FileInputStream(qFile);
+        try (InputStream fileInput = new FileInputStream(qFile)) {
             String query = IOUtils.toString(fileInput, "UTF-8");
 
             executeSparqlSelectQuery(query, inputFile, System.out, inputFormat, outputFormat, getBaseURI(args));
-        } finally {
-            if (fileInput != null) {
-                fileInput.close();
-            }
         }
     }
 
@@ -332,14 +321,8 @@ public class Sesamize {
                                             final String baseURI)
             throws SailException, IOException, RDFHandlerException, RDFParseException {
 
-        InputStream in = null;
-        try {
-            in = new FileInputStream(inputFile);
+        try (InputStream in = new FileInputStream(inputFile)) {
             translateRDFDocument(in, out, inFormat, outFormat, baseURI);
-        } finally {
-            if (in != null) {
-                in.close();
-            }
         }
     }
 
@@ -373,13 +356,10 @@ public class Sesamize {
             Repository repo = new SailRepository(sail);
 
             RepositoryConnection rc = repo.getConnection();
-            try {
-                OutputStream out = new FileOutputStream(dumpFile);
-                try {
+            try {                
+                try (OutputStream out = new FileOutputStream(dumpFile)) {
                     RDFHandler h = Rio.createWriter(format, out);
                     rc.export(h, contexts);
-                } finally {
-                    out.close();
                 }
             } finally {
                 rc.close();
