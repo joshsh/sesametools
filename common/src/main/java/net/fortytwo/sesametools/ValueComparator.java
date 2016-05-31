@@ -36,7 +36,7 @@ public class ValueComparator implements Comparator<Value> {
     }
 
     public final static int BEFORE = -1;
-    public final static int EQUALS = 0;
+    public final static int EQUAL = 0;
     public final static int AFTER = 1;
 
     /**
@@ -57,7 +57,7 @@ public class ValueComparator implements Comparator<Value> {
     public int compare(Value first, Value second) {
         if (first == null) {
             if (second == null) {
-                return EQUALS;
+                return EQUAL;
             } else {
                 return BEFORE;
             }
@@ -68,7 +68,7 @@ public class ValueComparator implements Comparator<Value> {
         }
 
         if (first == second || first.equals(second)) {
-            return EQUALS;
+            return EQUAL;
         }
 
         if (first instanceof BNode) {
@@ -100,7 +100,7 @@ public class ValueComparator implements Comparator<Value> {
             Literal secondLiteral = (Literal) second;
             int cmp = firstLiteral.getLabel().compareTo(secondLiteral.getLabel());
 
-            if (EQUALS == cmp) {
+            if (EQUAL == cmp) {
                 Optional<String> firstLang = firstLiteral.getLanguage();
                 Optional<String> secondLang = secondLiteral.getLanguage();
                 if (firstLang.isPresent()) {
@@ -117,7 +117,7 @@ public class ValueComparator implements Comparator<Value> {
                 IRI secondType = secondLiteral.getDatatype();
                 if (null == firstType) {
                     if (null == secondType) {
-                        return EQUALS;
+                        return EQUAL;
                     } else {
                         return BEFORE;
                     }

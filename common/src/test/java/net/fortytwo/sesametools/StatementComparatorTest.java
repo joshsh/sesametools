@@ -173,7 +173,7 @@ public class StatementComparatorTest {
      */
     @Test
     public void testStatementComparatorConstants() {
-        assertEquals(0, StatementComparator.EQUALS);
+        assertEquals(0, StatementComparator.EQUAL);
         assertTrue(StatementComparator.BEFORE < 0);
         assertTrue(StatementComparator.AFTER > 0);
     }
