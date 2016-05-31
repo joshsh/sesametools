@@ -485,7 +485,7 @@ public class RdfListUtil {
 
         Resource nextPointer = nextHead;
 
-        boolean allDone = true;
+        boolean allDone;
 
         do {
             // start off thinking all are done, and then set to false as

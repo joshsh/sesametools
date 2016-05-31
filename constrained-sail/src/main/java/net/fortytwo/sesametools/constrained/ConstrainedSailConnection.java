@@ -308,10 +308,8 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
                     super.removeStatements(subj, pred, obj, ctxArray);
                 }
             } else {
-                if (null != defaultWriteContext) {
-                    if (deletePermitted(defaultWriteContext)) {
-                        super.removeStatements(subj, pred, obj, defaultWriteContext);
-                    }
+                if (null != defaultWriteContext && deletePermitted(defaultWriteContext)) {
+                    super.removeStatements(subj, pred, obj, defaultWriteContext);
                 }
             }
 
