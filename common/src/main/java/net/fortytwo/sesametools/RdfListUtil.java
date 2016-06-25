@@ -179,7 +179,7 @@ public class RdfListUtil {
 
         final Resource aHead = valueFactory.createBNode();
 
-        if (nextValues.size() > 0) {
+        if (!nextValues.isEmpty()) {
             graphToAddTo.add(subject, predicate, aHead, contexts);
         }
 
@@ -459,7 +459,7 @@ public class RdfListUtil {
                 }
             }
 
-            if (nextResult.size() > 0) {
+            if (!nextResult.isEmpty()) {
                 results.add(nextResult);
             }
         }

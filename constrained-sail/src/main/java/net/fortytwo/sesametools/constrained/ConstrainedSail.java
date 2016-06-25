@@ -91,7 +91,7 @@ public class ConstrainedSail extends SailWrapper {
      */
     public boolean isWritable() throws SailException {
         return getBaseSail().isWritable()
-                && (writableSet.getNamedGraphs().size() > 0);  // TODO: OR the default analysis is writable
+                && (!writableSet.getNamedGraphs().isEmpty());  // TODO: OR the default analysis is writable
     }
 
     public void shutDown() throws SailException {

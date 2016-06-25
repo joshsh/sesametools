@@ -59,7 +59,7 @@ public class RDFTransactionSailConnection extends SailConnectionWrapper {
     }
 
     private void commitAll() throws SailException {
-        if (0 < buffer.size()) {
+        if (!buffer.isEmpty()) {
             sail.handleTransaction(buffer);
         }
 
