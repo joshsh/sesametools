@@ -189,10 +189,8 @@ public class WebResource extends ServerResource {
                 Statement st = iter.next();
                 org.openrdf.model.Resource context = st.getContext();
 
-                if (null != context) {
-                    if (context instanceof IRI && context.toString().startsWith(hostIdentifier)) {
-                        contexts.add((IRI) context);
-                    }
+                if (null != context && context instanceof IRI && context.toString().startsWith(hostIdentifier)) {
+                    contexts.add((IRI) context);
                 }
             }
         } finally {
@@ -205,10 +203,8 @@ public class WebResource extends ServerResource {
                 Statement st = iter.next();
                 org.openrdf.model.Resource context = st.getContext();
 
-                if (null != context) {
-                    if (context instanceof IRI && context.toString().startsWith(hostIdentifier)) {
-                        contexts.add((IRI) context);
-                    }
+                if (null != context && context instanceof IRI && context.toString().startsWith(hostIdentifier)) {
+                    contexts.add((IRI) context);
                 }
             }
         } finally {
