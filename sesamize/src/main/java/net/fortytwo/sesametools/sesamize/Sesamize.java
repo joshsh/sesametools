@@ -205,7 +205,7 @@ public class Sesamize {
 
         RDFWriter writer = Rio.createWriter(outputFormat, os);
         writer.startRDF();
-        for (long l = 0l; l < totalTriples; l++) {
+        for (long l = 0L; l < totalTriples; l++) {
             Statement st = rvf.randomStatement();
             writer.handleStatement(st);
         }
