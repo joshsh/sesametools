@@ -16,6 +16,10 @@ import java.util.Set;
  */
 public class DuplicateStatementFinder {
     private static final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+    
+    private DuplicateStatementFinder() {
+        
+    }
 
     public static Set<Statement> findDuplicateStatements(final SailConnection sc) throws SailException {
         boolean includeInferred = false;

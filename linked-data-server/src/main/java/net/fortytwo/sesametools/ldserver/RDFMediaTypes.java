@@ -39,6 +39,10 @@ public class RDFMediaTypes {
             RDF_VARIANTS.add(v);
         }
     }
+    
+    private RDFMediaTypes() {
+        
+    }
 
     public static List<Variant> getRDFVariants() {
         return RDF_VARIANTS;

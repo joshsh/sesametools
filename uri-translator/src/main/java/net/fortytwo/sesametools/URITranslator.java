@@ -24,6 +24,10 @@ import java.util.List;
  */
 public class URITranslator {
     private final static Logger logger = LoggerFactory.getLogger(URITranslator.class);
+    
+    private URITranslator() {
+        
+    }
 
     /**
      * Maps IRIs for all triples in the given contexts in the given repository, between the input
