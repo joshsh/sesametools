@@ -26,15 +26,15 @@ public class RandomValueFactory {
     private static final String[] languages = {"en", "fr", "de"};
 
     private enum ValueType {
-        Uri, /*Bnode,*/ Literal
+        URI, /*Bnode,*/ LITERAL
     }
 
     private enum LiteralKind {
-        Plain, WithLanguage, Typed
+        PLAIN, WITH_LANGUAGE, TYPED
     }
 
     private enum LiteralType {
-        String, Int, Double
+        STRING, INT, DOUBLE
     }
 
     private ValueFactory valueFactory;
@@ -59,7 +59,7 @@ public class RandomValueFactory {
         ValueType type;
         do {
             type = randomValueType();
-        } while (ValueType.Literal == type);
+        } while (ValueType.LITERAL == type);
         return (Resource) randomValue(type);
     }
 
@@ -81,13 +81,13 @@ public class RandomValueFactory {
         Literal l = null;
 
         switch (kind) {
-            case Plain:
+            case PLAIN:
                 l = valueFactory.createLiteral(randomStringLabel());
                 break;
-            case WithLanguage:
+            case WITH_LANGUAGE:
                 l = valueFactory.createLiteral(randomStringLabel(), randomLanguage());
                 break;
-            case Typed:
+            case TYPED:
                 l = randomTypedLiteral();
                 break;
         }
@@ -100,13 +100,13 @@ public class RandomValueFactory {
         Literal l = null;
 
         switch (type) {
-            case Int:
+            case INT:
                 l = valueFactory.createLiteral(rand.nextInt(MAXINT));
                 break;
-            case Double:
+            case DOUBLE:
                 l = valueFactory.createLiteral(rand.nextDouble());
                 break;
-            case String:
+            case STRING:
                 l = valueFactory.createLiteral(randomStringLabel(), XMLSchema.STRING);
                 break;
         }
@@ -121,13 +121,13 @@ public class RandomValueFactory {
     private Value randomValue(final ValueType type) {
         Value v = null;
         switch (type) {
-            case Uri:
+            case URI:
                 v = randomIRI();
                 break;
             //case Bnode:
             //    v = randomBNode();
             //    break;
-            case Literal:
+            case LITERAL:
                 v = randomLiteral();
                 break;
         }

@@ -42,7 +42,7 @@ public class WebResource extends ServerResource {
     private static final Logger logger = Logger.getLogger(WebResource.class.getName());
 
     enum WebResourceCategory {
-        InformationResource, NonInformationResource
+        INFORMATION_RESOURCE, NON_INFORMATION_RESOURCE
     }
 
     protected String selfURI;
@@ -91,10 +91,10 @@ public class WebResource extends ServerResource {
         }
 
         if (!format.isPresent()) {
-            webResourceCategory = WebResourceCategory.NonInformationResource;
+            webResourceCategory = WebResourceCategory.NON_INFORMATION_RESOURCE;
             getVariants().addAll(RDFMediaTypes.getRDFVariants());
         } else {
-            webResourceCategory = WebResourceCategory.InformationResource;
+            webResourceCategory = WebResourceCategory.INFORMATION_RESOURCE;
             getVariants().add(RDFMediaTypes.findVariant(format.get()));
 
             hostIdentifier = this.getRequest().getResourceRef().getHostIdentifier();
@@ -108,9 +108,9 @@ public class WebResource extends ServerResource {
         MediaType type = variant.getMediaType();
 
         switch (webResourceCategory) {
-            case InformationResource:
+            case INFORMATION_RESOURCE:
                 return representInformationResource();
-            case NonInformationResource:
+            case NON_INFORMATION_RESOURCE:
                 return representNonInformationResource(type);
             default:
                 throw new IllegalStateException("no such resource type: " + webResourceCategory);
