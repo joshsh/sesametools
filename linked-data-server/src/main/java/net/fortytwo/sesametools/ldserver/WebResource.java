@@ -74,17 +74,6 @@ public class WebResource extends ServerResource {
     public Representation get(final Variant variant) {
         selfURI = this.getRequest().getResourceRef().toString();
 
-        /*
-        System.out.println("selfURI = " + selfURI);
-        System.out.println("request: " + this.getRequest());
-        Request request = this.getRequest();
-        System.out.println("baseRef = " + request.getResourceRef().getBaseRef());
-        System.out.println("host domain = " + request.getResourceRef().getHostDomain());
-        System.out.println("host identifier = " + request.getResourceRef().getHostIdentifier());
-        System.out.println("hierarchical part = " + request.getResourceRef().getHierarchicalPart());
-        System.out.println("host ref = " + request.getHostRef().toString());
-        //*/
-
         int i = selfURI.lastIndexOf(".");
         if (i > 0) {
             format = RDFFormat.matchFileName(selfURI, null);
@@ -255,14 +244,10 @@ public class WebResource extends ServerResource {
                 addDocumentMetadata(statements, sail.getValueFactory());
 
                 // Select namespaces, for human-friendliness
-                CloseableIteration<? extends Namespace, SailException> nsIter
-                        = c.getNamespaces();
-                try {
+                try (CloseableIteration<? extends Namespace, SailException> nsIter = c.getNamespaces()) {
                     while (nsIter.hasNext()) {
                         namespaces.add(nsIter.next());
                     }
-                } finally {
-                    nsIter.close();
                 }
             } finally {
                 c.close();

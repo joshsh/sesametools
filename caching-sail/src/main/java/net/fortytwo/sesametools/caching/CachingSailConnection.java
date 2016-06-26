@@ -212,12 +212,11 @@ public class CachingSailConnection extends AbstractSailConnection {
     }
 
     private void cacheStatements(final Resource subj, final IRI pred, final Value obj) throws SailException {
-        boolean includeInferred = false;
 
         cacheConnection.begin();
 
         CloseableIteration<? extends Statement, SailException> iter
-                = baseSailConnection.getStatements(subj, pred, obj, includeInferred);
+                = baseSailConnection.getStatements(subj, pred, obj, false);
 
         while (iter.hasNext()) {
             Statement st = iter.next();

@@ -50,15 +50,6 @@ public class GraphResource extends ServerResource {
         RDFFormat format = RDFMediaTypes.findRdfFormat(type);
         selfIRI = this.getRequest().getResourceRef().toString();
 
-        /*
-        System.out.println("selfIRI = " + selfIRI);
-        System.out.println("baseRef = " + request.getResourceRef().getBaseRef());
-        System.out.println("host domain = " + request.getResourceRef().getHostDomain());
-        System.out.println("host identifier = " + request.getResourceRef().getHostIdentifier());
-        System.out.println("hierarchical part = " + request.getResourceRef().getHierarchicalPart());
-        System.out.println("host ref = " + request.getHostRef().toString());
-        //*/
-
         try {
             IRI subject = sail.getValueFactory().createIRI(selfIRI);
             return getRDFRepresentation(subject, format);

@@ -109,12 +109,10 @@ public class ConstrainedSailTest extends TestCase {
 
     private int count(final CloseableIteration<? extends Statement, SailException> iter) throws SailException {
         int c = 0;
-//System.out.println("...");
         try {
             while (iter.hasNext()) {
                 c++;
                 iter.next();
-//System.out.println(iter.next().toString());
             }
         } finally {
             iter.close();

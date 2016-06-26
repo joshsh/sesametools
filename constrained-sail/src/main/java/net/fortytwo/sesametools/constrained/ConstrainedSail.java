@@ -58,12 +58,10 @@ public class ConstrainedSail extends SailWrapper {
     }
 
     public void addReadableGraph(final IRI g) {
-        //System.out.println("adding readable analysis: " + g);
         readableSet.getDefaultGraphs().add(g);
     }
 
     public void addWritableGraph(final IRI g) {
-        //System.out.println("adding writable analysis: " + g);
         writableSet.getDefaultGraphs().add(g);
     }
 

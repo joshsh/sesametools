@@ -1,6 +1,5 @@
 package net.fortytwo.sesametools;
 
-import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -34,6 +33,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Peter Ansell p_ansell@yahoo.com
@@ -660,12 +660,6 @@ public class RdfListUtilTest {
 
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
-     * org.openrdf.model.Model, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListAfterAddListAtNodeMultipleElementsNullContext() {
         this.testRdfListUtilDefaults.addListAtNode(
@@ -700,12 +694,6 @@ public class RdfListUtilTest {
 
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
-     * org.openrdf.model.Model, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListAtNodeAfterInvalidGraphOperation() {
         this.testRdfListUtilDefaults.addListAtNode(
@@ -732,18 +720,12 @@ public class RdfListUtilTest {
                             this.testSubjectUri1, this.testPredicateUri1, this.testGraph, (Resource) null);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("List structure was not complete", rex.getMessage());
         }
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
-     * org.openrdf.model.Model, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListAtNodeMultipleElementsNullContext() {
         this.testRdfListUtilDefaults.addListAtNode(
@@ -763,12 +745,6 @@ public class RdfListUtilTest {
 
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
-     * org.openrdf.model.Model, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListBNodeHeadAfterInvalidGraphOperation() {
         this.testRdfListUtilDefaults.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
@@ -793,18 +769,12 @@ public class RdfListUtilTest {
                     this.testListHeadBNode1, this.testGraph, (Resource) null);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("List structure was not complete", rex.getMessage());
         }
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
-     * org.openrdf.model.Model, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListBNodeHeadAfterInvalidGraphOperation2() {
         this.testRdfListUtilDefaults.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
@@ -834,18 +804,12 @@ public class RdfListUtilTest {
                     this.testListHeadBNode1, this.testGraph, (Resource) null);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("List structure was not complete", rex.getMessage());
         }
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
-     * org.openrdf.model.Model, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListBNodeHeadMultipleElementsNullContext() {
         this.testRdfListUtilDefaults.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
@@ -957,7 +921,7 @@ public class RdfListUtilTest {
         assertEquals(this.testListHeadBNode1, matchedStatement.getSubject());
 
         Set<Resource> heads = new HashSet<>(1);
-        heads.add((BNode) matchedStatement.getSubject());
+        heads.add(matchedStatement.getSubject());
 
         final Collection<List<Value>> lists =
                 this.testRdfListUtilDefaults
@@ -1014,12 +978,6 @@ public class RdfListUtilTest {
         assertEquals(1, nextList.size());
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
-     * org.openrdf.model.Model, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListURIHeadAfterInvalidGraphOperation() {
         this.testRdfListUtilDefaults.addList(this.testListHeadUri1, this.testValuesMultipleElements, this.testGraph);
@@ -1044,7 +1002,7 @@ public class RdfListUtilTest {
                     this.testListHeadUri1, this.testGraph, (Resource) null);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("List structure was not complete", rex.getMessage());
         }
@@ -1703,7 +1661,7 @@ public class RdfListUtilTest {
                     = this.testRdfListUtilNoChecksOrRecursion.getLists(heads, this.testGraph);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Expected exception not found");
+            fail("Expected exception not found");
         } catch (Exception ex) {
             assertTrue(ex.getMessage().contains("List was too long, maximum is"));
         } finally {
@@ -1744,7 +1702,7 @@ public class RdfListUtilTest {
             final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("Found more than one list, possibly due to forking", rex.getMessage());
         }
@@ -1775,7 +1733,7 @@ public class RdfListUtilTest {
             final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("List structure was not complete", rex.getMessage());
         }
@@ -1815,7 +1773,7 @@ public class RdfListUtilTest {
             final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("List structure was not complete", rex.getMessage());
         }

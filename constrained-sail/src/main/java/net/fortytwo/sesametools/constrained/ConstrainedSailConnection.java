@@ -114,10 +114,8 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
         if (0 == contexts.length) {
             if (writePermitted(defaultWriteContext)) {
                 if (null == defaultWriteContext) {
-//System.out.println("wildcard write to null context");
                     super.addStatement(subj, pred, obj);
                 } else {
-//System.out.println("wildcard write to context: " + defaultWriteContext);
                     super.addStatement(subj, pred, obj, defaultWriteContext);
                 }
             }
@@ -292,8 +290,8 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
         if (0 == contexts.length) {
             if (WILDCARD_REMOVE_FROM_ALL_CONTEXTS) {
                 Collection<Resource> toRemove = new LinkedList<>();
-                boolean includeInferred = false;
-                try (CloseableIteration<? extends Statement, SailException> iter = super.getStatements(subj, pred, obj, includeInferred)) {
+                try (CloseableIteration<? extends Statement, SailException> iter
+                             = super.getStatements(subj, pred, obj, false)) {
                     while (iter.hasNext()) {
                         Resource context = iter.next().getContext();
                         if (null != context && writePermitted(context)) {
@@ -353,11 +351,11 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
     }
 
     public boolean readPermitted(final Resource context) throws SailException {
-        return readableSet.getDefaultGraphs().contains(context);
+        return context instanceof IRI && readableSet.getDefaultGraphs().contains(context);
     }
 
     public boolean writePermitted(final Resource context) throws SailException {
-        return writableSet.getDefaultGraphs().contains(context);
+        return context instanceof IRI && writableSet.getDefaultGraphs().contains(context);
     }
 
     public boolean deletePermitted(final Resource context) throws SailException {

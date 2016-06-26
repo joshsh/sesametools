@@ -30,7 +30,6 @@ public class AddStatementCall extends SailConnectionCall<SailConnection, Object>
         this.predicate = pred;
         this.object = obj;
         this.contexts = contexts;
-//System.out.println("call: " + this);
     }
 
     public String toString() {

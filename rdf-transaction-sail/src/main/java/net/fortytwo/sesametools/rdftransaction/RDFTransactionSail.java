@@ -39,12 +39,9 @@ public abstract class RDFTransactionSail extends SailWrapper {
 
     protected byte[] createTransactionEntity(final List<TransactionOperation> operations) throws SailException {
         try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            try {
+            try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
                 writer.serialize(operations, bos);
                 return bos.toByteArray();
-            } finally {
-                bos.close();
             }
         } catch (IOException e) {
             throw new SailException(e);

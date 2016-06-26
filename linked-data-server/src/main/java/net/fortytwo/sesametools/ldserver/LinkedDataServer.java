@@ -54,15 +54,11 @@ public class LinkedDataServer extends Application {
         if (!internalBaseURI.equals(externalBaseURI)) {
             RewriteRule outboundRewriter = new RewriteRule() {
                 public IRI rewrite(final IRI original) {
-                    //System.out.println("outbound: " + original);
 
                     if (null == original) {
                         return null;
                     } else {
                         String s = original.stringValue();
-                        //System.out.println("\t--> " + (s.startsWith(internalBaseURI)
-                        //        ? vf.createURI(s.replace(internalBaseURI, externalBaseURI))
-                        //        : original));
                         return s.startsWith(internalBaseURI)
                                 ? vf.createIRI(s.replace(internalBaseURI, externalBaseURI))
                                 : original;
@@ -72,14 +68,10 @@ public class LinkedDataServer extends Application {
 
             RewriteRule inboundRewriter = new RewriteRule() {
                 public IRI rewrite(final IRI original) {
-                    //System.out.println("inbound: " + original);
                     if (null == original) {
                         return null;
                     } else {
                         String s = original.stringValue();
-                        //System.out.println("\t--> " + (s.startsWith(externalBaseURI)
-                        //        ? vf.createURI(s.replace(externalBaseURI, internalBaseURI))
-                        //        : original));
                         return s.startsWith(externalBaseURI)
                                 ? vf.createIRI(s.replace(externalBaseURI, internalBaseURI))
                                 : original;

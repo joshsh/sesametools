@@ -39,11 +39,8 @@ public class SparqlAskTest {
     public static void setUp() throws Exception {
         // add test data
         final Repository repo = new SailRepository(sail);
-        final RepositoryConnection con = repo.getConnection();
-        try {
+        try (RepositoryConnection con = repo.getConnection()) {
             con.add(SparqlAskTest.class.getResourceAsStream(DATA_FILE), "", RDFFormat.TRIG);
-        } finally {
-            con.close();
         }
         
         // turn off verbose logging in Restlet engine

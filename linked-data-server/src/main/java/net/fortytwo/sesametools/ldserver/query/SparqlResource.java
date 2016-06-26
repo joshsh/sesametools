@@ -1,6 +1,5 @@
 package net.fortytwo.sesametools.ldserver.query;
 
-import org.openrdf.sail.SailException;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.MediaType;
@@ -42,10 +41,6 @@ public class SparqlResource extends QueryResource {
                         throw new IllegalArgumentException("POST entity has unsupported media type for SPARQL");
                 }
             }
-
-            //for (Map.Entry<String, String> e : arguments.entrySet()) {
-            //    System.out.println("\t" + e.getKey() + ": " + e.getValue());
-            //}
 
             if (null == query) {
                 query = arguments.get("query");

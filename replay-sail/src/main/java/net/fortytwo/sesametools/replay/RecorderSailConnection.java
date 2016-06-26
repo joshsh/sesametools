@@ -42,7 +42,6 @@ public class RecorderSailConnection extends AbstractSailConnection {
     private final String id = Integer.toString(new Random().nextInt(0xFFFF));
     private final Handler<SailConnectionCall, SailException> queryHandler;
     private final SailConnection baseSailConnection;
-    private final ReplayConfiguration config;
     private int iterationCount = 0;
 
     public RecorderSailConnection(final AbstractSail sail,
@@ -51,8 +50,7 @@ public class RecorderSailConnection extends AbstractSailConnection {
                                   final Handler<SailConnectionCall, SailException> queryHandler) throws SailException {
         super(sail);
         this.queryHandler = queryHandler;
-        this.config = config;
-        if (config.LOG_TRANSACTIONS) {
+        if (ReplayConfiguration.LOG_TRANSACTIONS) {
             queryHandler.handle(new ConstructorCall(id));
         }
         this.baseSailConnection = baseSail.getConnection();
@@ -64,7 +62,7 @@ public class RecorderSailConnection extends AbstractSailConnection {
                              final IRI pred,
                              final Value obj,
                              final Resource... contexts) throws SailException {
-        if (config.LOG_WRITE_OPERATIONS) {
+        if (ReplayConfiguration.LOG_WRITE_OPERATIONS) {
             queryHandler.handle(new AddStatementCall(id, subj, pred, obj, contexts));
         }
         baseSailConnection.addStatement(subj, pred, obj, contexts);
@@ -73,38 +71,39 @@ public class RecorderSailConnection extends AbstractSailConnection {
     // Note: clearing statements does not change the configuration of cached
     // values.
     protected void clearInternal(final Resource... contexts) throws SailException {
-        if (config.LOG_WRITE_OPERATIONS) {
+        if (ReplayConfiguration.LOG_WRITE_OPERATIONS) {
             queryHandler.handle(new ClearCall(id, contexts));
         }
         baseSailConnection.clear(contexts);
     }
 
     protected void clearNamespacesInternal() throws SailException {
-        if (config.LOG_WRITE_OPERATIONS) {
+        if (ReplayConfiguration.LOG_WRITE_OPERATIONS) {
             queryHandler.handle(new ClearNamespacesCall(id));
         }
         baseSailConnection.clearNamespaces();
     }
 
     protected void closeInternal() throws SailException {
-        if (config.LOG_TRANSACTIONS) {
+        if (ReplayConfiguration.LOG_TRANSACTIONS) {
             queryHandler.handle(new CloseConnectionCall(id));
         }
         baseSailConnection.close();
     }
 
     protected void commitInternal() throws SailException {
-        if (config.LOG_TRANSACTIONS) {
+        if (ReplayConfiguration.LOG_TRANSACTIONS) {
             queryHandler.handle(new CommitCall(id));
         }
         baseSailConnection.commit();
     }
 
     protected CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateInternal(
-            final TupleExpr tupleExpr, final Dataset dataSet, final BindingSet bindingSet, final boolean includeInferred)
+            final TupleExpr tupleExpr, final Dataset dataSet, final BindingSet bindingSet,
+            final boolean includeInferred)
             throws SailException {
         // Note: there is no recording iterator for evaluate() results
-        if (config.LOG_READ_OPERATIONS) {
+        if (ReplayConfiguration.LOG_READ_OPERATIONS) {
             queryHandler.handle(new EvaluateCall(id, includeInferred));
         }
         return baseSailConnection.evaluate(tupleExpr, dataSet, bindingSet, includeInferred);
@@ -112,7 +111,7 @@ public class RecorderSailConnection extends AbstractSailConnection {
 
     protected CloseableIteration<? extends Resource, SailException> getContextIDsInternal()
             throws SailException {
-        if (config.LOG_READ_OPERATIONS) {
+        if (ReplayConfiguration.LOG_READ_OPERATIONS) {
             queryHandler.handle(new GetContextIDsCall(id));
             return new RecorderIteration<>(
                     (CloseableIteration<Resource, SailException>) baseSailConnection.getContextIDs(),
@@ -129,7 +128,7 @@ public class RecorderSailConnection extends AbstractSailConnection {
     }
 
     protected String getNamespaceInternal(final String prefix) throws SailException {
-        if (config.LOG_READ_OPERATIONS) {
+        if (ReplayConfiguration.LOG_READ_OPERATIONS) {
             queryHandler.handle(new GetNamespaceCall(id, prefix));
         }
         return baseSailConnection.getNamespace(prefix);
@@ -137,7 +136,7 @@ public class RecorderSailConnection extends AbstractSailConnection {
 
     protected CloseableIteration<? extends Namespace, SailException> getNamespacesInternal()
             throws SailException {
-        if (config.LOG_READ_OPERATIONS) {
+        if (ReplayConfiguration.LOG_READ_OPERATIONS) {
             queryHandler.handle(new GetNamespacesCall(id));
             return new RecorderIteration<>(
                     (CloseableIteration<Namespace, SailException>) baseSailConnection.getNamespaces(),
@@ -152,7 +151,7 @@ public class RecorderSailConnection extends AbstractSailConnection {
             final Resource subj, final IRI pred, final Value obj, final boolean includeInferred,
             final Resource... contexts) throws SailException {
 
-        if (config.LOG_READ_OPERATIONS) {
+        if (ReplayConfiguration.LOG_READ_OPERATIONS) {
             queryHandler.handle(new GetStatementsCall(id, subj, pred, obj, includeInferred, contexts));
             return new RecorderIteration<>(
                     (CloseableIteration<Statement, SailException>) baseSailConnection.getStatements(
@@ -165,7 +164,7 @@ public class RecorderSailConnection extends AbstractSailConnection {
     }
 
     protected void removeNamespaceInternal(final String prefix) throws SailException {
-        if (config.LOG_WRITE_OPERATIONS) {
+        if (ReplayConfiguration.LOG_WRITE_OPERATIONS) {
             queryHandler.handle(new RemoveNamespaceCall(id, prefix));
         }
         baseSailConnection.removeNamespace(prefix);
@@ -175,35 +174,35 @@ public class RecorderSailConnection extends AbstractSailConnection {
                                  final IRI pred,
                                  final Value obj,
                                  final Resource... contexts) throws SailException {
-        if (config.LOG_WRITE_OPERATIONS) {
+        if (ReplayConfiguration.LOG_WRITE_OPERATIONS) {
             queryHandler.handle(new RemoveStatementsCall(id, subj, pred, obj, contexts));
         }
         baseSailConnection.removeStatements(subj, pred, obj, contexts);
     }
 
     protected void rollbackInternal() throws SailException {
-        if (config.LOG_TRANSACTIONS) {
+        if (ReplayConfiguration.LOG_TRANSACTIONS) {
             queryHandler.handle(new RollbackCall(id));
         }
         baseSailConnection.rollback();
     }
 
     protected void setNamespaceInternal(final String prefix, final String name) throws SailException {
-        if (config.LOG_WRITE_OPERATIONS) {
+        if (ReplayConfiguration.LOG_WRITE_OPERATIONS) {
             queryHandler.handle(new SetNamespaceCall(id, prefix, name));
         }
         baseSailConnection.setNamespace(prefix, name);
     }
 
     protected long sizeInternal(final Resource... contexts) throws SailException {
-        if (config.LOG_READ_OPERATIONS) {
+        if (ReplayConfiguration.LOG_READ_OPERATIONS) {
             queryHandler.handle(new SizeCall(id, contexts));
         }
         return baseSailConnection.size(contexts);
     }
 
     protected void startTransactionInternal() throws SailException {
-        if (config.LOG_TRANSACTIONS) {
+        if (ReplayConfiguration.LOG_TRANSACTIONS) {
             queryHandler.handle(new BeginCall(id));
         }
         baseSailConnection.begin();

@@ -210,14 +210,11 @@ public class RepositoryGraph implements Model {
         Object[] a = new Object[size];
         if (size > 0) try {
             int i = 0;
-            RepositoryResult result = rc.getStatements(null, null, null, INFER);
-            try {
+            try (RepositoryResult result = rc.getStatements(null, null, null, INFER)) {
                 while (result.hasNext()) {
                     a[i] = result.next();
                     i++;
                 }
-            } finally {
-                result.close();
             }
         } catch (Exception e) {
             throw new RepositoryGraphRuntimeException(e);

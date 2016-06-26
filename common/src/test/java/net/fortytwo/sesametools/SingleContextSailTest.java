@@ -114,15 +114,12 @@ public class SingleContextSailTest {
 
         SailConnection c = sail.getConnection();
         try {
-            CloseableIteration<? extends Statement, SailException> iter
-                    = c.getStatements(subject, predicate, object, false, contexts);
-            try {
+            try (CloseableIteration<? extends Statement, SailException> iter
+                         = c.getStatements(subject, predicate, object, false, contexts)) {
                 while (iter.hasNext()) {
                     count++;
                     iter.next();
                 }
-            } finally {
-                iter.close();
             }
             c.rollback();
         } finally {

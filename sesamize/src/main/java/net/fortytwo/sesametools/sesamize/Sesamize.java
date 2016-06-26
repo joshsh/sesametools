@@ -31,6 +31,8 @@ import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.memory.MemoryStore;
 import org.openrdf.sail.nativerdf.NativeStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,6 +49,8 @@ import java.util.List;
  * @author Joshua Shinavier (http://fortytwo.net).
  */
 public class Sesamize {
+    private final static Logger logger = LoggerFactory.getLogger(Sesamize.class);
+
     private static final String
             NAME = "Sesamize";
     private static final String
@@ -135,8 +139,7 @@ public class Sesamize {
                     break;
             }
         } catch (Throwable t) {
-            System.out.println("Exited with error: " + t);
-            t.printStackTrace();
+            logger.error("Exited with error", t);
             System.exit(1);
         }
     }
@@ -251,8 +254,7 @@ public class Sesamize {
 
         try {
             Repository repo = new SailRepository(sail);
-            RepositoryConnection rc = repo.getConnection();
-            try {
+            try (RepositoryConnection rc = repo.getConnection()) {
                 rc.add(inputFile, baseURI, inFormat);
                 rc.commit();
 
@@ -263,21 +265,16 @@ public class Sesamize {
                 w.startQueryResult(columnHeaders);
 
                 // Evaluate the first query to get all names
-                TupleQueryResult result = tq.evaluate();
-                try {
+                try (TupleQueryResult result = tq.evaluate()) {
                     // Loop over all names, and retrieve the corresponding e-mail address.
                     while (result.hasNext()) {
                         BindingSet b = result.next();
 
                         w.handleSolution(b);
                     }
-                } finally {
-                    result.close();
                 }
 
                 w.endQueryResult();
-            } finally {
-                rc.close();
             }
         } finally {
             sail.shutDown();
@@ -298,16 +295,13 @@ public class Sesamize {
 
         try {
             Repository repo = new SailRepository(sail);
-            RepositoryConnection rc = repo.getConnection();
-            try {
+            try (RepositoryConnection rc = repo.getConnection()) {
                 rc.add(inputFile, baseURI, inFormat);
                 rc.commit();
 
                 RDFWriter w = Rio.createWriter(outFormat, out);
 
                 rc.prepareGraphQuery(QueryLanguage.SPARQL, query).evaluate(w);
-            } finally {
-                rc.close();
             }
         } finally {
             sail.shutDown();
@@ -347,7 +341,7 @@ public class Sesamize {
                                                     final Resource... contexts)
             throws SailException, RepositoryException, IOException, RDFHandlerException {
 
-        System.out.println("dumping store at " + nativeStoreDirectory + " to file " + dumpFile);
+        logger.info("dumping store at " + nativeStoreDirectory + " to file " + dumpFile);
 
         Sail sail = new NativeStore(nativeStoreDirectory);
         sail.initialize();
@@ -355,14 +349,11 @@ public class Sesamize {
         try {
             Repository repo = new SailRepository(sail);
 
-            RepositoryConnection rc = repo.getConnection();
-            try {                
+            try (RepositoryConnection rc = repo.getConnection()) {
                 try (OutputStream out = new FileOutputStream(dumpFile)) {
                     RDFHandler h = Rio.createWriter(format, out);
                     rc.export(h, contexts);
                 }
-            } finally {
-                rc.close();
             }
         } finally {
             sail.shutDown();
@@ -375,19 +366,16 @@ public class Sesamize {
                                                         final Resource... contexts)
             throws SailException, RepositoryException, IOException, RDFParseException {
 
-        System.out.println("importing file " + dumpFile + " into store at " + nativeStoreDirectory);
+        logger.info("importing file " + dumpFile + " into store at " + nativeStoreDirectory);
         Sail sail = new NativeStore(nativeStoreDirectory);
         sail.initialize();
 
         try {
             Repository repo = new SailRepository(sail);
 
-            RepositoryConnection rc = repo.getConnection();
-            try {
+            try (RepositoryConnection rc = repo.getConnection()) {
                 rc.add(dumpFile, DEFAULT_BASEURI, format, contexts);
                 rc.commit();
-            } finally {
-                rc.close();
             }
         } finally {
             sail.shutDown();

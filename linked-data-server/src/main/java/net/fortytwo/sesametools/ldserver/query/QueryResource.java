@@ -35,15 +35,6 @@ public abstract class QueryResource extends Restlet {
          Map<String, String> arguments;
         selfURI = request.getResourceRef().toString();
 
-        /*
-        System.out.println("selfURI = " + selfURI);
-        System.out.println("baseRef = " + request.getResourceRef().getBaseRef());
-        System.out.println("host domain = " + request.getResourceRef().getHostDomain());
-        System.out.println("host identifier = " + request.getResourceRef().getHostIdentifier());
-        System.out.println("hierarchical part = " + request.getResourceRef().getHierarchicalPart());
-        System.out.println("host ref = " + request.getHostRef().toString());
-        //*/
-
         sail = LinkedDataServer.getInstance().getSail();
 
         //getVariants().add(new Variant(MediaType.APPLICATION_JSON));
@@ -60,11 +51,6 @@ public abstract class QueryResource extends Restlet {
                 }
             }
         }
-        /*
-        for (String name : arguments.keySet()) {
-            System.out.println("argument: " + name + " = " + arguments.get(name));
-        }
-        //*/
 
         return arguments;
     }

@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.openrdf.model.BNode;
 import org.openrdf.model.IRI;
 import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.impl.SimpleValueFactory;
@@ -197,8 +196,8 @@ public class StatementComparatorTest {
      */
     @Test
     public void testCompareEquivalentBothNullContextsTyped1() {
-        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (Resource) null);
-        statement2 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (Resource) null);
+        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, null);
+        statement2 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, null);
 
         assertEquals(0, testComparator.compare(statement1, statement2));
         assertEquals(0, testComparator.compare(statement2, statement1));
@@ -210,8 +209,8 @@ public class StatementComparatorTest {
      */
     @Test
     public void testCompareEquivalentBothNullContextsTyped2() {
-        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (Resource) null);
-        statement2 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (BNode) null);
+        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, null);
+        statement2 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, null);
 
         assertEquals(0, testComparator.compare(statement1, statement2));
         assertEquals(0, testComparator.compare(statement2, statement1));
@@ -223,8 +222,8 @@ public class StatementComparatorTest {
      */
     @Test
     public void testCompareEquivalentBothNullContextsTyped3() {
-        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (IRI) null);
-        statement2 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (BNode) null);
+        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, null);
+        statement2 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, null);
 
         assertEquals(0, testComparator.compare(statement1, statement2));
         assertEquals(0, testComparator.compare(statement2, statement1));
@@ -236,8 +235,8 @@ public class StatementComparatorTest {
      */
     @Test
     public void testCompareEquivalentBothNullContextsTyped4() {
-        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (IRI) null);
-        statement2 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, (Resource) null);
+        statement1 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, null);
+        statement2 = valueFactory.createStatement(testSubjectUri1, testPredicateUri1, testObjectUri1, null);
 
         assertEquals(0, testComparator.compare(statement1, statement2));
         assertEquals(0, testComparator.compare(statement2, statement1));

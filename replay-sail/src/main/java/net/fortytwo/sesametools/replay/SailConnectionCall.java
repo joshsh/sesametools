@@ -169,7 +169,6 @@ public abstract class SailConnectionCall<T, R> {
     }
 
     protected Resource[] parseContexts(final String s) {
-        //System.out.println("s = " + s);
         String s2 = s.substring(1, s.length() - 1);
         if (0 == s2.length()) {
             return new Resource[0];
