@@ -1,11 +1,13 @@
 package net.fortytwo.sesametools.ldserver.query;
 
 import info.aduna.iteration.CloseableIteration;
+
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResultHandlerException;
+import org.openrdf.query.QueryResultHandlerException;
 import org.openrdf.query.impl.MapBindingSet;
+import org.openrdf.query.parser.ParsedBooleanQuery;
 import org.openrdf.query.parser.ParsedQuery;
 import org.openrdf.query.parser.sparql.SPARQLParser;
 import org.openrdf.query.resultio.TupleQueryResultWriter;
@@ -33,7 +35,7 @@ public class SparqlTools {
 
         private final MediaType mediaType;
 
-        private SparqlResultFormat(final String mimeType) {
+        SparqlResultFormat(final String mimeType) {
             mediaType = new MediaType(mimeType);
         }
 
@@ -53,7 +55,7 @@ public class SparqlTools {
 
         public static List<Variant> getVariants() {
             if (null == VARIANTS) {
-                VARIANTS = new LinkedList<Variant>();
+                VARIANTS = new LinkedList<>();
                 for (SparqlResultFormat f : SparqlResultFormat.values()) {
                     VARIANTS.add(new Variant(f.mediaType));
                 }
@@ -101,43 +103,33 @@ public class SparqlTools {
                 throw new QueryException(new Throwable("bad query result format: " + format));
         }
 
-        ParsedQuery query;
-
         try {
-            query = parseQuery(queryStr);
-        } catch (MalformedQueryException e) {
-            throw new QueryException(e);
-        }
+            final ParsedQuery query = parseQuery(queryStr);
 
-        List<String> columnHeaders = new LinkedList<String>();
-        columnHeaders.addAll(query.getTupleExpr().getBindingNames());
-        // FIXME: *do* specify the column headers
-        //columnHeaders.add("post");
-        //columnHeaders.add("content");
-        //columnHeaders.add("screen_name");
-        try {
-            w.startQueryResult(columnHeaders);
-        } catch (TupleQueryResultHandlerException e) {
-            throw new QueryException(e);
-        }
+            try (CloseableIteration<? extends BindingSet, QueryEvaluationException> iter = evaluateQuery(query, sc)) {
+                if (query instanceof ParsedBooleanQuery) {
+                    w.handleBoolean(iter.hasNext());
+                } else {
+                    final List<String> columnHeaders = new LinkedList<>();
+                    columnHeaders.addAll(query.getTupleExpr().getBindingNames());
+                    // FIXME: *do* specify the column headers
+                    // columnHeaders.add("post");
+                    // columnHeaders.add("content");
+                    // columnHeaders.add("screen_name");
 
-        CloseableIteration<? extends BindingSet, QueryEvaluationException> iter
-                = evaluateQuery(query, sc);
-        int count = 0;
-        try {
-            try {
-                while (iter.hasNext() && count < limit) {
-                    w.handleSolution(iter.next());
-                    count++;
+                    w.startQueryResult(columnHeaders);
+                    int count = 0;
+                    while (iter.hasNext() && count < limit) {
+                        w.handleSolution(iter.next());
+                        count++;
+                    }
+                    w.endQueryResult();
                 }
-            } finally {
-                iter.close();
-            }
 
-            w.endQueryResult();
-        } catch (QueryEvaluationException e) {
-            throw new QueryException(e);
-        } catch (TupleQueryResultHandlerException e) {
+            } catch (QueryEvaluationException | QueryResultHandlerException e) {
+                throw new QueryException(e);
+            }
+        } catch (MalformedQueryException | QueryEvaluationException e) {
             throw new QueryException(e);
         }
     }

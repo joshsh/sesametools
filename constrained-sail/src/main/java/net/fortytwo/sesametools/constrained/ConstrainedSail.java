@@ -1,9 +1,9 @@
 
 package net.fortytwo.sesametools.constrained;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.query.Dataset;
-import org.openrdf.query.impl.DatasetImpl;
+import org.openrdf.query.impl.SimpleDataset;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
@@ -19,7 +19,7 @@ import org.openrdf.sail.helpers.SailWrapper;
  */
 public class ConstrainedSail extends SailWrapper {
 
-    private final URI defaultWriteContext;
+    private final IRI defaultWriteContext;
     private final boolean hideNonWritableContexts;
     protected final Dataset readableSet;
     protected final Dataset writableSet;
@@ -42,7 +42,7 @@ public class ConstrainedSail extends SailWrapper {
     public ConstrainedSail(final Sail baseSail,
                            final Dataset readableSet,
                            final Dataset writableSet,
-                           final URI defaultWriteContext,
+                           final IRI defaultWriteContext,
                            final boolean hideNonWritableContexts) {
         super(baseSail);
         this.readableSet = readableSet;
@@ -52,18 +52,16 @@ public class ConstrainedSail extends SailWrapper {
     }
 
     public ConstrainedSail(final Sail baseSail,
-                           final URI defaultWriteContext,
+                           final IRI defaultWriteContext,
                            final boolean hideNonWritableContexts) {
-        this(baseSail, new DatasetImpl(), new DatasetImpl(), defaultWriteContext, hideNonWritableContexts);
+        this(baseSail, new SimpleDataset(), new SimpleDataset(), defaultWriteContext, hideNonWritableContexts);
     }
 
-    public void addReadableGraph(final URI g) {
-        //System.out.println("adding readable analysis: " + g);
+    public void addReadableGraph(final IRI g) {
         readableSet.getDefaultGraphs().add(g);
     }
 
-    public void addWritableGraph(final URI g) {
-        //System.out.println("adding writable analysis: " + g);
+    public void addWritableGraph(final IRI g) {
         writableSet.getDefaultGraphs().add(g);
     }
 
@@ -77,7 +75,7 @@ public class ConstrainedSail extends SailWrapper {
                 true, true, hideNonWritableContexts);
     }
 
-    public URI getDefaultWriteContext() {
+    public IRI getDefaultWriteContext() {
         return defaultWriteContext;
     }
 
@@ -91,7 +89,7 @@ public class ConstrainedSail extends SailWrapper {
      */
     public boolean isWritable() throws SailException {
         return getBaseSail().isWritable()
-                && (writableSet.getNamedGraphs().size() > 0);  // TODO: OR the default analysis is writable
+                && (!writableSet.getNamedGraphs().isEmpty());  // TODO: OR the default analysis is writable
     }
 
     public void shutDown() throws SailException {

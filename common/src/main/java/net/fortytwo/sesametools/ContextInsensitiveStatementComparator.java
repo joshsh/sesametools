@@ -12,19 +12,19 @@ import java.util.Comparator;
  */
 public class ContextInsensitiveStatementComparator implements Comparator<Statement> {
     public final static int BEFORE = -1;
-    public final static int EQUALS = 0;
+    public final static int EQUAL = 0;
     public final static int AFTER = 1;
 
     @Override
     public int compare(Statement first, Statement second) {
         if (first == second) {
-            return EQUALS;
+            return EQUAL;
         }
 
         if (first.getSubject().equals(second.getSubject())) {
             if (first.getPredicate().equals(second.getPredicate())) {
                 if (first.getObject().equals(second.getObject())) {
-                    return EQUALS;
+                    return EQUAL;
                 } else {
                     return ValueComparator.getInstance().compare(first.getObject(), second.getObject());
                 }

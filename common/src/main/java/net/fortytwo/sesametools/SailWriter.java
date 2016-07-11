@@ -30,7 +30,7 @@ public class SailWriter implements RDFHandler {
         this.action = action;
     }
 
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         super.finalize();
 
         if (null != sailConnection) {

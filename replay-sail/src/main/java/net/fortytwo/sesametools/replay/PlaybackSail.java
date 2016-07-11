@@ -2,6 +2,7 @@
 package net.fortytwo.sesametools.replay;
 
 import info.aduna.iteration.CloseableIteration;
+import org.openrdf.IsolationLevel;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
@@ -33,15 +34,15 @@ public class PlaybackSail implements StackableSail {
     public PlaybackSail(final Sail baseSail, Source<SailConnectionCall, SailException> querySource) {
         this.baseSail = baseSail;
         this.querySource = querySource;
-        this.idToConnectionMap = new HashMap<String, SailConnection>();
-        this.idToIterationsMap = new HashMap<String, List<CloseableIteration>>();
+        this.idToConnectionMap = new HashMap<>();
+        this.idToIterationsMap = new HashMap<>();
     }
 
     public PlaybackSail(final Sail baseSail, final InputStream is) {
         this.baseSail = baseSail;
         this.querySource = new InputStreamSource(is);
-        this.idToConnectionMap = new HashMap<String, SailConnection>();
-        this.idToIterationsMap = new HashMap<String, List<CloseableIteration>>();
+        this.idToConnectionMap = new HashMap<>();
+        this.idToIterationsMap = new HashMap<>();
     }
 
     public void setDataDir(final File file) {
@@ -103,7 +104,7 @@ public class PlaybackSail implements StackableSail {
     private CloseableIteration getIteration(final String id) {
         int i = id.indexOf("-");
         String conId = id.substring(0, i);
-        int iterIndex = new Integer(id.substring(i + 1)).intValue() - 1;
+        int iterIndex = new Integer(id.substring(i + 1)) - 1;
         return idToIterationsMap.get(conId).get(iterIndex);
     }
 
@@ -122,7 +123,7 @@ public class PlaybackSail implements StackableSail {
         List<CloseableIteration> iters = idToIterationsMap.get(id);
 
         if (null == iters) {
-            iters = new ArrayList<CloseableIteration>();
+            iters = new ArrayList<>();
             idToIterationsMap.put(id, iters);
         }
 
@@ -148,6 +149,16 @@ public class PlaybackSail implements StackableSail {
 
     public ValueFactory getValueFactory() {
         return baseSail.getValueFactory();
+    }
+
+    @Override
+    public List<IsolationLevel> getSupportedIsolationLevels() {
+        return baseSail.getSupportedIsolationLevels();
+    }
+
+    @Override
+    public IsolationLevel getDefaultIsolationLevel() {
+        return baseSail.getDefaultIsolationLevel();
     }
 
     public void setBaseSail(final Sail sail) {

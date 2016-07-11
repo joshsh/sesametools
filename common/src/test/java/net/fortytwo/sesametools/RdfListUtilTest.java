@@ -1,19 +1,19 @@
 package net.fortytwo.sesametools;
 
-import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openrdf.model.BNode;
-import org.openrdf.model.Graph;
+import org.openrdf.model.Model;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.GraphImpl;
+import org.openrdf.model.impl.SimpleValueFactory;
+import org.openrdf.model.impl.TreeModel;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -30,6 +30,10 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Peter Ansell p_ansell@yahoo.com
@@ -37,17 +41,19 @@ import static junit.framework.Assert.assertEquals;
 public class RdfListUtilTest {
     private static final Logger log = Logger.getLogger(RdfListUtilTest.class.getName());
 
+    private static final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+
     private RdfListUtil testRdfListUtilDefaults;
     private RdfListUtil testRdfListUtilNoChecks;
     private RdfListUtil testRdfListUtilNoChecksOrRecursion;
 
-    private Graph testGraph;
+    private Model testGraph;
     private ValueFactory vf;
 
     private Resource testSubjectUri1;
-    private URI testPredicateUri1;
-    private URI testObjectUri1;
-    private URI testObjectUri2;
+    private IRI testPredicateUri1;
+    private IRI testObjectUri1;
+    private IRI testObjectUri2;
     private BNode testObjectBNode1;
     private Literal testObjectLiteral1;
 
@@ -55,8 +61,8 @@ public class RdfListUtilTest {
     private List<Value> testValuesSingleUri;
     private List<Value> testValuesMultipleElements;
 
-    private URI testListHeadUri1;
-    private URI testListHeadUri2;
+    private IRI testListHeadUri1;
+    private IRI testListHeadUri2;
     private BNode testListHeadBNode1;
     private BNode testListHeadBNode2;
 
@@ -68,29 +74,29 @@ public class RdfListUtilTest {
         this.testRdfListUtilNoChecks = new RdfListUtil(false, false, true);
         this.testRdfListUtilNoChecksOrRecursion = new RdfListUtil(false, false, false);
 
-        this.testGraph = new GraphImpl();
-        this.vf = this.testGraph.getValueFactory();
+        this.testGraph = new TreeModel();
+        this.vf = valueFactory;
 
-        this.testSubjectUri1 = this.vf.createURI("http://examples.net/testsubject/1");
-        this.testPredicateUri1 = this.vf.createURI("http://more.example.org/testpredicate/1");
+        this.testSubjectUri1 = this.vf. createIRI("http://examples.net/testsubject/1");
+        this.testPredicateUri1 = this.vf. createIRI("http://more.example.org/testpredicate/1");
 
-        this.testListHeadUri1 = this.vf.createURI("http://examples.net/testlisthead/1");
-        this.testListHeadUri2 = this.vf.createURI("http://examples.net/testlisthead/2");
+        this.testListHeadUri1 = this.vf. createIRI("http://examples.net/testlisthead/1");
+        this.testListHeadUri2 = this.vf. createIRI("http://examples.net/testlisthead/2");
         this.testListHeadBNode1 = this.vf.createBNode();
         this.testListHeadBNode2 = this.vf.createBNode();
 
-        this.testObjectUri1 = this.vf.createURI("http://example.org/testobject/1");
-        this.testObjectUri2 = this.vf.createURI("http://example.org/testobject/2");
+        this.testObjectUri1 = this.vf. createIRI("http://example.org/testobject/1");
+        this.testObjectUri2 = this.vf. createIRI("http://example.org/testobject/2");
         this.testObjectBNode1 = this.vf.createBNode();
         this.testObjectLiteral1 = this.vf.createLiteral("testobjectliteral1");
         this.testObjectLiteral2 = this.vf.createLiteral("testobjectliteral2");
 
         this.testValuesEmpty = Collections.emptyList();
 
-        this.testValuesSingleUri = new ArrayList<Value>(1);
+        this.testValuesSingleUri = new ArrayList<>(1);
         this.testValuesSingleUri.add(this.testObjectUri1);
 
-        this.testValuesMultipleElements = new ArrayList<Value>(3);
+        this.testValuesMultipleElements = new ArrayList<>(3);
         this.testValuesMultipleElements.add(this.testObjectBNode1);
         this.testValuesMultipleElements.add(this.testObjectLiteral1);
         this.testValuesMultipleElements.add(this.testObjectUri1);
@@ -128,8 +134,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
+     * java.util.List, org.openrdf.model.Model, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -142,8 +148,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
+     * java.util.List, org.openrdf.model.Model, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -155,107 +161,108 @@ public class RdfListUtilTest {
         assertEquals(7, this.testGraph.size());
 
         // Match the head
-        final Iterator<Statement> headMatch = this.testGraph.match(this.testSubjectUri1, this.testPredicateUri1, null);
+        final Iterator<Statement> headMatch
+                = this.testGraph.filter(this.testSubjectUri1, this.testPredicateUri1, null).iterator();
 
-        Assert.assertTrue(headMatch.hasNext());
+        assertTrue(headMatch.hasNext());
 
         final Statement headMatchedStatement = headMatch.next();
 
-        Assert.assertNotNull(headMatchedStatement);
+        assertNotNull(headMatchedStatement);
 
-        Assert.assertFalse(headMatch.hasNext());
+        assertFalse(headMatch.hasNext());
 
-        Assert.assertTrue(headMatchedStatement.getObject() instanceof Resource);
+        assertTrue(headMatchedStatement.getObject() instanceof Resource);
 
         // match the first element, which should be a bnode
         final Iterator<Statement> matchFirst1 =
-                this.testGraph.match((BNode) headMatchedStatement.getObject(), RDF.FIRST, null);
+                this.testGraph.filter((BNode) headMatchedStatement.getObject(), RDF.FIRST, null).iterator();
 
-        Assert.assertTrue(matchFirst1.hasNext());
+        assertTrue(matchFirst1.hasNext());
 
         final Statement firstListMatchedStatement1 = matchFirst1.next();
 
-        Assert.assertNotNull(firstListMatchedStatement1);
+        assertNotNull(firstListMatchedStatement1);
 
-        Assert.assertFalse(matchFirst1.hasNext());
+        assertFalse(matchFirst1.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement1.getObject() instanceof Resource);
+        assertTrue(firstListMatchedStatement1.getObject() instanceof Resource);
         // TODO: is this check consistent with BlankNode theory?
         assertEquals(this.testObjectBNode1, firstListMatchedStatement1.getObject());
 
         // match the rest link, which should be a BNode
         final Iterator<Statement> matchRest1 =
-                this.testGraph.match((BNode) headMatchedStatement.getObject(), RDF.REST, null);
+                this.testGraph.filter((BNode) headMatchedStatement.getObject(), RDF.REST, null).iterator();
 
-        Assert.assertTrue(matchRest1.hasNext());
+        assertTrue(matchRest1.hasNext());
 
         final Statement restListMatchedStatement1 = matchRest1.next();
 
-        Assert.assertNotNull(restListMatchedStatement1);
+        assertNotNull(restListMatchedStatement1);
 
-        Assert.assertFalse(matchRest1.hasNext());
+        assertFalse(matchRest1.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement1.getObject() instanceof Resource);
+        assertTrue(restListMatchedStatement1.getObject() instanceof Resource);
 
         // match the next first node, which should be a literal
         final Iterator<Statement> matchFirst2 =
-                this.testGraph.match((BNode) restListMatchedStatement1.getObject(), RDF.FIRST, null);
+                this.testGraph.filter((BNode) restListMatchedStatement1.getObject(), RDF.FIRST, null).iterator();
 
-        Assert.assertTrue(matchFirst2.hasNext());
+        assertTrue(matchFirst2.hasNext());
 
         final Statement firstListMatchedStatement2 = matchFirst2.next();
 
-        Assert.assertNotNull(firstListMatchedStatement2);
+        assertNotNull(firstListMatchedStatement2);
 
-        Assert.assertFalse(matchFirst2.hasNext());
+        assertFalse(matchFirst2.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement2.getObject() instanceof Literal);
+        assertTrue(firstListMatchedStatement2.getObject() instanceof Literal);
 
         assertEquals(this.testObjectLiteral1, firstListMatchedStatement2.getObject());
 
         // match the rest link, which should be a BNode
         final Iterator<Statement> matchRest2 =
-                this.testGraph.match((BNode) restListMatchedStatement1.getObject(), RDF.REST, null);
+                this.testGraph.filter((BNode) restListMatchedStatement1.getObject(), RDF.REST, null).iterator();
 
-        Assert.assertTrue(matchRest2.hasNext());
+        assertTrue(matchRest2.hasNext());
 
         final Statement restListMatchedStatement2 = matchRest2.next();
 
-        Assert.assertNotNull(restListMatchedStatement2);
+        assertNotNull(restListMatchedStatement2);
 
-        Assert.assertFalse(matchRest2.hasNext());
+        assertFalse(matchRest2.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement2.getObject() instanceof Resource);
+        assertTrue(restListMatchedStatement2.getObject() instanceof Resource);
 
         // match the next first node, which should be a URI
         final Iterator<Statement> matchFirst3 =
-                this.testGraph.match((BNode) restListMatchedStatement2.getObject(), RDF.FIRST, null);
+                this.testGraph.filter((BNode) restListMatchedStatement2.getObject(), RDF.FIRST, null).iterator();
 
-        Assert.assertTrue(matchFirst3.hasNext());
+        assertTrue(matchFirst3.hasNext());
 
         final Statement firstListMatchedStatement3 = matchFirst3.next();
 
-        Assert.assertNotNull(firstListMatchedStatement3);
+        assertNotNull(firstListMatchedStatement3);
 
-        Assert.assertFalse(matchFirst3.hasNext());
+        assertFalse(matchFirst3.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement3.getObject() instanceof URI);
+        assertTrue(firstListMatchedStatement3.getObject() instanceof IRI);
 
         assertEquals(this.testObjectUri1, firstListMatchedStatement3.getObject());
 
-        // match the rest link, which should be the URI rdf:nil
+        // match the rest link, which should be the IRI rdf:nil
         final Iterator<Statement> matchRest3 =
-                this.testGraph.match((BNode) restListMatchedStatement2.getObject(), RDF.REST, null);
+                this.testGraph.filter((BNode) restListMatchedStatement2.getObject(), RDF.REST, null).iterator();
 
-        Assert.assertTrue(matchRest3.hasNext());
+        assertTrue(matchRest3.hasNext());
 
         final Statement restListMatchedStatement3 = matchRest3.next();
 
-        Assert.assertNotNull(restListMatchedStatement3);
+        assertNotNull(restListMatchedStatement3);
 
-        Assert.assertFalse(matchRest3.hasNext());
+        assertFalse(matchRest3.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement3.getObject() instanceof URI);
+        assertTrue(restListMatchedStatement3.getObject() instanceof IRI);
 
         assertEquals(RDF.NIL, restListMatchedStatement3.getObject());
 
@@ -263,8 +270,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
+     * java.util.List, org.openrdf.model.Model, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -275,47 +282,48 @@ public class RdfListUtilTest {
         assertEquals(3, this.testGraph.size());
 
         // Match the head
-        final Iterator<Statement> match = this.testGraph.match(this.testSubjectUri1, this.testPredicateUri1, null);
+        final Iterator<Statement> match
+                = this.testGraph.filter(this.testSubjectUri1, this.testPredicateUri1, null).iterator();
 
-        Assert.assertTrue(match.hasNext());
+        assertTrue(match.hasNext());
 
         final Statement matchedStatement = match.next();
 
-        Assert.assertNotNull(matchedStatement);
+        assertNotNull(matchedStatement);
 
-        Assert.assertFalse(match.hasNext());
+        assertFalse(match.hasNext());
 
-        Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
+        assertTrue(matchedStatement.getObject() instanceof Resource);
 
         // match the first element
         final Iterator<Statement> matchFirstOthers =
-                this.testGraph.match((BNode) matchedStatement.getObject(), RDF.FIRST, null);
+                this.testGraph.filter((BNode) matchedStatement.getObject(), RDF.FIRST, null).iterator();
 
-        Assert.assertTrue(matchFirstOthers.hasNext());
+        assertTrue(matchFirstOthers.hasNext());
 
         final Statement firstListMatchedStatement = matchFirstOthers.next();
 
-        Assert.assertNotNull(firstListMatchedStatement);
+        assertNotNull(firstListMatchedStatement);
 
-        Assert.assertFalse(matchFirstOthers.hasNext());
+        assertFalse(matchFirstOthers.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement.getObject() instanceof URI);
+        assertTrue(firstListMatchedStatement.getObject() instanceof IRI);
 
         assertEquals(this.testObjectUri1, firstListMatchedStatement.getObject());
 
         // match the rest link, which should be rdf:nil for a single value list
         final Iterator<Statement> matchRestNil =
-                this.testGraph.match((BNode) matchedStatement.getObject(), RDF.REST, null);
+                this.testGraph.filter((BNode) matchedStatement.getObject(), RDF.REST, null).iterator();
 
-        Assert.assertTrue(matchRestNil.hasNext());
+        assertTrue(matchRestNil.hasNext());
 
         final Statement restListMatchedStatement = matchRestNil.next();
 
-        Assert.assertNotNull(restListMatchedStatement);
+        assertNotNull(restListMatchedStatement);
 
-        Assert.assertFalse(matchRestNil.hasNext());
+        assertFalse(matchRestNil.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement.getObject() instanceof URI);
+        assertTrue(restListMatchedStatement.getObject() instanceof IRI);
 
         assertEquals(RDF.NIL, restListMatchedStatement.getObject());
 
@@ -323,8 +331,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
+     * java.util.List, org.openrdf.model.Model, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -336,8 +344,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
+     * java.util.List, org.openrdf.model.Model, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -347,93 +355,95 @@ public class RdfListUtilTest {
         assertEquals(6, this.testGraph.size());
 
         // match the first element, which should be a bnode
-        final Iterator<Statement> matchFirst1 = this.testGraph.match(this.testListHeadBNode1, RDF.FIRST, null);
+        final Iterator<Statement> matchFirst1
+                = this.testGraph.filter(this.testListHeadBNode1, RDF.FIRST, null).iterator();
 
-        Assert.assertTrue(matchFirst1.hasNext());
+        assertTrue(matchFirst1.hasNext());
 
         final Statement firstListMatchedStatement1 = matchFirst1.next();
 
-        Assert.assertNotNull(firstListMatchedStatement1);
+        assertNotNull(firstListMatchedStatement1);
 
-        Assert.assertFalse(matchFirst1.hasNext());
+        assertFalse(matchFirst1.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement1.getObject() instanceof Resource);
+        assertTrue(firstListMatchedStatement1.getObject() instanceof Resource);
 
         // TODO: is this check consistent with BlankNode theory?
         assertEquals(this.testObjectBNode1, firstListMatchedStatement1.getObject());
 
         // match the rest link, which should be a BNode
-        final Iterator<Statement> matchRest1 = this.testGraph.match(this.testListHeadBNode1, RDF.REST, null);
+        final Iterator<Statement> matchRest1
+                = this.testGraph.filter(this.testListHeadBNode1, RDF.REST, null).iterator();
 
-        Assert.assertTrue(matchRest1.hasNext());
+        assertTrue(matchRest1.hasNext());
 
         final Statement restListMatchedStatement1 = matchRest1.next();
 
-        Assert.assertNotNull(restListMatchedStatement1);
+        assertNotNull(restListMatchedStatement1);
 
-        Assert.assertFalse(matchRest1.hasNext());
+        assertFalse(matchRest1.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement1.getObject() instanceof Resource);
+        assertTrue(restListMatchedStatement1.getObject() instanceof Resource);
 
         // match the next first node, which should be a literal
         final Iterator<Statement> matchFirst2 =
-                this.testGraph.match((BNode) restListMatchedStatement1.getObject(), RDF.FIRST, null);
+                this.testGraph.filter((BNode) restListMatchedStatement1.getObject(), RDF.FIRST, null).iterator();
 
-        Assert.assertTrue(matchFirst2.hasNext());
+        assertTrue(matchFirst2.hasNext());
 
         final Statement firstListMatchedStatement2 = matchFirst2.next();
 
-        Assert.assertNotNull(firstListMatchedStatement2);
+        assertNotNull(firstListMatchedStatement2);
 
-        Assert.assertFalse(matchFirst2.hasNext());
+        assertFalse(matchFirst2.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement2.getObject() instanceof Literal);
+        assertTrue(firstListMatchedStatement2.getObject() instanceof Literal);
 
         assertEquals(this.testObjectLiteral1, firstListMatchedStatement2.getObject());
 
         // match the rest link, which should be a BNode
         final Iterator<Statement> matchRest2 =
-                this.testGraph.match((BNode) restListMatchedStatement1.getObject(), RDF.REST, null);
+                this.testGraph.filter((BNode) restListMatchedStatement1.getObject(), RDF.REST, null).iterator();
 
-        Assert.assertTrue(matchRest2.hasNext());
+        assertTrue(matchRest2.hasNext());
 
         final Statement restListMatchedStatement2 = matchRest2.next();
 
-        Assert.assertNotNull(restListMatchedStatement2);
+        assertNotNull(restListMatchedStatement2);
 
-        Assert.assertFalse(matchRest2.hasNext());
+        assertFalse(matchRest2.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement2.getObject() instanceof Resource);
+        assertTrue(restListMatchedStatement2.getObject() instanceof Resource);
 
         // match the next first node, which should be a URI
         final Iterator<Statement> matchFirst3 =
-                this.testGraph.match((BNode) restListMatchedStatement2.getObject(), RDF.FIRST, null);
+                this.testGraph.filter((BNode) restListMatchedStatement2.getObject(), RDF.FIRST, null).iterator();
 
-        Assert.assertTrue(matchFirst3.hasNext());
+        assertTrue(matchFirst3.hasNext());
 
         final Statement firstListMatchedStatement3 = matchFirst3.next();
 
-        Assert.assertNotNull(firstListMatchedStatement3);
+        assertNotNull(firstListMatchedStatement3);
 
-        Assert.assertFalse(matchFirst3.hasNext());
+        assertFalse(matchFirst3.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement3.getObject() instanceof URI);
+        assertTrue(firstListMatchedStatement3.getObject() instanceof IRI);
 
         assertEquals(this.testObjectUri1, firstListMatchedStatement3.getObject());
 
-        // match the rest link, which should be the URI rdf:nil
+        // match the rest link, which should be the IRI rdf:nil
         final Iterator<Statement> matchRest3 =
-                this.testGraph.match((BNode) restListMatchedStatement2.getObject(), RDF.REST, null);
+                this.testGraph.filter((BNode) restListMatchedStatement2.getObject(), RDF.REST, null).iterator();
 
-        Assert.assertTrue(matchRest3.hasNext());
+        assertTrue(matchRest3.hasNext());
 
         final Statement restListMatchedStatement3 = matchRest3.next();
 
-        Assert.assertNotNull(restListMatchedStatement3);
+        assertNotNull(restListMatchedStatement3);
 
-        Assert.assertFalse(matchRest3.hasNext());
+        assertFalse(matchRest3.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement3.getObject() instanceof URI);
+        assertTrue(restListMatchedStatement3.getObject() instanceof IRI);
 
         assertEquals(RDF.NIL, restListMatchedStatement3.getObject());
 
@@ -441,8 +451,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
+     * java.util.List, org.openrdf.model.Model, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -452,32 +462,34 @@ public class RdfListUtilTest {
         assertEquals(2, this.testGraph.size());
 
         // match the first element
-        final Iterator<Statement> matchFirstOthers = this.testGraph.match(this.testListHeadBNode1, RDF.FIRST, null);
+        final Iterator<Statement> matchFirstOthers
+                = this.testGraph.filter(this.testListHeadBNode1, RDF.FIRST, null).iterator();
 
-        Assert.assertTrue(matchFirstOthers.hasNext());
+        assertTrue(matchFirstOthers.hasNext());
 
         final Statement firstListMatchedStatement = matchFirstOthers.next();
 
-        Assert.assertNotNull(firstListMatchedStatement);
+        assertNotNull(firstListMatchedStatement);
 
-        Assert.assertFalse(matchFirstOthers.hasNext());
+        assertFalse(matchFirstOthers.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement.getObject() instanceof URI);
+        assertTrue(firstListMatchedStatement.getObject() instanceof IRI);
 
         assertEquals(this.testObjectUri1, firstListMatchedStatement.getObject());
 
         // match the rest link, which should be rdf:nil for a single value list
-        final Iterator<Statement> matchRestNil = this.testGraph.match(this.testListHeadBNode1, RDF.REST, null);
+        final Iterator<Statement> matchRestNil
+                = this.testGraph.filter(this.testListHeadBNode1, RDF.REST, null).iterator();
 
-        Assert.assertTrue(matchRestNil.hasNext());
+        assertTrue(matchRestNil.hasNext());
 
         final Statement restListMatchedStatement = matchRestNil.next();
 
-        Assert.assertNotNull(restListMatchedStatement);
+        assertNotNull(restListMatchedStatement);
 
-        Assert.assertFalse(matchRestNil.hasNext());
+        assertFalse(matchRestNil.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement.getObject() instanceof URI);
+        assertTrue(restListMatchedStatement.getObject() instanceof IRI);
 
         assertEquals(RDF.NIL, restListMatchedStatement.getObject());
 
@@ -485,8 +497,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
+     * java.util.List, org.openrdf.model.Model, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -498,8 +510,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
+     * java.util.List, org.openrdf.model.Model, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -509,93 +521,94 @@ public class RdfListUtilTest {
         assertEquals(6, this.testGraph.size());
 
         // match the first element, which should be a bnode
-        final Iterator<Statement> matchFirst1 = this.testGraph.match(this.testListHeadUri1, RDF.FIRST, null);
+        final Iterator<Statement> matchFirst1
+                = this.testGraph.filter(this.testListHeadUri1, RDF.FIRST, null).iterator();
 
-        Assert.assertTrue(matchFirst1.hasNext());
+        assertTrue(matchFirst1.hasNext());
 
         final Statement firstListMatchedStatement1 = matchFirst1.next();
 
-        Assert.assertNotNull(firstListMatchedStatement1);
+        assertNotNull(firstListMatchedStatement1);
 
-        Assert.assertFalse(matchFirst1.hasNext());
+        assertFalse(matchFirst1.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement1.getObject() instanceof Resource);
+        assertTrue(firstListMatchedStatement1.getObject() instanceof Resource);
 
         // TODO: is this check consistent with BlankNode theory?
         assertEquals(this.testObjectBNode1, firstListMatchedStatement1.getObject());
 
         // match the rest link, which should be a BNode
-        final Iterator<Statement> matchRest1 = this.testGraph.match(this.testListHeadUri1, RDF.REST, null);
+        final Iterator<Statement> matchRest1 = this.testGraph.filter(this.testListHeadUri1, RDF.REST, null).iterator();
 
-        Assert.assertTrue(matchRest1.hasNext());
+        assertTrue(matchRest1.hasNext());
 
         final Statement restListMatchedStatement1 = matchRest1.next();
 
-        Assert.assertNotNull(restListMatchedStatement1);
+        assertNotNull(restListMatchedStatement1);
 
-        Assert.assertFalse(matchRest1.hasNext());
+        assertFalse(matchRest1.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement1.getObject() instanceof Resource);
+        assertTrue(restListMatchedStatement1.getObject() instanceof Resource);
 
         // match the next first node, which should be a literal
         final Iterator<Statement> matchFirst2 =
-                this.testGraph.match((BNode) restListMatchedStatement1.getObject(), RDF.FIRST, null);
+                this.testGraph.filter((BNode) restListMatchedStatement1.getObject(), RDF.FIRST, null).iterator();
 
-        Assert.assertTrue(matchFirst2.hasNext());
+        assertTrue(matchFirst2.hasNext());
 
         final Statement firstListMatchedStatement2 = matchFirst2.next();
 
-        Assert.assertNotNull(firstListMatchedStatement2);
+        assertNotNull(firstListMatchedStatement2);
 
-        Assert.assertFalse(matchFirst2.hasNext());
+        assertFalse(matchFirst2.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement2.getObject() instanceof Literal);
+        assertTrue(firstListMatchedStatement2.getObject() instanceof Literal);
 
         assertEquals(this.testObjectLiteral1, firstListMatchedStatement2.getObject());
 
         // match the rest link, which should be a BNode
         final Iterator<Statement> matchRest2 =
-                this.testGraph.match((BNode) restListMatchedStatement1.getObject(), RDF.REST, null);
+                this.testGraph.filter((BNode) restListMatchedStatement1.getObject(), RDF.REST, null).iterator();
 
-        Assert.assertTrue(matchRest2.hasNext());
+        assertTrue(matchRest2.hasNext());
 
         final Statement restListMatchedStatement2 = matchRest2.next();
 
-        Assert.assertNotNull(restListMatchedStatement2);
+        assertNotNull(restListMatchedStatement2);
 
-        Assert.assertFalse(matchRest2.hasNext());
+        assertFalse(matchRest2.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement2.getObject() instanceof Resource);
+        assertTrue(restListMatchedStatement2.getObject() instanceof Resource);
 
         // match the next first node, which should be a URI
         final Iterator<Statement> matchFirst3 =
-                this.testGraph.match((BNode) restListMatchedStatement2.getObject(), RDF.FIRST, null);
+                this.testGraph.filter((BNode) restListMatchedStatement2.getObject(), RDF.FIRST, null).iterator();
 
-        Assert.assertTrue(matchFirst3.hasNext());
+        assertTrue(matchFirst3.hasNext());
 
         final Statement firstListMatchedStatement3 = matchFirst3.next();
 
-        Assert.assertNotNull(firstListMatchedStatement3);
+        assertNotNull(firstListMatchedStatement3);
 
-        Assert.assertFalse(matchFirst3.hasNext());
+        assertFalse(matchFirst3.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement3.getObject() instanceof URI);
+        assertTrue(firstListMatchedStatement3.getObject() instanceof IRI);
 
         assertEquals(this.testObjectUri1, firstListMatchedStatement3.getObject());
 
-        // match the rest link, which should be the URI rdf:nil
+        // match the rest link, which should be the IRI rdf:nil
         final Iterator<Statement> matchRest3 =
-                this.testGraph.match((BNode) restListMatchedStatement2.getObject(), RDF.REST, null);
+                this.testGraph.filter((BNode) restListMatchedStatement2.getObject(), RDF.REST, null).iterator();
 
-        Assert.assertTrue(matchRest3.hasNext());
+        assertTrue(matchRest3.hasNext());
 
         final Statement restListMatchedStatement3 = matchRest3.next();
 
-        Assert.assertNotNull(restListMatchedStatement3);
+        assertNotNull(restListMatchedStatement3);
 
-        Assert.assertFalse(matchRest3.hasNext());
+        assertFalse(matchRest3.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement3.getObject() instanceof URI);
+        assertTrue(restListMatchedStatement3.getObject() instanceof IRI);
 
         assertEquals(RDF.NIL, restListMatchedStatement3.getObject());
 
@@ -603,8 +616,8 @@ public class RdfListUtilTest {
 
     /**
      * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * java.util.List, org.openrdf.model.Graph, org.openrdf.model.Resource[])}
+     * {@link net.fortytwo.sesametools.RdfListUtil#addListAtNode(org.openrdf.model.Resource, org.openrdf.model.IRI,
+     * java.util.List, org.openrdf.model.Model, org.openrdf.model.Resource[])}
      * .
      */
     @Test
@@ -614,43 +627,39 @@ public class RdfListUtilTest {
         assertEquals(2, this.testGraph.size());
 
         // match the first element
-        final Iterator<Statement> matchFirstOthers = this.testGraph.match(this.testListHeadUri1, RDF.FIRST, null);
+        final Iterator<Statement> matchFirstOthers
+                = this.testGraph.filter(this.testListHeadUri1, RDF.FIRST, null).iterator();
 
-        Assert.assertTrue(matchFirstOthers.hasNext());
+        assertTrue(matchFirstOthers.hasNext());
 
         final Statement firstListMatchedStatement = matchFirstOthers.next();
 
-        Assert.assertNotNull(firstListMatchedStatement);
+        assertNotNull(firstListMatchedStatement);
 
-        Assert.assertFalse(matchFirstOthers.hasNext());
+        assertFalse(matchFirstOthers.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement.getObject() instanceof URI);
+        assertTrue(firstListMatchedStatement.getObject() instanceof IRI);
 
         assertEquals(this.testObjectUri1, firstListMatchedStatement.getObject());
 
         // match the rest link, which should be rdf:nil for a single value list
-        final Iterator<Statement> matchRestNil = this.testGraph.match(this.testListHeadUri1, RDF.REST, null);
+        final Iterator<Statement> matchRestNil
+                = this.testGraph.filter(this.testListHeadUri1, RDF.REST, null).iterator();
 
-        Assert.assertTrue(matchRestNil.hasNext());
+        assertTrue(matchRestNil.hasNext());
 
         final Statement restListMatchedStatement = matchRestNil.next();
 
-        Assert.assertNotNull(restListMatchedStatement);
+        assertNotNull(restListMatchedStatement);
 
-        Assert.assertFalse(matchRestNil.hasNext());
+        assertFalse(matchRestNil.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement.getObject() instanceof URI);
+        assertTrue(restListMatchedStatement.getObject() instanceof IRI);
 
         assertEquals(RDF.NIL, restListMatchedStatement.getObject());
 
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListAfterAddListAtNodeMultipleElementsNullContext() {
         this.testRdfListUtilDefaults.addListAtNode(
@@ -660,17 +669,18 @@ public class RdfListUtilTest {
 
         // verify that the head statement was inserted and find the first pointer to use with
         // getList
-        final Iterator<Statement> match = this.testGraph.match(this.testSubjectUri1, this.testPredicateUri1, null);
+        final Iterator<Statement> match
+                = this.testGraph.filter(this.testSubjectUri1, this.testPredicateUri1, null).iterator();
 
-        Assert.assertTrue(match.hasNext());
+        assertTrue(match.hasNext());
 
         final Statement matchedStatement = match.next();
 
-        Assert.assertNotNull(matchedStatement);
+        assertNotNull(matchedStatement);
 
-        Assert.assertFalse(match.hasNext());
+        assertFalse(match.hasNext());
 
-        Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
+        assertTrue(matchedStatement.getObject() instanceof Resource);
 
         final List<Value> results =
                 this.testRdfListUtilDefaults.getList(
@@ -678,18 +688,12 @@ public class RdfListUtilTest {
 
         assertEquals(3, results.size());
 
-        Assert.assertTrue(results.contains(this.testObjectBNode1));
-        Assert.assertTrue(results.contains(this.testObjectLiteral1));
-        Assert.assertTrue(results.contains(this.testObjectUri1));
+        assertTrue(results.contains(this.testObjectBNode1));
+        assertTrue(results.contains(this.testObjectLiteral1));
+        assertTrue(results.contains(this.testObjectUri1));
 
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListAtNodeAfterInvalidGraphOperation() {
         this.testRdfListUtilDefaults.addListAtNode(
@@ -698,17 +702,17 @@ public class RdfListUtilTest {
         assertEquals(7, this.testGraph.size());
 
         // Modify the graph in an invalid way to test getList
-        final Iterator<Statement> matches = this.testGraph.match(null, RDF.REST, RDF.NIL);
+        final Iterator<Statement> matches = this.testGraph.filter(null, RDF.REST, RDF.NIL).iterator();
 
-        Assert.assertTrue(matches.hasNext());
+        assertTrue(matches.hasNext());
 
         final Statement matchedStatement = matches.next();
 
-        Assert.assertFalse(matches.hasNext());
+        assertFalse(matches.hasNext());
 
-        Assert.assertTrue(this.testGraph.remove(matchedStatement));
+        assertTrue(this.testGraph.remove(matchedStatement));
 
-        Assert.assertFalse(this.testGraph.contains(matchedStatement));
+        assertFalse(this.testGraph.contains(matchedStatement));
 
         try {
             final List<Value> results =
@@ -716,18 +720,12 @@ public class RdfListUtilTest {
                             this.testSubjectUri1, this.testPredicateUri1, this.testGraph, (Resource) null);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("List structure was not complete", rex.getMessage());
         }
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListAtNodeMultipleElementsNullContext() {
         this.testRdfListUtilDefaults.addListAtNode(
@@ -741,18 +739,12 @@ public class RdfListUtilTest {
 
         assertEquals(3, results.size());
 
-        Assert.assertTrue(results.contains(this.testObjectBNode1));
-        Assert.assertTrue(results.contains(this.testObjectLiteral1));
-        Assert.assertTrue(results.contains(this.testObjectUri1));
+        assertTrue(results.contains(this.testObjectBNode1));
+        assertTrue(results.contains(this.testObjectLiteral1));
+        assertTrue(results.contains(this.testObjectUri1));
 
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListBNodeHeadAfterInvalidGraphOperation() {
         this.testRdfListUtilDefaults.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
@@ -760,35 +752,29 @@ public class RdfListUtilTest {
         assertEquals(6, this.testGraph.size());
 
         // Modify the graph in an invalid way to test getList
-        final Iterator<Statement> matches = this.testGraph.match(null, RDF.REST, RDF.NIL);
+        final Iterator<Statement> matches = this.testGraph.filter(null, RDF.REST, RDF.NIL).iterator();
 
-        Assert.assertTrue(matches.hasNext());
+        assertTrue(matches.hasNext());
 
         final Statement matchedStatement = matches.next();
 
-        Assert.assertFalse(matches.hasNext());
+        assertFalse(matches.hasNext());
 
-        Assert.assertTrue(this.testGraph.remove(matchedStatement));
+        assertTrue(this.testGraph.remove(matchedStatement));
 
-        Assert.assertFalse(this.testGraph.contains(matchedStatement));
+        assertFalse(this.testGraph.contains(matchedStatement));
 
         try {
             final List<Value> results = this.testRdfListUtilDefaults.getList(
                     this.testListHeadBNode1, this.testGraph, (Resource) null);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("List structure was not complete", rex.getMessage());
         }
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListBNodeHeadAfterInvalidGraphOperation2() {
         this.testRdfListUtilDefaults.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
@@ -796,17 +782,17 @@ public class RdfListUtilTest {
         assertEquals(6, this.testGraph.size());
 
         // Modify the graph in an invalid way to test getList
-        final Iterator<Statement> matches = this.testGraph.match(null, RDF.REST, RDF.NIL);
+        final Iterator<Statement> matches = this.testGraph.filter(null, RDF.REST, RDF.NIL).iterator();
 
-        Assert.assertTrue(matches.hasNext());
+        assertTrue(matches.hasNext());
 
         final Statement matchedStatement = matches.next();
 
-        Assert.assertFalse(matches.hasNext());
+        assertFalse(matches.hasNext());
 
-        Assert.assertTrue(this.testGraph.remove(matchedStatement));
+        assertTrue(this.testGraph.remove(matchedStatement));
 
-        Assert.assertFalse(this.testGraph.contains(matchedStatement));
+        assertFalse(this.testGraph.contains(matchedStatement));
 
         Statement literalRdfRest = this.vf.createStatement(
                 matchedStatement.getSubject(), RDF.REST, this.vf.createLiteral("InvalidRdfRestLiteral"));
@@ -818,18 +804,12 @@ public class RdfListUtilTest {
                     this.testListHeadBNode1, this.testGraph, (Resource) null);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("List structure was not complete", rex.getMessage());
         }
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListBNodeHeadMultipleElementsNullContext() {
         this.testRdfListUtilDefaults.addList(this.testListHeadBNode1, this.testValuesMultipleElements, this.testGraph);
@@ -841,9 +821,9 @@ public class RdfListUtilTest {
 
         assertEquals(3, results.size());
 
-        Assert.assertTrue(results.contains(this.testObjectBNode1));
-        Assert.assertTrue(results.contains(this.testObjectLiteral1));
-        Assert.assertTrue(results.contains(this.testObjectUri1));
+        assertTrue(results.contains(this.testObjectBNode1));
+        assertTrue(results.contains(this.testObjectLiteral1));
+        assertTrue(results.contains(this.testObjectUri1));
 
     }
 
@@ -855,17 +835,18 @@ public class RdfListUtilTest {
         assertEquals(3, this.testGraph.size());
 
         // verify that the head statement was inserted
-        final Iterator<Statement> match = this.testGraph.match(this.testSubjectUri1, this.testPredicateUri1, null);
+        final Iterator<Statement> match
+                = this.testGraph.filter(this.testSubjectUri1, this.testPredicateUri1, null).iterator();
 
-        Assert.assertTrue(match.hasNext());
+        assertTrue(match.hasNext());
 
         final Statement matchedStatement = match.next();
 
-        Assert.assertNotNull(matchedStatement);
+        assertNotNull(matchedStatement);
 
-        Assert.assertFalse(match.hasNext());
+        assertFalse(match.hasNext());
 
-        Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
+        assertTrue(matchedStatement.getObject() instanceof Resource);
 
         final Collection<List<Value>> lists =
                 this.testRdfListUtilDefaults
@@ -875,7 +856,7 @@ public class RdfListUtilTest {
 
         Iterator<List<Value>> listIterator = lists.iterator();
 
-        Assert.assertTrue(listIterator.hasNext());
+        assertTrue(listIterator.hasNext());
 
         List<Value> nextList = listIterator.next();
 
@@ -890,19 +871,20 @@ public class RdfListUtilTest {
         assertEquals(3, this.testGraph.size());
 
         // verify that the head statement was inserted
-        final Iterator<Statement> match = this.testGraph.match(this.testSubjectUri1, this.testPredicateUri1, null);
+        final Iterator<Statement> match
+                = this.testGraph.filter(this.testSubjectUri1, this.testPredicateUri1, null).iterator();
 
-        Assert.assertTrue(match.hasNext());
+        assertTrue(match.hasNext());
 
         final Statement matchedStatement = match.next();
 
-        Assert.assertNotNull(matchedStatement);
+        assertNotNull(matchedStatement);
 
-        Assert.assertFalse(match.hasNext());
+        assertFalse(match.hasNext());
 
-        Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
+        assertTrue(matchedStatement.getObject() instanceof Resource);
 
-        Set<Resource> heads = new HashSet<Resource>(1);
+        Set<Resource> heads = new HashSet<>(1);
         heads.add((BNode) matchedStatement.getObject());
 
         final Collection<List<Value>> lists =
@@ -913,7 +895,7 @@ public class RdfListUtilTest {
 
         Iterator<List<Value>> listIterator = lists.iterator();
 
-        Assert.assertTrue(listIterator.hasNext());
+        assertTrue(listIterator.hasNext());
 
         List<Value> nextList = listIterator.next();
 
@@ -928,18 +910,18 @@ public class RdfListUtilTest {
         assertEquals(2, this.testGraph.size());
 
         // verify that the head statement was inserted
-        final Iterator<Statement> match = this.testGraph.match(this.testListHeadBNode1, null, null);
+        final Iterator<Statement> match = this.testGraph.filter(this.testListHeadBNode1, null, null).iterator();
 
-        Assert.assertTrue(match.hasNext());
+        assertTrue(match.hasNext());
 
         final Statement matchedStatement = match.next();
 
-        Assert.assertNotNull(matchedStatement);
+        assertNotNull(matchedStatement);
 
         assertEquals(this.testListHeadBNode1, matchedStatement.getSubject());
 
-        Set<Resource> heads = new HashSet<Resource>(1);
-        heads.add((BNode) matchedStatement.getSubject());
+        Set<Resource> heads = new HashSet<>(1);
+        heads.add(matchedStatement.getSubject());
 
         final Collection<List<Value>> lists =
                 this.testRdfListUtilDefaults
@@ -949,7 +931,7 @@ public class RdfListUtilTest {
 
         Iterator<List<Value>> listIterator = lists.iterator();
 
-        Assert.assertTrue(listIterator.hasNext());
+        assertTrue(listIterator.hasNext());
 
         List<Value> nextList = listIterator.next();
 
@@ -964,21 +946,22 @@ public class RdfListUtilTest {
         assertEquals(3, this.testGraph.size());
 
         // Find the head node that was generated by this method
-        final Iterator<Statement> match = this.testGraph.match(this.testSubjectUri1, this.testPredicateUri1, null);
+        final Iterator<Statement> match
+                = this.testGraph.filter(this.testSubjectUri1, this.testPredicateUri1, null).iterator();
 
-        Assert.assertTrue(match.hasNext());
+        assertTrue(match.hasNext());
 
         final Statement matchedStatement = match.next();
 
-        Assert.assertNotNull(matchedStatement);
+        assertNotNull(matchedStatement);
 
-        Assert.assertFalse(match.hasNext());
+        assertFalse(match.hasNext());
 
-        Assert.assertTrue(matchedStatement.getObject() instanceof Resource);
+        assertTrue(matchedStatement.getObject() instanceof Resource);
 
         final Resource headNode = (Resource) matchedStatement.getObject();
 
-        final Set<Resource> heads = new HashSet<Resource>();
+        final Set<Resource> heads = new HashSet<>();
 
         heads.add(headNode);
 
@@ -988,19 +971,13 @@ public class RdfListUtilTest {
 
         Iterator<List<Value>> listIterator = lists.iterator();
 
-        Assert.assertTrue(listIterator.hasNext());
+        assertTrue(listIterator.hasNext());
 
         List<Value> nextList = listIterator.next();
 
         assertEquals(1, nextList.size());
     }
 
-    /**
-     * Test method for
-     * {@link net.fortytwo.sesametools.RdfListUtil#getListAtNode(org.openrdf.model.Resource, org.openrdf.model.URI,
-     * org.openrdf.model.Graph, org.openrdf.model.Resource)}
-     * .
-     */
     @Test
     public void testGetListURIHeadAfterInvalidGraphOperation() {
         this.testRdfListUtilDefaults.addList(this.testListHeadUri1, this.testValuesMultipleElements, this.testGraph);
@@ -1008,24 +985,24 @@ public class RdfListUtilTest {
         assertEquals(6, this.testGraph.size());
 
         // Modify the graph in an invalid way to test getList
-        final Iterator<Statement> matches = this.testGraph.match(null, RDF.REST, RDF.NIL);
+        final Iterator<Statement> matches = this.testGraph.filter(null, RDF.REST, RDF.NIL).iterator();
 
-        Assert.assertTrue(matches.hasNext());
+        assertTrue(matches.hasNext());
 
         final Statement matchedStatement = matches.next();
 
-        Assert.assertFalse(matches.hasNext());
+        assertFalse(matches.hasNext());
 
-        Assert.assertTrue(this.testGraph.remove(matchedStatement));
+        assertTrue(this.testGraph.remove(matchedStatement));
 
-        Assert.assertFalse(this.testGraph.contains(matchedStatement));
+        assertFalse(this.testGraph.contains(matchedStatement));
 
         try {
             final List<Value> results = this.testRdfListUtilDefaults.getList(
                     this.testListHeadUri1, this.testGraph, (Resource) null);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("List structure was not complete", rex.getMessage());
         }
@@ -1060,7 +1037,7 @@ public class RdfListUtilTest {
         Statement testStatement9 = vf.createStatement(testListHeadUri2, RDF.REST, RDF.NIL);
         this.testGraph.add(testStatement9);
 
-        Set<Resource> heads = new HashSet<Resource>(1);
+        Set<Resource> heads = new HashSet<>(1);
         heads.add(this.testListHeadBNode1);
 
         final Collection<List<Value>> results = this.testRdfListUtilDefaults.getLists(heads, this.testGraph);
@@ -1074,9 +1051,9 @@ public class RdfListUtilTest {
         for (List<Value> resultList : results) {
             assertEquals(3, resultList.size());
 
-            Assert.assertTrue(resultList.contains(testObjectLiteral1));
+            assertTrue(resultList.contains(testObjectLiteral1));
 
-            Assert.assertTrue(resultList.contains(testObjectUri1));
+            assertTrue(resultList.contains(testObjectUri1));
 
             if (resultList.contains(testObjectBNode1)) {
                 foundFirstList = true;
@@ -1085,8 +1062,8 @@ public class RdfListUtilTest {
             }
         }
 
-        Assert.assertTrue("Did not find first list", foundFirstList);
-        Assert.assertTrue("Did not find second list", foundSecondList);
+        assertTrue("Did not find first list", foundFirstList);
+        assertTrue("Did not find second list", foundSecondList);
     }
 
     @Test
@@ -1094,7 +1071,7 @@ public class RdfListUtilTest {
         int iCount = 30;
         int jCount = 60;
 
-        Set<Resource> heads = new HashSet<Resource>((int) (iCount * 1.5));
+        Set<Resource> heads = new HashSet<>((int) (iCount * 1.5));
 
         for (int i = 0; i < iCount; i++) {
             BNode nextHeadBNode = vf.createBNode();
@@ -1131,9 +1108,7 @@ public class RdfListUtilTest {
         final Collection<List<Value>> results = this.testRdfListUtilDefaults.getLists(heads, this.testGraph);
         log.info("end");
 
-        int expectedResultsCount = iCount;
-
-        log.info("expectedResultsCount=" + expectedResultsCount);
+        log.info("expectedResultsCount=" + iCount);
         log.info("results.size()=" + results.size());
 
         assertEquals(iCount, results.size());
@@ -1148,7 +1123,7 @@ public class RdfListUtilTest {
         int iCount = 5;
         int jCount = 1000;
 
-        Set<Resource> heads = new HashSet<Resource>((int) (iCount * 1.5));
+        Set<Resource> heads = new HashSet<>((int) (iCount * 1.5));
 
         for (int i = 0; i < iCount; i++) {
             BNode nextHeadBNode = vf.createBNode();
@@ -1185,9 +1160,7 @@ public class RdfListUtilTest {
         final Collection<List<Value>> results = this.testRdfListUtilDefaults.getLists(heads, this.testGraph);
         log.info("end");
 
-        int expectedResultsCount = iCount;
-
-        log.info("expectedResultsCount=" + expectedResultsCount);
+        log.info("expectedResultsCount=" + iCount);
         log.info("results.size()=" + results.size());
 
         assertEquals(iCount, results.size());
@@ -1202,7 +1175,7 @@ public class RdfListUtilTest {
         int iCount = 30;
         int kCount = 60;
 
-        Set<Resource> heads = new HashSet<Resource>((int) (iCount * 1.5));
+        Set<Resource> heads = new HashSet<>((int) (iCount * 1.5));
 
         for (int i = 0; i < iCount; i++) {
             BNode nextHeadBNode = vf.createBNode("i-" + i);
@@ -1277,7 +1250,7 @@ public class RdfListUtilTest {
      */
     @Test
     public void testGetListsForkedValidStressDeepAndShallow() {
-        Set<Resource> heads = new HashSet<Resource>();
+        Set<Resource> heads = new HashSet<>();
 
         int iHeadCount = 500;
         int kDepthCount = 4;
@@ -1409,7 +1382,7 @@ public class RdfListUtilTest {
      */
     @Test
     public void testGetListsForkedValidStressDeepAndShallowNoErrorChecking() {
-        Set<Resource> heads = new HashSet<Resource>();
+        Set<Resource> heads = new HashSet<>();
 
         int iHeadCount = 500;
         int kDepthCount = 4;
@@ -1550,7 +1523,7 @@ public class RdfListUtilTest {
         int iCount = 5;
         int kCount = 1100;
 
-        Set<Resource> heads = new HashSet<Resource>((int) (iCount * 1.5));
+        Set<Resource> heads = new HashSet<>((int) (iCount * 1.5));
 
         for (int i = 0; i < iCount; i++) {
             BNode nextHeadBNode = vf.createBNode("i-" + i);
@@ -1629,7 +1602,7 @@ public class RdfListUtilTest {
         int iCount = 5;
         int kCount = 1100;
 
-        Set<Resource> heads = new HashSet<Resource>((int) (iCount * 1.5));
+        Set<Resource> heads = new HashSet<>((int) (iCount * 1.5));
 
         for (int i = 0; i < iCount; i++) {
             BNode nextHeadBNode = vf.createBNode("i-" + i);
@@ -1688,9 +1661,9 @@ public class RdfListUtilTest {
                     = this.testRdfListUtilNoChecksOrRecursion.getLists(heads, this.testGraph);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Expected exception not found");
+            fail("Expected exception not found");
         } catch (Exception ex) {
-            Assert.assertTrue(ex.getMessage().contains("List was too long, maximum is"));
+            assertTrue(ex.getMessage().contains("List was too long, maximum is"));
         } finally {
             log.info("end");
         }
@@ -1729,7 +1702,7 @@ public class RdfListUtilTest {
             final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("Found more than one list, possibly due to forking", rex.getMessage());
         }
@@ -1760,7 +1733,7 @@ public class RdfListUtilTest {
             final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("List structure was not complete", rex.getMessage());
         }
@@ -1800,7 +1773,7 @@ public class RdfListUtilTest {
             final List<Value> results = this.testRdfListUtilDefaults.getList(this.testListHeadBNode1, this.testGraph);
 
             assertEquals("Returned results from an invalid list structure", 0, results.size());
-            Assert.fail("Did not find expected exception");
+            fail("Did not find expected exception");
         } catch (final RuntimeException rex) {
             assertEquals("List structure was not complete", rex.getMessage());
         }
@@ -1834,29 +1807,29 @@ public class RdfListUtilTest {
         // Match the head
         final Iterator<Statement> headMatch = g.match(this.testSubjectUri1, this.testPredicateUri1, null);
 
-        Assert.assertTrue(headMatch.hasNext());
+        assertTrue(headMatch.hasNext());
 
         final Statement headMatchedStatement = headMatch.next();
 
-        Assert.assertNotNull(headMatchedStatement);
+        assertNotNull(headMatchedStatement);
 
-        Assert.assertFalse(headMatch.hasNext());
+        assertFalse(headMatch.hasNext());
 
-        Assert.assertTrue(headMatchedStatement.getObject() instanceof Resource);
+        assertTrue(headMatchedStatement.getObject() instanceof Resource);
 
         // match the first element, which should be a bnode
         final Iterator<Statement> matchFirst1 =
                 g.match((BNode) headMatchedStatement.getObject(), RDF.FIRST, null);
 
-        Assert.assertTrue(matchFirst1.hasNext());
+        assertTrue(matchFirst1.hasNext());
 
         final Statement firstListMatchedStatement1 = matchFirst1.next();
 
-        Assert.assertNotNull(firstListMatchedStatement1);
+        assertNotNull(firstListMatchedStatement1);
 
-        Assert.assertFalse(matchFirst1.hasNext());
+        assertFalse(matchFirst1.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement1.getObject() instanceof Resource);
+        assertTrue(firstListMatchedStatement1.getObject() instanceof Resource);
         // TODO: is this check consistent with BlankNode theory?
         assertEquals(this.testObjectBNode1, firstListMatchedStatement1.getObject());
 
@@ -1864,29 +1837,29 @@ public class RdfListUtilTest {
         final Iterator<Statement> matchRest1 =
                 g.match((BNode) headMatchedStatement.getObject(), RDF.REST, null);
 
-        Assert.assertTrue(matchRest1.hasNext());
+        assertTrue(matchRest1.hasNext());
 
         final Statement restListMatchedStatement1 = matchRest1.next();
 
-        Assert.assertNotNull(restListMatchedStatement1);
+        assertNotNull(restListMatchedStatement1);
 
-        Assert.assertFalse(matchRest1.hasNext());
+        assertFalse(matchRest1.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement1.getObject() instanceof Resource);
+        assertTrue(restListMatchedStatement1.getObject() instanceof Resource);
 
         // match the next first node, which should be a literal
         final Iterator<Statement> matchFirst2 =
                 g.match((BNode) restListMatchedStatement1.getObject(), RDF.FIRST, null);
 
-        Assert.assertTrue(matchFirst2.hasNext());
+        assertTrue(matchFirst2.hasNext());
 
         final Statement firstListMatchedStatement2 = matchFirst2.next();
 
-        Assert.assertNotNull(firstListMatchedStatement2);
+        assertNotNull(firstListMatchedStatement2);
 
-        Assert.assertFalse(matchFirst2.hasNext());
+        assertFalse(matchFirst2.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement2.getObject() instanceof Literal);
+        assertTrue(firstListMatchedStatement2.getObject() instanceof Literal);
 
         assertEquals(this.testObjectLiteral1, firstListMatchedStatement2.getObject());
 
@@ -1894,45 +1867,45 @@ public class RdfListUtilTest {
         final Iterator<Statement> matchRest2 =
                 g.match((BNode) restListMatchedStatement1.getObject(), RDF.REST, null);
 
-        Assert.assertTrue(matchRest2.hasNext());
+        assertTrue(matchRest2.hasNext());
 
         final Statement restListMatchedStatement2 = matchRest2.next();
 
-        Assert.assertNotNull(restListMatchedStatement2);
+        assertNotNull(restListMatchedStatement2);
 
-        Assert.assertFalse(matchRest2.hasNext());
+        assertFalse(matchRest2.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement2.getObject() instanceof Resource);
+        assertTrue(restListMatchedStatement2.getObject() instanceof Resource);
 
         // match the next first node, which should be a URI
         final Iterator<Statement> matchFirst3 =
                 g.match((BNode) restListMatchedStatement2.getObject(), RDF.FIRST, null);
 
-        Assert.assertTrue(matchFirst3.hasNext());
+        assertTrue(matchFirst3.hasNext());
 
         final Statement firstListMatchedStatement3 = matchFirst3.next();
 
-        Assert.assertNotNull(firstListMatchedStatement3);
+        assertNotNull(firstListMatchedStatement3);
 
-        Assert.assertFalse(matchFirst3.hasNext());
+        assertFalse(matchFirst3.hasNext());
 
-        Assert.assertTrue(firstListMatchedStatement3.getObject() instanceof URI);
+        assertTrue(firstListMatchedStatement3.getObject() instanceof IRI);
 
         assertEquals(this.testObjectUri1, firstListMatchedStatement3.getObject());
 
-        // match the rest link, which should be the URI rdf:nil
+        // match the rest link, which should be the IRI rdf:nil
         final Iterator<Statement> matchRest3 =
                 g.match((BNode) restListMatchedStatement2.getObject(), RDF.REST, null);
 
-        Assert.assertTrue(matchRest3.hasNext());
+        assertTrue(matchRest3.hasNext());
 
         final Statement restListMatchedStatement3 = matchRest3.next();
 
-        Assert.assertNotNull(restListMatchedStatement3);
+        assertNotNull(restListMatchedStatement3);
 
-        Assert.assertFalse(matchRest3.hasNext());
+        assertFalse(matchRest3.hasNext());
 
-        Assert.assertTrue(restListMatchedStatement3.getObject() instanceof URI);
+        assertTrue(restListMatchedStatement3.getObject() instanceof IRI);
 
         assertEquals(RDF.NIL, restListMatchedStatement3.getObject());
 

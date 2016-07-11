@@ -8,7 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.sail.SailRepository;
@@ -38,13 +38,12 @@ public class CachingSailTest {
     private SailCounter counter;
     private SailConnection sc;
     private CachingSail cachingSail;
-    private RecorderSail recorderSail;
 
     @Before
     public void setUp() throws Exception {
         counter = new SailCounter();
         baseSail = new MemoryStore();
-        recorderSail = new RecorderSail(baseSail, counter);
+        RecorderSail recorderSail = new RecorderSail(baseSail, counter);
         cachingSail = new CachingSail(recorderSail, true, false, false, CAPACITY);
         cachingSail.initialize();
 
@@ -110,7 +109,7 @@ public class CachingSailTest {
     public void testWrite() throws Exception {
         int count;
 
-        URI resA = uri("http://example.org/ns/resA");
+        IRI resA = uri("http://example.org/ns/resA");
 
         sc.begin();
         sc.addStatement(resA, resA, resA);
@@ -135,8 +134,8 @@ public class CachingSailTest {
         assertEquals(0, count);
     }
 
-    private URI uri(final String localName) {
-        return baseSail.getValueFactory().createURI(NS + localName);
+    private IRI uri(final String localName) {
+        return baseSail.getValueFactory().createIRI(NS + localName);
     }
 
     private int countStatements(final CloseableIteration<? extends Statement, SailException> iter)

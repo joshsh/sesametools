@@ -5,19 +5,20 @@ import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.sesametools.CompoundCloseableIteration;
 import net.fortytwo.sesametools.EmptyCloseableIteration;
 import net.fortytwo.sesametools.SailConnectionTripleSource;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
+import org.openrdf.query.algebra.evaluation.EvaluationStrategy;
 import org.openrdf.query.algebra.evaluation.TripleSource;
-import org.openrdf.query.algebra.evaluation.impl.EvaluationStrategyImpl;
-import org.openrdf.query.impl.DatasetImpl;
+import org.openrdf.query.algebra.evaluation.impl.SimpleEvaluationStrategy;
+import org.openrdf.query.impl.SimpleDataset;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.helpers.SailConnectionWrapper;
@@ -47,11 +48,11 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
 
     // For now, it is assumed that no requestor has permission to see the total
     // number of statements in all contexts.
-    private boolean allowWildcardSize = false;
+    private static final boolean ALLOW_WILDCARD_SIZE = false;
 
     // For now, it is assumed that no requestor has permission to clear
     // statements from all contexts.
-    private boolean allowWildcardClear = false;
+    private static final boolean ALLOW_WILDCARD_CLEAR = false;
 
     private Dataset readableSet;
     private Dataset writableSet;
@@ -107,16 +108,14 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
      */
     @Override
     public void addStatement(final Resource subj,
-                             final URI pred,
+                             final IRI pred,
                              final Value obj,
                              final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
             if (writePermitted(defaultWriteContext)) {
                 if (null == defaultWriteContext) {
-//System.out.println("wildcard write to null context");
                     super.addStatement(subj, pred, obj);
                 } else {
-//System.out.println("wildcard write to context: " + defaultWriteContext);
                     super.addStatement(subj, pred, obj, defaultWriteContext);
                 }
             }
@@ -141,7 +140,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
                 if (deletePermitted(defaultWriteContext)) {
                     super.clear(defaultWriteContext);
                 }
-            } else if (allowWildcardClear) {
+            } else if (ALLOW_WILDCARD_CLEAR) {
                 super.clear();
             }
         } else {
@@ -181,16 +180,16 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
         if (null == dataset) {
             d = this.readableSet;
         } else {
-            DatasetImpl di = new DatasetImpl();
+            SimpleDataset di = new SimpleDataset();
             d = di;
 
-            for (URI r : dataset.getDefaultGraphs()) {
+            for (IRI r : dataset.getDefaultGraphs()) {
                 if (this.readPermitted(r)) {
                     di.addDefaultGraph(r);
                 }
             }
 
-            for (URI r : dataset.getNamedGraphs()) {
+            for (IRI r : dataset.getNamedGraphs()) {
                 if (this.readPermitted(r)) {
                     di.addNamedGraph(r);
                 }
@@ -207,7 +206,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
             final boolean includeInferred) throws SailException {
         try {
             TripleSource tripleSource = new SailConnectionTripleSource(this, valueFactory, includeInferred);
-            EvaluationStrategyImpl strategy = new EvaluationStrategyImpl(tripleSource, dataset);
+            EvaluationStrategy strategy = new SimpleEvaluationStrategy(tripleSource, dataset, null);
 
             return strategy.evaluate(tupleExpr, bindings);
         } catch (QueryEvaluationException e) {
@@ -227,7 +226,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
 
     @Override
     public String getNamespace(String prefix) throws SailException {
-        return (namespacesAreReadable)
+        return namespacesAreReadable
                 ? super.getNamespace(prefix)
                 : null;
     }
@@ -235,7 +234,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
     @Override
     public CloseableIteration<? extends Namespace, SailException> getNamespaces()
             throws SailException {
-        return (namespacesAreReadable)
+        return namespacesAreReadable
                 ? super.getNamespaces()
                 : new EmptyCloseableIteration<Namespace, SailException>();
     }
@@ -244,7 +243,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
     @Override
     public CloseableIteration<? extends Statement, SailException> getStatements(
             final Resource subj,
-            final URI pred,
+            final IRI pred,
             final Value obj,
             final boolean includeInferred,
             final Resource... contexts) throws SailException {
@@ -260,7 +259,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
         // requested contexts.
         else {
             Collection<CloseableIteration<? extends Statement, SailException>>
-                    iterations = new LinkedList<CloseableIteration<? extends Statement, SailException>>();
+                    iterations = new LinkedList<>();
 
             for (Resource context : contexts) {
                 if (readPermitted(context)) {
@@ -286,35 +285,29 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
      *                 matching statements will be removed from the designated writeable context.
      */
     @Override
-    public void removeStatements(final Resource subj, final URI pred, final Value obj,
+    public void removeStatements(final Resource subj, final IRI pred, final Value obj,
                                  final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
             if (WILDCARD_REMOVE_FROM_ALL_CONTEXTS) {
-                Collection<Resource> toRemove = new LinkedList<Resource>();
-                boolean includeInferred = false;
-                CloseableIteration<? extends Statement, SailException> iter
-                        = super.getStatements(subj, pred, obj, includeInferred);
-                try {
+                Collection<Resource> toRemove = new LinkedList<>();
+                try (CloseableIteration<? extends Statement, SailException> iter
+                             = super.getStatements(subj, pred, obj, false)) {
                     while (iter.hasNext()) {
                         Resource context = iter.next().getContext();
                         if (null != context && writePermitted(context)) {
                             toRemove.add(context);
                         }
                     }
-                } finally {
-                    iter.close();
                 }
 
-                if (0 < toRemove.size()) {
+                if (!toRemove.isEmpty()) {
                     Resource[] ctxArray = new Resource[toRemove.size()];
                     toRemove.toArray(ctxArray);
                     super.removeStatements(subj, pred, obj, ctxArray);
                 }
             } else {
-                if (null != defaultWriteContext) {
-                    if (deletePermitted(defaultWriteContext)) {
-                        super.removeStatements(subj, pred, obj, defaultWriteContext);
-                    }
+                if (null != defaultWriteContext && deletePermitted(defaultWriteContext)) {
+                    super.removeStatements(subj, pred, obj, defaultWriteContext);
                 }
             }
 
@@ -341,7 +334,7 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
     @Override
     public long size(final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
-            return (allowWildcardSize)
+            return ALLOW_WILDCARD_SIZE
                     ? super.size()
                     : 0;
         } else {
@@ -358,11 +351,11 @@ public class ConstrainedSailConnection extends SailConnectionWrapper {
     }
 
     public boolean readPermitted(final Resource context) throws SailException {
-        return readableSet.getDefaultGraphs().contains(context);
+        return context instanceof IRI && readableSet.getDefaultGraphs().contains(context);
     }
 
     public boolean writePermitted(final Resource context) throws SailException {
-        return writableSet.getDefaultGraphs().contains(context);
+        return context instanceof IRI && writableSet.getDefaultGraphs().contains(context);
     }
 
     public boolean deletePermitted(final Resource context) throws SailException {

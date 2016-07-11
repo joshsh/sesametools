@@ -1,11 +1,12 @@
 package net.fortytwo.sesametools;
 
 import org.openrdf.model.BNode;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Literal;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * Implements a Comparator for OpenRDF Value objects where
@@ -15,7 +16,7 @@ import java.util.Comparator;
  * <li> URI's </li>
  * <li> Literals </li>
  * </ol>
- * <p/>
+ * <p>
  * with null Values sorted before others
  *
  * @author Peter Ansell p_ansell@yahoo.com
@@ -30,12 +31,12 @@ public class ValueComparator implements Comparator<Value> {
     /**
      * A thread-safe pre-instantiated instance of ValueComparator.
      */
-    public final static ValueComparator getInstance() {
+    public static ValueComparator getInstance() {
         return INSTANCE;
     }
 
     public final static int BEFORE = -1;
-    public final static int EQUALS = 0;
+    public final static int EQUAL = 0;
     public final static int AFTER = 1;
 
     /**
@@ -56,7 +57,7 @@ public class ValueComparator implements Comparator<Value> {
     public int compare(Value first, Value second) {
         if (first == null) {
             if (second == null) {
-                return EQUALS;
+                return EQUAL;
             } else {
                 return BEFORE;
             }
@@ -67,7 +68,7 @@ public class ValueComparator implements Comparator<Value> {
         }
 
         if (first == second || first.equals(second)) {
-            return EQUALS;
+            return EQUAL;
         }
 
         if (first instanceof BNode) {
@@ -83,13 +84,13 @@ public class ValueComparator implements Comparator<Value> {
         } else if (second instanceof BNode) {
             // sort BNodes before other things, and first was not a BNode
             return AFTER;
-        } else if (first instanceof URI) {
-            if (second instanceof URI) {
-                return ((URI) first).stringValue().compareTo(((URI) second).stringValue());
+        } else if (first instanceof IRI) {
+            if (second instanceof IRI) {
+                return first.stringValue().compareTo(second.stringValue());
             } else {
                 return BEFORE;
             }
-        } else if (second instanceof URI) {
+        } else if (second instanceof IRI) {
             // sort URIs before Literals
             return AFTER;
         }
@@ -99,24 +100,24 @@ public class ValueComparator implements Comparator<Value> {
             Literal secondLiteral = (Literal) second;
             int cmp = firstLiteral.getLabel().compareTo(secondLiteral.getLabel());
 
-            if (EQUALS == cmp) {
-                String firstLang = firstLiteral.getLanguage();
-                String secondLang = secondLiteral.getLanguage();
-                if (null != firstLang) {
-                    if (null != secondLang) {
-                        return firstLang.compareTo(secondLang);
+            if (EQUAL == cmp) {
+                Optional<String> firstLang = firstLiteral.getLanguage();
+                Optional<String> secondLang = secondLiteral.getLanguage();
+                if (firstLang.isPresent()) {
+                    if (secondLang.isPresent()) {
+                        return firstLang.get().compareTo(secondLang.get());
                     } else {
                         return AFTER;
                     }
-                } else if (null != secondLang) {
+                } else if (secondLang.isPresent()) {
                     return BEFORE;
                 }
 
-                URI firstType = firstLiteral.getDatatype();
-                URI secondType = secondLiteral.getDatatype();
+                IRI firstType = firstLiteral.getDatatype();
+                IRI secondType = secondLiteral.getDatatype();
                 if (null == firstType) {
                     if (null == secondType) {
-                        return EQUALS;
+                        return EQUAL;
                     } else {
                         return BEFORE;
                     }

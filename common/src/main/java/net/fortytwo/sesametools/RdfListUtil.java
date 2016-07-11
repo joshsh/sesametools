@@ -1,12 +1,13 @@
 package net.fortytwo.sesametools;
 
 import org.openrdf.OpenRDFUtil;
-import org.openrdf.model.Graph;
+import org.openrdf.model.IRI;
+import org.openrdf.model.Model;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,8 @@ public class RdfListUtil {
      * The default value for useIterativeOnError if no other value is given.
      */
     public final static boolean DEFAULT_USE_ITERATIVE_ON_ERROR = true;
+
+    private static final ValueFactory valueFactory = SimpleValueFactory.getInstance();
 
     /**
      * If enabled, this causes the getLists method to throw RuntimeExceptions if cyclic lists are found.
@@ -120,18 +123,16 @@ public class RdfListUtil {
      * @param head         the head resource of the list
      * @param nextValues   the list to add. If this list is empty, no statements will be
      *                     written
-     * @param graphToAddTo the Graph to add the resulting list to
-     * @param contexts     the graph contexts into which to add the new statements. If no
+     * @param graphToAddTo the Model to add the resulting list to
+     * @param contexts     the Model contexts into which to add the new statements. If no
      *                     contexts are given, statements will be added to the default
      *                     (null) context.
      */
     public void addList(final Resource head,
                         final List<Value> nextValues,
-                        final Graph graphToAddTo,
+                        final Model graphToAddTo,
                         final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
-
-        final ValueFactory vf = graphToAddTo.getValueFactory();
 
         Resource aCurr = head;
 
@@ -141,7 +142,7 @@ public class RdfListUtil {
             // increment counter
             i++;
 
-            final Resource aNext = vf.createBNode();
+            final Resource aNext = valueFactory.createBNode();
 
             graphToAddTo.add(aCurr, RDF.FIRST, nextValue, contexts);
 
@@ -166,21 +167,19 @@ public class RdfListUtil {
      *                     list
      * @param nextValues   the list to add. If this list is empty, only the pointer
      *                     statement will be written.
-     * @param graphToAddTo the Graph to add the resulting list to
-     * @param contexts     the graph contexts into which to add the new statements. If no
+     * @param graphToAddTo the Model to add the resulting list to
+     * @param contexts     the Model contexts into which to add the new statements. If no
      *                     contexts are given, statements will be added to the default
      *                     (null) context.
      */
     public void addListAtNode(final Resource subject,
-                              final URI predicate, final List<Value> nextValues,
-                              final Graph graphToAddTo, final Resource... contexts) {
+                              final IRI predicate, final List<Value> nextValues,
+                              final Model graphToAddTo, final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
-        final ValueFactory vf = graphToAddTo.getValueFactory();
+        final Resource aHead = valueFactory.createBNode();
 
-        final Resource aHead = vf.createBNode();
-
-        if (nextValues.size() > 0) {
+        if (!nextValues.isEmpty()) {
             graphToAddTo.add(subject, predicate, aHead, contexts);
         }
 
@@ -191,12 +190,12 @@ public class RdfListUtil {
      * Fetches a simple (non-branching) list from a graph.
      *
      * @param head          the head of the list
-     * @param graphToSearch the graph from which the list is to be fetched
-     * @param contexts      the graph contexts from which the list is to be fetched
+     * @param graphToSearch the Model from which the list is to be fetched
+     * @param contexts      the Model contexts from which the list is to be fetched
      * @return the contents of the list
      */
     public List<Value> getList(final Resource head,
-                               final Graph graphToSearch, final Resource... contexts) {
+                               final Model graphToSearch, final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
         final Collection<List<Value>> results = this.getLists(Collections.singleton(head),
@@ -216,7 +215,7 @@ public class RdfListUtil {
     }
 
     /**
-     * Fetches a single headed list from the graph based on the given subject
+     * Fetches a single headed list from the Model based on the given subject
      * and predicate
      * <p>
      * Note: We silently fail if no list is detected at all and return null
@@ -228,14 +227,14 @@ public class RdfListUtil {
      *
      * @param subject       the subject of a statement pointing to the list
      * @param predicate     the predicate of a statement pointing to the list
-     * @param graphToSearch the graph from which the list is to be fetched
-     * @param contexts      the graph contexts from which the list is to be fetched
+     * @param graphToSearch the Model from which the list is to be fetched
+     * @param contexts      the Model contexts from which the list is to be fetched
      * @return the contents of the list
      * @throws RuntimeException if the list structure was not complete, or it had cycles
      */
     public List<Value> getListAtNode(final Resource subject,
-                                     final URI predicate,
-                                     final Graph graphToSearch,
+                                     final IRI predicate,
+                                     final Model graphToSearch,
                                      final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
@@ -260,20 +259,20 @@ public class RdfListUtil {
      * branch from head to tail.
      *
      * @param heads         the heads of the lists to fetch
-     * @param graphToSearch the graph from which the list is to be fetched
-     * @param contexts      the graph contexts from which the list is to be fetched
+     * @param graphToSearch the Model from which the list is to be fetched
+     * @param contexts      the Model contexts from which the list is to be fetched
      * @return all matching lists. If no matching lists are found, an empty
      * collection is returned.
      */
     //*
     public Collection<List<Value>> getListsIterative(final Set<Resource> heads,
-                                                     final Graph graphToSearch,
+                                                     final Model graphToSearch,
                                                      final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
-        final List<List<Value>> results = new ArrayList<List<Value>>(heads.size());
+        final List<List<Value>> results = new ArrayList<>(heads.size());
 
-        List<List<Resource>> completedPointerTrails = new ArrayList<List<Resource>>(
+        List<List<Resource>> completedPointerTrails = new ArrayList<>(
                 heads.size());
 
         for (final Resource nextHead : heads) {
@@ -300,11 +299,11 @@ public class RdfListUtil {
 
     //*
     public Collection<List<Value>> getLists(final Set<Resource> heads,
-                                            final Graph graphToSearch,
+                                            final Model graphToSearch,
                                             final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
-        Collection<List<Value>> matches = new LinkedList<List<Value>>();
+        Collection<List<Value>> matches = new LinkedList<>();
 
         try {
             for (Resource h : heads) {
@@ -324,12 +323,12 @@ public class RdfListUtil {
     //*/
 
     public Collection<List<Value>> getListsRecursive(final Resource head,
-                                                     final Graph graph,
+                                                     final Model graph,
                                                      final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
-        Collection<List<Value>> matches = new LinkedList<List<Value>>();
-        Set<Resource> prev = new HashSet<Resource>();
+        Collection<List<Value>> matches = new LinkedList<>();
+        Set<Resource> prev = new HashSet<>();
 
         // The length of this buffer corresponds to both the longest list and the 
         // maximum number of iterations that are supported by this implementation
@@ -344,14 +343,14 @@ public class RdfListUtil {
     }
 
     private void matchLists(final Resource head,
-                            final Graph graph,
+                            final Model graph,
                             final Collection<List<Value>> matches,
                             final Set<Resource> prev,
                             final Value[] buffer,
                             final int i,
                             final Resource... contexts) {
         if (head.equals(RDF.NIL)) {  // End of list
-            List<Value> finalisedList = new ArrayList<Value>(i);
+            List<Value> finalisedList = new ArrayList<>(i);
             for (int j = 0; j < i; j++) {
                 finalisedList.add(j, buffer[j]);
             }
@@ -361,7 +360,7 @@ public class RdfListUtil {
         } else if (!prev.contains(head)) {  // List continues, no cycle so far.
             prev.add(head);
 
-            Iterator<Statement> first = graph.match(head, RDF.FIRST, null, contexts);
+            Iterator<Statement> first = graph.filter(head, RDF.FIRST, null, contexts).iterator();
 
             if (this.getCheckIncomplete() && !first.hasNext()) {
                 throw new RuntimeException("List structure was not complete");
@@ -370,7 +369,7 @@ public class RdfListUtil {
             while (first.hasNext()) {
                 buffer[i] = first.next().getObject();
 
-                Iterator<Statement> rest = graph.match(head, RDF.REST, null, contexts);
+                Iterator<Statement> rest = graph.filter(head, RDF.REST, null, contexts).iterator();
 
                 if (this.getCheckIncomplete() && !rest.hasNext()) {
                     throw new RuntimeException("List structure was not complete");
@@ -401,16 +400,16 @@ public class RdfListUtil {
     }
 
     private List<List<Value>> getValuesForPointerTrails(
-            final Graph graphToSearch,
+            final Model graphToSearch,
             List<List<Resource>> completedPointerTrails,
             final Resource... contexts) {
-        final List<List<Value>> results = new ArrayList<List<Value>>(
+        final List<List<Value>> results = new ArrayList<>(
                 completedPointerTrails.size());
 
         // Go through the pointer trails finding the corresponding
         // RDF.FIRST/Value combinations to generate the result lists
         for (List<Resource> nextPointerTrail : completedPointerTrails) {
-            final List<Value> nextResult = new ArrayList<Value>();
+            final List<Value> nextResult = new ArrayList<>();
 
             for (int i = 0; i < nextPointerTrail.size(); i++) {
                 Resource nextPointer = nextPointerTrail.get(i);
@@ -429,8 +428,8 @@ public class RdfListUtil {
 
                     Value nextValue = null;
 
-                    final Iterator<Statement> valueMatch = graphToSearch.match(
-                            nextPointer, RDF.FIRST, null, contexts);
+                    final Iterator<Statement> valueMatch = graphToSearch.filter(
+                            nextPointer, RDF.FIRST, null, contexts).iterator();
 
                     if (valueMatch.hasNext()) {
                         final Statement nextValueMatch = valueMatch.next();
@@ -460,7 +459,7 @@ public class RdfListUtil {
                 }
             }
 
-            if (nextResult.size() > 0) {
+            if (!nextResult.isEmpty()) {
                 results.add(nextResult);
             }
         }
@@ -469,24 +468,24 @@ public class RdfListUtil {
     }
 
     private void followPointerTrails(Resource nextHead,
-                                     Graph graphToSearch, List<List<Resource>> completedPointerTrails,
+                                     Model graphToSearch, List<List<Resource>> completedPointerTrails,
                                      Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
-        List<Resource> firstPointerTrail = new ArrayList<Resource>();
+        List<Resource> firstPointerTrail = new ArrayList<>();
         // add the first head to the currentPointerTrail
         firstPointerTrail.add(nextHead);
 
         // start off our currentPointerTrail marker list with the contents of
         // the firstPointerTrail
-        List<Resource> currentPointerTrail = new ArrayList<Resource>(
+        List<Resource> currentPointerTrail = new ArrayList<>(
                 firstPointerTrail);
 
-        List<List<Resource>> uncompletedPointerTrails = new ArrayList<List<Resource>>();
+        List<List<Resource>> uncompletedPointerTrails = new ArrayList<>();
 
         Resource nextPointer = nextHead;
 
-        boolean allDone = true;
+        boolean allDone;
 
         do {
             // start off thinking all are done, and then set to false as
@@ -494,8 +493,8 @@ public class RdfListUtil {
             allDone = true;
 
             // match the nextPointer with RDF.REST predicate to find next hops
-            final Iterator<Statement> nextMatch = graphToSearch.match(
-                    nextPointer, RDF.REST, null, contexts);
+            final Iterator<Statement> nextMatch = graphToSearch.filter(
+                    nextPointer, RDF.REST, null, contexts).iterator();
 
             // if there are no matches complain and throw a runtime exception
             if (!nextMatch.hasNext()) {
@@ -552,7 +551,7 @@ public class RdfListUtil {
                 throw new RuntimeException("List cannot contain cycles");
             }
 
-            ArrayList<Resource> nextTrail = new ArrayList<Resource>(
+            ArrayList<Resource> nextTrail = new ArrayList<>(
                     currentPointerTrail);
 
             nextTrail.add(nextResource);
@@ -578,22 +577,22 @@ public class RdfListUtil {
      *
      * @param subject       the subject of a statement pointing to the list
      * @param predicate     the predicate of a statement pointing to the list
-     * @param graphToSearch the graph from which the list is to be fetched
-     * @param contexts      the graph contexts from which the list is to be fetched
+     * @param graphToSearch the Model from which the list is to be fetched
+     * @param contexts      the Model contexts from which the list is to be fetched
      * @return all matching lists. If no matching lists are found, an empty
      * collection is returned.
      */
     public Collection<List<Value>> getListsAtNode(
-            final Resource subject, final URI predicate,
-            final Graph graphToSearch, final Resource... contexts) {
+            final Resource subject, final IRI predicate,
+            final Model graphToSearch, final Resource... contexts) {
         OpenRDFUtil.verifyContextNotNull(contexts);
 
         Collection<List<Value>> results;
 
-        final Iterator<Statement> headStatementMatches = graphToSearch.match(
-                subject, predicate, null, contexts);
+        final Iterator<Statement> headStatementMatches = graphToSearch.filter(
+                subject, predicate, null, contexts).iterator();
 
-        final Set<Resource> heads = new HashSet<Resource>();
+        final Set<Resource> heads = new HashSet<>();
 
         while (headStatementMatches.hasNext()) {
             final Statement nextHeadStatement = headStatementMatches.next();

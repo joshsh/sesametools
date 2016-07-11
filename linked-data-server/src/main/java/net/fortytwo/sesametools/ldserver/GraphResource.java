@@ -3,7 +3,7 @@ package net.fortytwo.sesametools.ldserver;
 import info.aduna.iteration.CloseableIteration;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
@@ -22,16 +22,16 @@ import java.util.logging.Logger;
 /**
  * Graph resources are information resources which (in the present schema) do not use suffixes identifying the RDF
  * format (e.g. .rdf or .ttl).  Instead, they use content negotiation to serve an appropriate representation against
- * the URI of the graph, without redirection.
- * <p/>
- * This conforms to the common expectation that RDF documents and corresponding named graphs have the same URI.
+ * the IRI of the graph, without redirection.
+ * <p>
+ * This conforms to the common expectation that RDF documents and corresponding named graphs have the same IRI.
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class GraphResource extends ServerResource {
     private static final Logger logger = Logger.getLogger(GraphResource.class.getName());
 
-    protected String selfURI;
+    protected String selfIRI;
 
     protected Sail sail;
 
@@ -48,19 +48,10 @@ public class GraphResource extends ServerResource {
     public Representation get(final Variant entity) {
         MediaType type = entity.getMediaType();
         RDFFormat format = RDFMediaTypes.findRdfFormat(type);
-        selfURI = this.getRequest().getResourceRef().toString();
-
-        /*
-        System.out.println("selfURI = " + selfURI);
-        System.out.println("baseRef = " + request.getResourceRef().getBaseRef());
-        System.out.println("host domain = " + request.getResourceRef().getHostDomain());
-        System.out.println("host identifier = " + request.getResourceRef().getHostIdentifier());
-        System.out.println("hierarchical part = " + request.getResourceRef().getHierarchicalPart());
-        System.out.println("host ref = " + request.getHostRef().toString());
-        //*/
+        selfIRI = this.getRequest().getResourceRef().toString();
 
         try {
-            URI subject = sail.getValueFactory().createURI(selfURI);
+            IRI subject = sail.getValueFactory().createIRI(selfIRI);
             return getRDFRepresentation(subject, format);
         } catch (Throwable t) {
             t.printStackTrace();
@@ -71,22 +62,19 @@ public class GraphResource extends ServerResource {
     private void addStatementsInGraph(final org.openrdf.model.Resource graph,
                                       final Collection<Statement> statements,
                                       final SailConnection c) throws SailException {
-        CloseableIteration<? extends Statement, SailException> stIter
-                = c.getStatements(null, null, null, false, graph);
-        try {
+        try (CloseableIteration<? extends Statement, SailException> stIter
+                     = c.getStatements(null, null, null, false, graph)) {
             while (stIter.hasNext()) {
                 statements.add(stIter.next());
             }
-        } finally {
-            stIter.close();
         }
     }
 
-    private Representation getRDFRepresentation(final URI graph,
+    private Representation getRDFRepresentation(final IRI graph,
                                                 final RDFFormat format) {
         try {
-            Collection<Namespace> namespaces = new LinkedList<Namespace>();
-            Collection<Statement> statements = new LinkedList<Statement>();
+            Collection<Namespace> namespaces = new LinkedList<>();
+            Collection<Statement> statements = new LinkedList<>();
 
             SailConnection c = sail.getConnection();
             try {
@@ -97,14 +85,10 @@ public class GraphResource extends ServerResource {
                 addStatementsInGraph(graph, statements, c);
 
                 // Select namespaces, for human-friendliness
-                CloseableIteration<? extends Namespace, SailException> ns
-                        = c.getNamespaces();
-                try {
+                try (CloseableIteration<? extends Namespace, SailException> ns = c.getNamespaces()) {
                     while (ns.hasNext()) {
                         namespaces.add(ns.next());
                     }
-                } finally {
-                    ns.close();
                 }
             } finally {
                 c.close();

@@ -3,7 +3,7 @@ package net.fortytwo.sesametools.ldserver;
 import net.fortytwo.sesametools.mappingsail.MappingSail;
 import net.fortytwo.sesametools.mappingsail.MappingSchema;
 import net.fortytwo.sesametools.mappingsail.RewriteRule;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.Sail;
 import org.restlet.Application;
@@ -16,7 +16,7 @@ import org.restlet.Application;
 public class LinkedDataServer extends Application {
 
     private final Sail sail;
-    private final URI datasetURI;
+    private final IRI datasetURI;
 
     private static LinkedDataServer SINGLETON = null;
 
@@ -53,35 +53,27 @@ public class LinkedDataServer extends Application {
 
         if (!internalBaseURI.equals(externalBaseURI)) {
             RewriteRule outboundRewriter = new RewriteRule() {
-                public URI rewrite(final URI original) {
-                    //System.out.println("outbound: " + original);
+                public IRI rewrite(final IRI original) {
 
                     if (null == original) {
                         return null;
                     } else {
                         String s = original.stringValue();
-                        //System.out.println("\t--> " + (s.startsWith(internalBaseURI)
-                        //        ? vf.createURI(s.replace(internalBaseURI, externalBaseURI))
-                        //        : original));
                         return s.startsWith(internalBaseURI)
-                                ? vf.createURI(s.replace(internalBaseURI, externalBaseURI))
+                                ? vf.createIRI(s.replace(internalBaseURI, externalBaseURI))
                                 : original;
                     }
                 }
             };
 
             RewriteRule inboundRewriter = new RewriteRule() {
-                public URI rewrite(final URI original) {
-                    //System.out.println("inbound: " + original);
+                public IRI rewrite(final IRI original) {
                     if (null == original) {
                         return null;
                     } else {
                         String s = original.stringValue();
-                        //System.out.println("\t--> " + (s.startsWith(externalBaseURI)
-                        //        ? vf.createURI(s.replace(externalBaseURI, internalBaseURI))
-                        //        : original));
                         return s.startsWith(externalBaseURI)
-                                ? vf.createURI(s.replace(externalBaseURI, internalBaseURI))
+                                ? vf.createIRI(s.replace(externalBaseURI, internalBaseURI))
                                 : original;
                     }
                 }
@@ -94,12 +86,12 @@ public class LinkedDataServer extends Application {
 
             datasetURI = null == dataset
                     ? null
-                    : outboundRewriter.rewrite(vf.createURI(dataset));
+                    : outboundRewriter.rewrite(vf.createIRI(dataset));
         } else {
             this.sail = baseSail;
             datasetURI = null == dataset
                     ? null
-                    : vf.createURI(dataset);
+                    : vf.createIRI(dataset);
         }
     }
 
@@ -113,7 +105,7 @@ public class LinkedDataServer extends Application {
     /**
      * @return the internal URI for the data set published by this server
      */
-    public URI getDatasetURI() {
+    public IRI getDatasetURI() {
         return datasetURI;
     }
 

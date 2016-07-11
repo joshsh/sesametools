@@ -3,11 +3,12 @@ package net.fortytwo.sesametools.constrained;
 
 import info.aduna.iteration.CloseableIteration;
 import junit.framework.TestCase;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.SimpleValueFactory;
 import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.query.impl.DatasetImpl;
+import org.openrdf.query.impl.SimpleDataset;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
@@ -17,20 +18,22 @@ import org.openrdf.sail.memory.MemoryStore;
  * @author Joshua Shinavier (http://fortytwo.net)
  */
 public class ConstrainedSailTest extends TestCase {
-    private static final URI
-            CONTEXT1_RW = new URIImpl("http://example.org/context1"),
-            CONTEXT2_R = new URIImpl("http://example.org/context2"),
-            CONTEXT3_W = new URIImpl("http://example.org/context3");
+    private static final ValueFactory valueFactory = SimpleValueFactory.getInstance();
+
+    private static final IRI
+            CONTEXT1_RW = valueFactory.createIRI("http://example.org/context1"),
+            CONTEXT2_R = valueFactory.createIRI("http://example.org/context2"),
+            CONTEXT3_W = valueFactory.createIRI("http://example.org/context3");
 
     private Sail baseSail;
     private ConstrainedSail constrainedSail;
 
     public void setUp() throws Exception {
-        DatasetImpl writableSet = new DatasetImpl();
+        SimpleDataset writableSet = new SimpleDataset();
         writableSet.addDefaultGraph(CONTEXT1_RW);
         writableSet.addDefaultGraph(CONTEXT3_W);
 
-        DatasetImpl readableSet = new DatasetImpl();
+        SimpleDataset readableSet = new SimpleDataset();
         readableSet.addDefaultGraph(CONTEXT1_RW);
         readableSet.addDefaultGraph(CONTEXT2_R);
 
@@ -106,12 +109,10 @@ public class ConstrainedSailTest extends TestCase {
 
     private int count(final CloseableIteration<? extends Statement, SailException> iter) throws SailException {
         int c = 0;
-//System.out.println("...");
         try {
             while (iter.hasNext()) {
                 c++;
                 iter.next();
-//System.out.println(iter.next().toString());
             }
         } finally {
             iter.close();

@@ -1,21 +1,21 @@
 package net.fortytwo.sesametools;
 
 import info.aduna.iteration.CloseableIteration;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Namespace;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.Dataset;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.algebra.TupleExpr;
-import org.openrdf.query.impl.DatasetImpl;
+import org.openrdf.query.impl.SimpleDataset;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
-import org.openrdf.sail.helpers.SailBase;
-import org.openrdf.sail.helpers.SailConnectionBase;
+import org.openrdf.sail.helpers.AbstractSail;
+import org.openrdf.sail.helpers.AbstractSailConnection;
 
 
 /**
@@ -25,11 +25,11 @@ import org.openrdf.sail.helpers.SailConnectionBase;
  *
  * @author Joshua Shinavier (http://fortytwo.net)
  */
-class SingleContextSailConnection extends SailConnectionBase {
+class SingleContextSailConnection extends AbstractSailConnection {
     private SailConnection baseSailConnection;
     private Resource singleContext;
 
-    public SingleContextSailConnection(final SailBase sail,
+    public SingleContextSailConnection(final AbstractSail sail,
                                        final Sail baseSail,
                                        final Resource context) throws SailException {
         super(sail);
@@ -37,7 +37,7 @@ class SingleContextSailConnection extends SailConnectionBase {
         singleContext = context;
     }
 
-    protected void addStatementInternal(final Resource subj, final URI pred, final Value obj,
+    protected void addStatementInternal(final Resource subj, final IRI pred, final Value obj,
                                         final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
             baseSailConnection.addStatement(subj, pred, obj, singleContext);
@@ -87,12 +87,12 @@ class SingleContextSailConnection extends SailConnectionBase {
             final boolean includeInferred) throws SailException {
 
         // ignore the given dataset and restrict everything to the single context we have been setup with
-        DatasetImpl singleContextDataset = new DatasetImpl();
-        if (singleContext instanceof URI) {
-            singleContextDataset.setDefaultInsertGraph((URI) singleContext);
-            singleContextDataset.addDefaultGraph((URI) singleContext);
-            singleContextDataset.addNamedGraph((URI) singleContext);
-            singleContextDataset.addDefaultRemoveGraph((URI) singleContext);
+        SimpleDataset singleContextDataset = new SimpleDataset();
+        if (singleContext instanceof IRI) {
+            singleContextDataset.setDefaultInsertGraph((IRI) singleContext);
+            singleContextDataset.addDefaultGraph((IRI) singleContext);
+            singleContextDataset.addNamedGraph((IRI) singleContext);
+            singleContextDataset.addDefaultRemoveGraph((IRI) singleContext);
         }
 
         return baseSailConnection.evaluate(tupleExpr, singleContextDataset, bindingSet, includeInferred);
@@ -104,10 +104,10 @@ class SingleContextSailConnection extends SailConnectionBase {
         // ignore the given dataset and restrict everything to the single context we have been setup with
         DatasetImpl singleContextDataset = new DatasetImpl();
         if (singleContext instanceof URI) {
-            singleContextDataset.setDefaultInsertGraph((URI) singleContext);
-            singleContextDataset.addDefaultGraph((URI) singleContext);
-            singleContextDataset.addNamedGraph((URI) singleContext);
-            singleContextDataset.addDefaultRemoveGraph((URI) singleContext);
+            singleContextDataset.setDefaultInsertGraph((IRI) singleContext);
+            singleContextDataset.addDefaultGraph((IRI) singleContext);
+            singleContextDataset.addNamedGraph((IRI) singleContext);
+            singleContextDataset.addDefaultRemoveGraph((IRI) singleContext);
         }
 
         baseSailConnection.executeUpdate(updateExpr, singleContextDataset, bindingSet, includeInferred);
@@ -129,7 +129,7 @@ class SingleContextSailConnection extends SailConnectionBase {
 
     protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(
             final Resource subj,
-            final URI pred,
+            final IRI pred,
             final Value obj,
             final boolean includeInferred,
             final Resource... contexts) throws SailException {
@@ -143,7 +143,7 @@ class SingleContextSailConnection extends SailConnectionBase {
                 }
             }
 
-            return new EmptyCloseableIteration<Statement, SailException>();
+            return new EmptyCloseableIteration<>();
         }
     }
 
@@ -151,7 +151,7 @@ class SingleContextSailConnection extends SailConnectionBase {
         baseSailConnection.removeNamespace(prefix);
     }
 
-    protected void removeStatementsInternal(final Resource subj, final URI pred, final Value obj,
+    protected void removeStatementsInternal(final Resource subj, final IRI pred, final Value obj,
                                             final Resource... contexts) throws SailException {
         if (0 == contexts.length) {
             baseSailConnection.removeStatements(subj, pred, obj, singleContext);
@@ -198,7 +198,7 @@ class SingleContextSailConnection extends SailConnectionBase {
         }
 
         public boolean hasNext() throws SailException {
-            return (null != nextContext);
+            return null != nextContext;
         }
 
         public Resource next() throws SailException {

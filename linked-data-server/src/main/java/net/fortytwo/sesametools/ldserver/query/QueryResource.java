@@ -35,21 +35,12 @@ public abstract class QueryResource extends Restlet {
          Map<String, String> arguments;
         selfURI = request.getResourceRef().toString();
 
-        /*
-        System.out.println("selfURI = " + selfURI);
-        System.out.println("baseRef = " + request.getResourceRef().getBaseRef());
-        System.out.println("host domain = " + request.getResourceRef().getHostDomain());
-        System.out.println("host identifier = " + request.getResourceRef().getHostIdentifier());
-        System.out.println("hierarchical part = " + request.getResourceRef().getHierarchicalPart());
-        System.out.println("host ref = " + request.getHostRef().toString());
-        //*/
-
         sail = LinkedDataServer.getInstance().getSail();
 
         //getVariants().add(new Variant(MediaType.APPLICATION_JSON));
 
         int i = selfURI.lastIndexOf("?");
-        arguments = new HashMap<String, String>();
+        arguments = new HashMap<>();
         if (0 < i) {
             String args = selfURI.substring(i + 1);
             if (0 < args.length()) {
@@ -60,17 +51,12 @@ public abstract class QueryResource extends Restlet {
                 }
             }
         }
-        /*
-        for (String name : arguments.keySet()) {
-            System.out.println("argument: " + name + " = " + arguments.get(name));
-        }
-        //*/
 
         return arguments;
     }
 
     protected Map<String, String> parseParams(final String s) throws UnsupportedEncodingException {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
 
         String[] a = s.split("&");
         for (String p : a) {

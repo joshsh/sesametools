@@ -2,8 +2,8 @@
 package net.fortytwo.sesametools.replay.calls;
 
 import net.fortytwo.sesametools.replay.SailConnectionCall;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
@@ -16,13 +16,13 @@ import java.util.StringTokenizer;
 public class AddStatementCall extends SailConnectionCall<SailConnection, Object> {
 
     private final Resource subject;
-    private final URI predicate;
+    private final IRI predicate;
     private final Value object;
     private final Resource[] contexts;
 
     public AddStatementCall(final String id,
                             final Resource subj,
-                            final URI pred,
+                            final IRI pred,
                             final Value obj,
                             final Resource... contexts) {
         super(id, Type.ADD_STATEMENT);
@@ -30,7 +30,6 @@ public class AddStatementCall extends SailConnectionCall<SailConnection, Object>
         this.predicate = pred;
         this.object = obj;
         this.contexts = contexts;
-//System.out.println("call: " + this);
     }
 
     public String toString() {
@@ -48,7 +47,7 @@ public class AddStatementCall extends SailConnectionCall<SailConnection, Object>
                             final StringTokenizer tok) {
         super(id, type);
         this.subject = parseResource(tok.nextToken());
-        this.predicate = parseURI(tok.nextToken());
+        this.predicate = parseIRI(tok.nextToken());
         this.object = parseValue(tok.nextToken());
         this.contexts = parseContexts(tok.nextToken());
     }

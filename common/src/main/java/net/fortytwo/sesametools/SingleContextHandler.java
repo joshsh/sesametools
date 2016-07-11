@@ -5,7 +5,7 @@ import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 
@@ -39,7 +39,7 @@ public class SingleContextHandler implements RDFHandler {
 
     public void handleStatement(final Statement st) throws RDFHandlerException {
         Resource subj = st.getSubject();
-        URI pred = st.getPredicate();
+        IRI pred = st.getPredicate();
         Value obj = st.getObject();
 
         Statement newSt = valueFactory.createStatement(subj, pred, obj, context);

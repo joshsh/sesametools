@@ -1,6 +1,6 @@
 package net.fortytwo.sesametools.mappingsail;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 /**
  * Represents a rule to map an original URI to a new URI.
@@ -13,5 +13,5 @@ public interface RewriteRule {
      * @param original an complete URI (i.e. not only a URI prefix) to be rewritten
      * @return the resulting URI
      */
-    URI rewrite(URI original);
+    IRI rewrite(IRI original);
 }

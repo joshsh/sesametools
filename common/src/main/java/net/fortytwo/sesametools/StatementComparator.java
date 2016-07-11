@@ -19,12 +19,12 @@ public class StatementComparator implements Comparator<Statement> {
     /**
      * @return A thread-safe pre-instantiated instance of StatementComparator.
      */
-    public final static StatementComparator getInstance() {
+    public static StatementComparator getInstance() {
         return INSTANCE;
     }
 
     public final static int BEFORE = -1;
-    public final static int EQUALS = 0;
+    public final static int EQUAL = 0;
     public final static int AFTER = 1;
 
     @Override
@@ -32,7 +32,7 @@ public class StatementComparator implements Comparator<Statement> {
         // Cannot use Statement.equals as it does not take Context into account,
         // but can check for reference equality (==)
         if (first == second) {
-            return EQUALS;
+            return EQUAL;
         }
 
         if (first.getSubject().equals(second.getSubject())) {
@@ -41,7 +41,7 @@ public class StatementComparator implements Comparator<Statement> {
                     // Context is the only part of a statement that should legitimately be null
                     if (first.getContext() == null) {
                         if (second.getContext() == null) {
-                            return EQUALS;
+                            return EQUAL;
                         } else {
                             return BEFORE;
                         }

@@ -1,6 +1,7 @@
 package net.fortytwo.sesametools.ldserver;
 
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFParserRegistry;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Variant;
 
@@ -20,15 +21,15 @@ public class RDFMediaTypes {
     private static final Map<MediaType, RDFFormat> RDFFORMAT_BY_MEDIATYPE;
 
     static {
-        RDF_VARIANTS = new LinkedList<Variant>();
-        MEDATYPE_BY_RDFFORMAT = new HashMap<RDFFormat, MediaType>();
-        RDFFORMAT_BY_MEDIATYPE = new HashMap<MediaType, RDFFormat>();
+        RDF_VARIANTS = new LinkedList<>();
+        MEDATYPE_BY_RDFFORMAT = new HashMap<>();
+        RDFFORMAT_BY_MEDIATYPE = new HashMap<>();
 
-        LinkedHashSet<RDFFormat> toAdd = new LinkedHashSet<RDFFormat>();
+        LinkedHashSet<RDFFormat> toAdd = new LinkedHashSet<>();
         // add RDF/XML first, as the default format
         toAdd.add(RDFFormat.RDFXML);
         // now add the others
-        toAdd.addAll(RDFFormat.values());
+        toAdd.addAll(RDFParserRegistry.getInstance().getKeys());
 
         for (RDFFormat f : toAdd) {
             MediaType mt = new MediaType(f.getDefaultMIMEType());
@@ -37,6 +38,10 @@ public class RDFMediaTypes {
             RDFFORMAT_BY_MEDIATYPE.put(mt, f);
             RDF_VARIANTS.add(v);
         }
+    }
+    
+    private RDFMediaTypes() {
+        
     }
 
     public static List<Variant> getRDFVariants() {

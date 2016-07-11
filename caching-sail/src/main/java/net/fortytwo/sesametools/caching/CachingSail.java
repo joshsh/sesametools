@@ -1,15 +1,15 @@
 
 package net.fortytwo.sesametools.caching;
 
+import org.openrdf.model.IRI;
 import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.Sail;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.StackableSail;
-import org.openrdf.sail.helpers.SailBase;
+import org.openrdf.sail.helpers.AbstractSail;
 import org.openrdf.sail.memory.MemoryStore;
 
 import java.io.File;
@@ -24,8 +24,8 @@ import java.util.Set;
  */
 // Note: assumes that the value factories of the base Sail and the MemoryStore
 // cache are compatible.
-public class CachingSail extends SailBase implements StackableSail {
-    private static long DEFAULT_CAPACITY = 1000000l;
+public class CachingSail extends AbstractSail implements StackableSail {
+    private static final long DEFAULT_CAPACITY = 1000000L;
 
     private boolean cacheSubject, cachePredicate, cacheObject;
 
@@ -33,7 +33,7 @@ public class CachingSail extends SailBase implements StackableSail {
     private Sail cache;
 
     private Set<Resource> cachedSubjects;
-    private Set<URI> cachedPredicates;
+    private Set<IRI> cachedPredicates;
     private Set<Value> cachedObjects;
 
     private long capacity;
@@ -74,15 +74,15 @@ public class CachingSail extends SailBase implements StackableSail {
         cache.initialize();
 
         if (cacheSubject) {
-            cachedSubjects = new HashSet<Resource>();
+            cachedSubjects = new HashSet<>();
         }
 
         if (cachePredicate) {
-            cachedPredicates = new HashSet<URI>();
+            cachedPredicates = new HashSet<>();
         }
 
         if (cacheObject) {
-            cachedObjects = new HashSet<Value>();
+            cachedObjects = new HashSet<>();
         }
     }
 

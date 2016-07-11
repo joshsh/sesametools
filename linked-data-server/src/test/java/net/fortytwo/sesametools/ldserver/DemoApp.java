@@ -19,11 +19,8 @@ public class DemoApp {
         sail.initialize();
 
         Repository repo = new SailRepository(sail);
-        RepositoryConnection rc = repo.getConnection();
-        try {
+        try (RepositoryConnection rc = repo.getConnection()) {
             rc.add(DemoApp.class.getResourceAsStream("demoApp.trig"), "", RDFFormat.TRIG);
-        } finally {
-            rc.close();
         }
 
         LinkedDataServer server = new LinkedDataServer(

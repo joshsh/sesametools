@@ -4,9 +4,6 @@ package net.fortytwo.sesametools.replay.calls;
 import info.aduna.iteration.CloseableIteration;
 import net.fortytwo.sesametools.EmptyCloseableIteration;
 import net.fortytwo.sesametools.replay.SailConnectionCall;
-import org.openrdf.model.Resource;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 import org.openrdf.sail.SailConnection;
 import org.openrdf.sail.SailException;
 
