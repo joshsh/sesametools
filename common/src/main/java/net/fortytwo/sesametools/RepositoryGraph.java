@@ -187,7 +187,7 @@ public class RepositoryGraph implements Model {
         if (o instanceof Statement) {
             Statement st = (Statement) o;
             try {
-                try (RepositoryResult result = rc.getStatements(
+                try (RepositoryResult<Statement> result = rc.getStatements(
                         st.getSubject(), st.getPredicate(), st.getObject(), INFER, st.getContext())) {
                     return result.hasNext();
                 }
@@ -210,7 +210,7 @@ public class RepositoryGraph implements Model {
         Object[] a = new Object[size];
         if (size > 0) try {
             int i = 0;
-            try (RepositoryResult result = rc.getStatements(null, null, null, INFER)) {
+            try (RepositoryResult<Statement> result = rc.getStatements(null, null, null, INFER)) {
                 while (result.hasNext()) {
                     a[i] = result.next();
                     i++;
@@ -300,9 +300,9 @@ public class RepositoryGraph implements Model {
     }
 
     private class RepositoryResultIterator implements Iterator<Statement> {
-        private final RepositoryResult result;
+        private final RepositoryResult<Statement> result;
 
-        private RepositoryResultIterator(RepositoryResult result) {
+        private RepositoryResultIterator(RepositoryResult<Statement> result) {
             this.result = result;
         }
 
@@ -316,7 +316,7 @@ public class RepositoryGraph implements Model {
 
         public Statement next() {
             try {
-                return (Statement) result.next();
+                return result.next();
             } catch (RepositoryException e) {
                 throw new RepositoryGraphRuntimeException(e);
             }
