@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>sesamize</artifactId>
+    <artifactId>rdfize</artifactId>
     <packaging>jar</packaging>
-    <name>Sesamize</name>
-    <description>Command-line tools for Sesame</description>
+    <name>RDFize</name>
+    <description>Command-line tools for RDF4J</description>
 
     <parent>
         <groupId>net.fortytwo.sesametools</groupId>
@@ -48,7 +48,7 @@
             <artifactId>rdf4j-queryresultio-text</artifactId>
         </dependency>
 
-        <!-- Sesame Rio -->
+        <!-- RDF4J Rio -->
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-rio-n3</artifactId>

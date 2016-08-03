@@ -77,7 +77,7 @@
         <module>readonly-sail</module>
         <module>replay-sail</module>
         <module>repository-sail</module>
-        <module>sesamize</module>
+        <module>rdfize</module>
         <module>uri-translator</module>
         <module>writeonly-sail</module>
     </modules>
