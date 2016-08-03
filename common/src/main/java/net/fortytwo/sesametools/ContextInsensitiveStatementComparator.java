@@ -1,6 +1,6 @@
 package net.fortytwo.sesametools;
 
-import org.openrdf.model.Statement;
+import org.eclipse.rdf4j.model.Statement;
 
 import java.util.Comparator;
 

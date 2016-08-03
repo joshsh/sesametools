@@ -3,9 +3,9 @@ package net.fortytwo.sesametools.ldserver;
 import net.fortytwo.sesametools.mappingsail.MappingSail;
 import net.fortytwo.sesametools.mappingsail.MappingSchema;
 import net.fortytwo.sesametools.mappingsail.RewriteRule;
-import org.openrdf.model.IRI;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.sail.Sail;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.sail.Sail;
 import org.restlet.Application;
 
 /**

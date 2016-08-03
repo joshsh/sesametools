@@ -1,9 +1,9 @@
 package net.fortytwo.sesametools.mappingsail;
 
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
-import org.openrdf.sail.helpers.SailWrapper;
+import org.eclipse.rdf4j.sail.Sail;
+import org.eclipse.rdf4j.sail.SailConnection;
+import org.eclipse.rdf4j.sail.SailException;
+import org.eclipse.rdf4j.sail.helpers.SailWrapper;
 
 /**
  * A <code>Sail</code> which maps between the internal URI space of a lower-level data store,

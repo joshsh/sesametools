@@ -1,11 +1,11 @@
 
 package net.fortytwo.sesametools.replay.calls;
 
-import info.aduna.iteration.CloseableIteration;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import net.fortytwo.sesametools.EmptyCloseableIteration;
 import net.fortytwo.sesametools.replay.SailConnectionCall;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
+import org.eclipse.rdf4j.sail.SailConnection;
+import org.eclipse.rdf4j.sail.SailException;
 
 import java.util.StringTokenizer;
 

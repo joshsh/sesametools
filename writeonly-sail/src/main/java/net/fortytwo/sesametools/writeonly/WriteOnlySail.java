@@ -1,11 +1,11 @@
 
 package net.fortytwo.sesametools.writeonly;
 
-import org.openrdf.model.ValueFactory;
-import org.openrdf.rio.RDFHandler;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
-import org.openrdf.sail.helpers.AbstractSail;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.sail.SailConnection;
+import org.eclipse.rdf4j.sail.SailException;
+import org.eclipse.rdf4j.sail.helpers.AbstractSail;
 
 /**
  * A <code>Sail</code> which can be written to, but not read from.

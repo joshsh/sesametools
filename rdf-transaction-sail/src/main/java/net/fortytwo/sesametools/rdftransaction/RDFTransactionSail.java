@@ -1,11 +1,11 @@
 package net.fortytwo.sesametools.rdftransaction;
 
-import org.openrdf.http.protocol.transaction.TransactionWriter;
-import org.openrdf.http.protocol.transaction.operations.TransactionOperation;
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
-import org.openrdf.sail.helpers.SailWrapper;
+import org.eclipse.rdf4j.http.protocol.transaction.TransactionWriter;
+import org.eclipse.rdf4j.http.protocol.transaction.operations.TransactionOperation;
+import org.eclipse.rdf4j.sail.Sail;
+import org.eclipse.rdf4j.sail.SailConnection;
+import org.eclipse.rdf4j.sail.SailException;
+import org.eclipse.rdf4j.sail.helpers.SailWrapper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

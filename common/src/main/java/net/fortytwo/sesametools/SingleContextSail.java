@@ -1,12 +1,12 @@
 package net.fortytwo.sesametools;
 
-import org.openrdf.model.Resource;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
-import org.openrdf.sail.StackableSail;
-import org.openrdf.sail.helpers.AbstractSail;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.sail.Sail;
+import org.eclipse.rdf4j.sail.SailConnection;
+import org.eclipse.rdf4j.sail.SailException;
+import org.eclipse.rdf4j.sail.StackableSail;
+import org.eclipse.rdf4j.sail.helpers.AbstractSail;
 
 import java.io.File;
 

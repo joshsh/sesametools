@@ -1,13 +1,13 @@
 
 package net.fortytwo.sesametools.replay;
 
-import info.aduna.iteration.CloseableIteration;
-import org.openrdf.IsolationLevel;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
-import org.openrdf.sail.StackableSail;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
+import org.eclipse.rdf4j.IsolationLevel;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.sail.Sail;
+import org.eclipse.rdf4j.sail.SailConnection;
+import org.eclipse.rdf4j.sail.SailException;
+import org.eclipse.rdf4j.sail.StackableSail;
 
 import java.io.BufferedReader;
 import java.io.File;

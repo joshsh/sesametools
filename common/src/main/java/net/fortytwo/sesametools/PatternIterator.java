@@ -1,10 +1,10 @@
 package net.fortytwo.sesametools;
 
-import org.openrdf.model.IRI;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.util.iterators.FilterIterator;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.util.iterators.FilterIterator;
 
 import java.util.Iterator;
 

@@ -1,16 +1,16 @@
 package net.fortytwo.sesametools.ldserver;
 
-import info.aduna.iteration.CloseableIteration;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Namespace;
-import org.openrdf.model.Statement;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.RDFS;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Namespace;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.sail.Sail;
+import org.eclipse.rdf4j.sail.SailConnection;
+import org.eclipse.rdf4j.sail.SailException;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
 import org.restlet.representation.Variant;
@@ -134,7 +134,7 @@ public class WebResource extends ServerResource {
         return null;
     }
 
-    private void addIncidentStatements(final org.openrdf.model.Resource vertex,
+    private void addIncidentStatements(final org.eclipse.rdf4j.model.Resource vertex,
                                        final Collection<Statement> statements,
                                        final SailConnection c) throws SailException {
         // Select outbound statements
@@ -166,7 +166,7 @@ public class WebResource extends ServerResource {
     }
 
     // Note: a SPARQL query might be more efficient in some applications
-    private void addSeeAlsoStatements(final org.openrdf.model.Resource subject,
+    private void addSeeAlsoStatements(final org.eclipse.rdf4j.model.Resource subject,
                                       final Collection<Statement> statements,
                                       final SailConnection c,
                                       final ValueFactory vf) throws SailException {
@@ -176,7 +176,7 @@ public class WebResource extends ServerResource {
         try {
             while (iter.hasNext()) {
                 Statement st = iter.next();
-                org.openrdf.model.Resource context = st.getContext();
+                org.eclipse.rdf4j.model.Resource context = st.getContext();
 
                 if (null != context && context instanceof IRI && context.toString().startsWith(hostIdentifier)) {
                     contexts.add((IRI) context);
@@ -190,7 +190,7 @@ public class WebResource extends ServerResource {
         try {
             while (iter.hasNext()) {
                 Statement st = iter.next();
-                org.openrdf.model.Resource context = st.getContext();
+                org.eclipse.rdf4j.model.Resource context = st.getContext();
 
                 if (null != context && context instanceof IRI && context.toString().startsWith(hostIdentifier)) {
                     contexts.add((IRI) context);
