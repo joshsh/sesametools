@@ -23,15 +23,15 @@ import net.fortytwo.sesametools.replay.calls.RemoveStatementsCall;
 import net.fortytwo.sesametools.replay.calls.RollbackCall;
 import net.fortytwo.sesametools.replay.calls.SetNamespaceCall;
 import net.fortytwo.sesametools.replay.calls.SizeCall;
-import org.openrdf.model.BNode;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.SimpleValueFactory;
-import org.openrdf.rio.ntriples.NTriplesUtil;
-import org.openrdf.sail.SailException;
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.ntriples.NTriplesUtil;
+import org.eclipse.rdf4j.sail.SailException;
 
 import java.util.StringTokenizer;
 

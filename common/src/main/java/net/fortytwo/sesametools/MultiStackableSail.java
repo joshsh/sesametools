@@ -1,12 +1,12 @@
 
 package net.fortytwo.sesametools;
 
-import org.openrdf.IsolationLevel;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
-import org.openrdf.sail.StackableSail;
+import org.eclipse.rdf4j.IsolationLevel;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.sail.Sail;
+import org.eclipse.rdf4j.sail.SailConnection;
+import org.eclipse.rdf4j.sail.SailException;
+import org.eclipse.rdf4j.sail.StackableSail;
 
 import java.io.File;
 import java.util.List;

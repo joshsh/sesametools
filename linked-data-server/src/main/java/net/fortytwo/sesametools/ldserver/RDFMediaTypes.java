@@ -1,7 +1,7 @@
 package net.fortytwo.sesametools.ldserver;
 
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParserRegistry;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParserRegistry;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Variant;
 

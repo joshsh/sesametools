@@ -1,9 +1,9 @@
 package net.fortytwo.sesametools.deduplication;
 
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
-import org.openrdf.sail.helpers.SailWrapper;
+import org.eclipse.rdf4j.sail.Sail;
+import org.eclipse.rdf4j.sail.SailConnection;
+import org.eclipse.rdf4j.sail.SailException;
+import org.eclipse.rdf4j.sail.helpers.SailWrapper;
 
 /**
  * A <code>Sail</code> which avoids adding duplicate statements to a base <code>Sail</code>.

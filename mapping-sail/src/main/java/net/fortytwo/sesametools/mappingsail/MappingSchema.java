@@ -1,6 +1,6 @@
 package net.fortytwo.sesametools.mappingsail;
 
-import org.openrdf.model.IRI;
+import org.eclipse.rdf4j.model.IRI;
 
 import java.util.HashMap;
 import java.util.Map;

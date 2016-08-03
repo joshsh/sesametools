@@ -1,7 +1,7 @@
 
 package net.fortytwo.sesametools;
 
-import info.aduna.iteration.CloseableIteration;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 
 import java.util.Collection;
 import java.util.Iterator;

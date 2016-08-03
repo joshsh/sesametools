@@ -1,7 +1,7 @@
 package net.fortytwo.sesametools.ldserver.query;
 
 import net.fortytwo.sesametools.ldserver.LinkedDataServer;
-import org.openrdf.sail.Sail;
+import org.eclipse.rdf4j.sail.Sail;
 import org.restlet.Request;
 import org.restlet.Restlet;
 import org.restlet.resource.ResourceException;

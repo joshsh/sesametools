@@ -1,7 +1,7 @@
 package net.fortytwo.sesametools.ldserver.query;
 
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.SailConnection;
+import org.eclipse.rdf4j.sail.Sail;
+import org.eclipse.rdf4j.sail.SailConnection;
 import org.restlet.data.MediaType;
 import org.restlet.representation.OutputRepresentation;
 

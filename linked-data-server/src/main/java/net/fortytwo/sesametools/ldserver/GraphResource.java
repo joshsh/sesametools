@@ -1,13 +1,13 @@
 package net.fortytwo.sesametools.ldserver;
 
-import info.aduna.iteration.CloseableIteration;
-import org.openrdf.model.Namespace;
-import org.openrdf.model.Statement;
-import org.openrdf.model.IRI;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
+import org.eclipse.rdf4j.model.Namespace;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.sail.Sail;
+import org.eclipse.rdf4j.sail.SailConnection;
+import org.eclipse.rdf4j.sail.SailException;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
 import org.restlet.representation.Variant;
@@ -59,7 +59,7 @@ public class GraphResource extends ServerResource {
         }
     }
 
-    private void addStatementsInGraph(final org.openrdf.model.Resource graph,
+    private void addStatementsInGraph(final org.eclipse.rdf4j.model.Resource graph,
                                       final Collection<Statement> statements,
                                       final SailConnection c) throws SailException {
         try (CloseableIteration<? extends Statement, SailException> stIter

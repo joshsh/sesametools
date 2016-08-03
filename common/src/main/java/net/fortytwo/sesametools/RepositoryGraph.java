@@ -1,16 +1,16 @@
 package net.fortytwo.sesametools;
 
-import info.aduna.iteration.CloseableIteration;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Model;
-import org.openrdf.model.Namespace;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.RepositoryResult;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Namespace;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -187,7 +187,7 @@ public class RepositoryGraph implements Model {
         if (o instanceof Statement) {
             Statement st = (Statement) o;
             try {
-                try (RepositoryResult result = rc.getStatements(
+                try (RepositoryResult<Statement> result = rc.getStatements(
                         st.getSubject(), st.getPredicate(), st.getObject(), INFER, st.getContext())) {
                     return result.hasNext();
                 }
@@ -210,7 +210,7 @@ public class RepositoryGraph implements Model {
         Object[] a = new Object[size];
         if (size > 0) try {
             int i = 0;
-            try (RepositoryResult result = rc.getStatements(null, null, null, INFER)) {
+            try (RepositoryResult<Statement> result = rc.getStatements(null, null, null, INFER)) {
                 while (result.hasNext()) {
                     a[i] = result.next();
                     i++;
@@ -300,9 +300,9 @@ public class RepositoryGraph implements Model {
     }
 
     private class RepositoryResultIterator implements Iterator<Statement> {
-        private final RepositoryResult result;
+        private final RepositoryResult<Statement> result;
 
-        private RepositoryResultIterator(RepositoryResult result) {
+        private RepositoryResultIterator(RepositoryResult<Statement> result) {
             this.result = result;
         }
 
@@ -316,7 +316,7 @@ public class RepositoryGraph implements Model {
 
         public Statement next() {
             try {
-                return (Statement) result.next();
+                return result.next();
             } catch (RepositoryException e) {
                 throw new RepositoryGraphRuntimeException(e);
             }

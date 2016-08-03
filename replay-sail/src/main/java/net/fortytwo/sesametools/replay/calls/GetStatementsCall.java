@@ -2,12 +2,12 @@
 package net.fortytwo.sesametools.replay.calls;
 
 import net.fortytwo.sesametools.replay.SailConnectionCall;
-import info.aduna.iteration.CloseableIteration;
-import org.openrdf.model.Resource;
-import org.openrdf.model.IRI;
-import org.openrdf.model.Value;
-import org.openrdf.sail.SailConnection;
-import org.openrdf.sail.SailException;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.sail.SailConnection;
+import org.eclipse.rdf4j.sail.SailException;
 
 import java.util.StringTokenizer;
 

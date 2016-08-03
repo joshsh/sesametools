@@ -1,6 +1,6 @@
 package net.fortytwo.sesametools.replay;
 
-import info.aduna.iteration.CloseableIteration;
+import org.eclipse.rdf4j.common.iteration.CloseableIteration;
 import net.fortytwo.sesametools.replay.calls.HasNextCall;
 import net.fortytwo.sesametools.replay.calls.NextCall;
 import net.fortytwo.sesametools.replay.calls.RemoveCall;
