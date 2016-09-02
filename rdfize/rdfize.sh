@@ -15,7 +15,7 @@ fi
 DIR=`dirname $0`
 
 # Launch the application
-$JAVA $JAVA_OPTIONS -cp $DIR/target/classes:$DIR/"target/dependency/*" net.fortytwo.sesametools.sesamize.Sesamize $*
+$JAVA $JAVA_OPTIONS -cp $DIR/target/classes:$DIR/"target/dependency/*" net.fortytwo.sesametools.rdfize.RDFize $*
 
 # Return the program's exit code
 exit $?
