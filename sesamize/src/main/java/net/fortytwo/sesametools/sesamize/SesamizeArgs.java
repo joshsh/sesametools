@@ -1,5 +1,7 @@
 package net.fortytwo.sesametools.sesamize;
 
+import org.apache.commons.io.FilenameUtils;
+import org.eclipse.rdf4j.common.lang.FileFormat;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParserRegistry;
 
@@ -19,6 +21,16 @@ public class SesamizeArgs {
     public final Set<String> flags;
     public final Map<String, String> pairs;
     public final List<String> nonOptions;
+
+    private static final Map<String, RDFFormat> formatsByFileExtension;
+    static {
+        formatsByFileExtension = new HashMap<>();
+        for (RDFFormat format : RDFParserRegistry.getInstance().getKeys()) {
+            for (String ext : format.getFileExtensions()) {
+                formatsByFileExtension.putIfAbsent(ext, format);
+            }
+        }
+    }
 
     public SesamizeArgs(final String[] args) {
         flags = new HashSet<>();
@@ -97,8 +109,10 @@ public class SesamizeArgs {
         } else {
             // otherwise try to find the format based on the file name extension,
             // using the specified default value as a fallback
-            Optional<RDFFormat> f = RDFFormat.matchFileName(file.getName(), null);
-            format = f.isPresent() ? f.get() : defaultValue;
+            String ext = FilenameUtils.getExtension(file.getName());
+            return formatsByFileExtension.get(ext);
+            //Optional<RDFFormat> f = RDFFormat.matchFileName(file.getName(), );
+            //format = f.isPresent() ? f.get() : defaultValue;
         }
 
         return format;

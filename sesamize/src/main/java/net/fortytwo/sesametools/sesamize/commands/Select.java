@@ -46,6 +46,7 @@ public class Select extends Command {
 
     @Override
     public void execute(SesamizeArgs args) throws Exception {
+        System.out.println("select...");
         File inputFile = new File(args.nonOptions.get(1));
 
         RDFFormat inputFormat = args.getRDFFormat(inputFile, RDFFormat.RDFXML, "i", "inputFormat");
@@ -57,6 +58,7 @@ public class Select extends Command {
 
             executeSparqlSelectQuery(query, inputFile, System.out, inputFormat, outputFormat, getBaseURI(args));
         }
+        System.out.println("...done");
     }
 
     private void executeSparqlSelectQuery(final String query,

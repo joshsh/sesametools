@@ -36,21 +36,24 @@ public class Sesamize {
     }
 
     private static void printUsage() {
-        System.out.println("Usage: sesamize [options] subcommand [arguments]");
-        System.out.println("Options:\n"
+        System.err.println("Usage: sesamize [options] subcommand [arguments]");
+        System.err.println("Options:\n"
                 + "  -h           Print this help and exit\n"
                 + "  -v           Print version information and exit");
-        System.out.println("Subcommands:");
+        System.err.println("Subcommands:");
         StringBuilder sb = new StringBuilder();
         printSubcommands(sb);
-        System.out.print(sb);
-        System.out.println("E.g.");
-        System.out.println("  sesamize translate -i trig -o nq mydata.trig > mydata.nq");
-        System.out.println("For more information, please see:\n"
+        System.err.print(sb);
+        System.err.println("E.g.");
+        System.err.println("  sesamize translate -i trig -o nq mydata.trig > mydata.nq");
+        System.err.println("For more information, please see:\n"
                 + "  <URL:http://github.com/joshsh/sesametools/tree/master/sesamize>.");
     }
 
-    private static void printUsageAndExit(int exitCode) {
+    private static void printUsageAndExit(int exitCode, String errorMessage) {
+        if (null != errorMessage) {
+            System.err.println(errorMessage);
+        }
         printUsage();
         System.exit(exitCode);
     }
@@ -61,30 +64,34 @@ public class Sesamize {
     }
 
     public static void main(final String[] args) {
-        SesamizeArgs a = new SesamizeArgs(args);
+        System.out.println("length: " + args.length);
+        for (String s : args) System.out.println("\t" + s);
 
         if (args.length < 1) {
-            printUsageAndExit(1);
+            printUsageAndExit(1, "missing command");
         }
 
+        SesamizeArgs a = new SesamizeArgs(args);
+
         if (null != a.getOption(null, "h", "help")) {
-            printUsageAndExit(0);
+            printUsageAndExit(0, null);
         }
 
         if (null != a.getOption(null, "v", "version")) {
             printVersion();
-            System.exit(0);
+            return;
         }
 
         Command c = subcommands.get(args[0]);
 
         if (null == c) {
-            printUsageAndExit(1);
+            printUsageAndExit(1, "no such command: " + args[0]);
         } else {
             try {
                 c.execute(a);
             } catch (Exception e) {
                 logger.error("Exited with error", e);
+                System.err.println(e.getMessage());
                 System.exit(1);
             }
         }
