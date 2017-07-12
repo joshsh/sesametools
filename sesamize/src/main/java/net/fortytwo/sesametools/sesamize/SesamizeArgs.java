@@ -80,7 +80,7 @@ public class SesamizeArgs {
     public SparqlResultFormat getSparqlResultFormat(final SparqlResultFormat defaultValue,
                                                     final String... alternatives) {
         String s = getOption(null, alternatives);
-        return null == s ? defaultValue : SparqlResultFormat.lookupByNickname(s);
+        return null == s ? defaultValue : SparqlResultFormat.lookupByNickname(s.toLowerCase());
     }
 
     public RDFFormat getRDFFormat(final RDFFormat defaultValue,

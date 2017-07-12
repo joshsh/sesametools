@@ -64,9 +64,6 @@ public class Sesamize {
     }
 
     public static void main(final String[] args) {
-        System.out.println("length: " + args.length);
-        for (String s : args) System.out.println("\t" + s);
-
         if (args.length < 1) {
             printUsageAndExit(1, "missing command");
         }

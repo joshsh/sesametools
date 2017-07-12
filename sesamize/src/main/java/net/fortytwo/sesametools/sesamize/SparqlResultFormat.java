@@ -6,8 +6,9 @@ package net.fortytwo.sesametools.sesamize;
 public enum SparqlResultFormat {
     // Note: the XML format is defined first, so that it is the default format.
     XML("application/sparql-results+xml", "xml"),
+    CSV("text/csv", "csv"),
     JSON("application/sparql-results+json", "json"),
-    TAB("text/tab-delimited-values", "tab"); // ~
+    TAB("text/tab-delimited-values", "tab", "tsv");
 
     private final String mediaType;
     private final String[] nicknames;

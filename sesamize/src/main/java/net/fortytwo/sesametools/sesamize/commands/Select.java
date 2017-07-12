@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriter;
 import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriter;
 import org.eclipse.rdf4j.query.resultio.sparqlxml.SPARQLResultsXMLWriter;
+import org.eclipse.rdf4j.query.resultio.text.csv.SPARQLResultsCSVWriter;
 import org.eclipse.rdf4j.query.resultio.text.tsv.SPARQLResultsTSVWriter;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
@@ -46,7 +47,6 @@ public class Select extends Command {
 
     @Override
     public void execute(SesamizeArgs args) throws Exception {
-        System.out.println("select...");
         File inputFile = new File(args.nonOptions.get(1));
 
         RDFFormat inputFormat = args.getRDFFormat(inputFile, RDFFormat.RDFXML, "i", "inputFormat");
@@ -58,7 +58,6 @@ public class Select extends Command {
 
             executeSparqlSelectQuery(query, inputFile, System.out, inputFormat, outputFormat, getBaseURI(args));
         }
-        System.out.println("...done");
     }
 
     private void executeSparqlSelectQuery(final String query,
@@ -70,6 +69,9 @@ public class Select extends Command {
         TupleQueryResultWriter w;
 
         switch (outFormat) {
+            case CSV:
+                w = new SPARQLResultsCSVWriter(out);
+                break;
             case JSON:
                 w = new SPARQLResultsJSONWriter(out);
                 break;
