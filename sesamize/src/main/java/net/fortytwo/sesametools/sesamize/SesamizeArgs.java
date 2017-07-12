@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * @author Joshua Shinavier (http://fortytwo.net).
  */
-class SesamizeArgs {
+public class SesamizeArgs {
     public final Set<String> flags;
     public final Map<String, String> pairs;
     public final List<String> nonOptions;
