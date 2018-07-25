@@ -119,4 +119,9 @@ public class WriteOnlySailConnection extends AbstractSailConnection {
     protected void startTransactionInternal() throws SailException {
         // Does nothing.
     }
+
+    @Override
+    public boolean pendingRemovals() {
+        return false;
+    }
 }

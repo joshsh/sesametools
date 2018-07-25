@@ -207,4 +207,9 @@ public class RecorderSailConnection extends AbstractSailConnection {
         }
         baseSailConnection.begin();
     }
+
+    @Override
+    public boolean pendingRemovals() {
+        return false;
+    }
 }

@@ -1,7 +1,6 @@
 package net.fortytwo.sesametools.sesamize;
 
 import org.apache.commons.io.FilenameUtils;
-import org.eclipse.rdf4j.common.lang.FileFormat;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParserRegistry;
 
@@ -23,12 +22,16 @@ public class SesamizeArgs {
     public final List<String> nonOptions;
 
     private static final Map<String, RDFFormat> formatsByFileExtension;
+    private static final Map<String, RDFFormat> formatsByName;
+
     static {
         formatsByFileExtension = new HashMap<>();
+        formatsByName = new HashMap<>();
         for (RDFFormat format : RDFParserRegistry.getInstance().getKeys()) {
             for (String ext : format.getFileExtensions()) {
                 formatsByFileExtension.putIfAbsent(ext, format);
             }
+            formatsByName.put(format.getName().toLowerCase(), format);
         }
     }
 
@@ -119,19 +122,40 @@ public class SesamizeArgs {
     }
 
     private RDFFormat findRDFFormat(final String s) {
+        RDFFormat format = formatsByName.get(s.toLowerCase());
+        if (null != format) {
+            return format;
+        }
+
         Optional<RDFFormat> f;
 
-        f = RDFParserRegistry.getInstance().getFileFormatForMIMEType(s);
+        RDFParserRegistry registry = RDFParserRegistry.getInstance();
+        f = registry.getFileFormatForMIMEType(s);
 
         if (!f.isPresent()) {
-            f = RDFParserRegistry.getInstance().getFileFormatForFileName("example." + s);
+            f = registry.getFileFormatForFileName("example." + s);
         }
         
         if (!f.isPresent()) {
-            throw new IllegalArgumentException("no matching RDF format for '" + s + "'");
+            throw new IllegalArgumentException("no matching RDF format for '" + s + "' (" +
+                    "supported formats are: " + getFormats(registry) + ")");
         }
 
         return f.get();
+    }
+
+    private String getFormats(final RDFParserRegistry registry) {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (RDFFormat format : registry.getKeys()) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append(", ");
+            }
+            sb.append(format.getName());
+        }
+        return sb.toString();
     }
 
     private String getOptionName(final String option) {
@@ -143,5 +167,4 @@ public class SesamizeArgs {
             return option;
         }
     }
-
 }

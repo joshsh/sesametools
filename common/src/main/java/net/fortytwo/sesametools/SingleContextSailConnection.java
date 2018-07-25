@@ -187,6 +187,11 @@ class SingleContextSailConnection extends AbstractSailConnection {
         }
     }
 
+    @Override
+    public boolean pendingRemovals() {
+        return false;
+    }
+
     private class SingleContextIteration implements CloseableIteration<Resource, SailException> {
         private Resource nextContext;
 

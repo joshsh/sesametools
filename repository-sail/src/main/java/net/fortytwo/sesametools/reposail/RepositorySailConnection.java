@@ -178,4 +178,9 @@ public class RepositorySailConnection extends AbstractSailConnection {
             throw new SailException(e);
         }
     }
+
+    @Override
+    public boolean pendingRemovals() {
+        return false;
+    }
 }

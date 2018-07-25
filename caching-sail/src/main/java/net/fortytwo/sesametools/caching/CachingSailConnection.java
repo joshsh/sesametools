@@ -231,4 +231,9 @@ public class CachingSailConnection extends AbstractSailConnection {
     public SailConnection getBaseConnection() {
         return baseSailConnection;
     }
+
+    @Override
+    public boolean pendingRemovals() {
+        return false;
+    }
 }

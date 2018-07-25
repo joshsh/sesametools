@@ -54,7 +54,7 @@
         <junit.version>4.12</junit.version>
         <log4j.version>1.2.17</log4j.version>
         <restlet.version>2.2.2</restlet.version>
-        <rdf4j.version>2.0M3</rdf4j.version>
+        <rdf4j.version>2.3.2</rdf4j.version>
         <slf4j.version>1.7.10</slf4j.version>
         <httpcomponents.version>4.5.2</httpcomponents.version>
 

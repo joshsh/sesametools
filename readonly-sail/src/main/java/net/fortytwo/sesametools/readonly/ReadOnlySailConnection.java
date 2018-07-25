@@ -104,4 +104,9 @@ public class ReadOnlySailConnection extends AbstractSailConnection {
     protected void startTransactionInternal() throws SailException {
         baseSailConnection.begin();
     }
+
+    @Override
+    public boolean pendingRemovals() {
+        return false;
+    }
 }
