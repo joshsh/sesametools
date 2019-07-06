@@ -14,7 +14,7 @@ SesameTools is a collection of general-purpose components for use with the [Sesa
 * **RDFTransactionSail**: a write-only Sail which generates RDF transactions instead of performing per-call updates.  Useful for streaming RDF data as described [here](http://arxiv.org/abs/1011.3595)
 * **ReadOnlySail**: a read-only Sail implementation
 * **ReplaySail**: a pair of Sail implementations which allow Sail operations to be first recorded to a log file, then reproduced from the log file
-* **RepositorySail**: a Sail implementation which wraps a Repository object.  This is essentially the inverse of Sesame's [SailRepository](http://rdf4j.org/sesame/2.7/apidocs/org/openrdf/repository/sail/SailRepository.html)
+* **RepositorySail**: a Sail implementation which wraps a Repository object.  This is essentially the inverse of Sesame's [SailRepository](http://docs.rdf4j.org/javadoc/latest/org/eclipse/rdf4j/repository/sail/SailRepository.html)
 * **Sesamize**: command-line tools for Sesame
 * **URI Translator**: a utility which runs SPARQL-1.1 Update queries against a Repository to convert URIs between different prefixes
 * **WriteOnlySail**: a write-only Sail implementation
